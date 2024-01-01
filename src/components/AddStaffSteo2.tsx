@@ -1,12 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Modal from './Modal';
+import EditService from './EditService';
+import useWorkerStore from '../store/ServiceStore';
 
-function AddService() {
+function AddService({ settheStep }: AddStaffMemberChildrenProps) {
+  const {
+    Service: { services: globalServices },
+  } = useWorkerStore();
+  const [services, setservices] = useState<ServiceName>();
+  const [showModal, setshowModal] = useState<boolean>(false);
+  console.log(globalServices);
   return (
     <div className="flex flex-col  space-y-4">
+      {showModal && (
+        <Modal closeModal={() => setshowModal((p) => false)}>
+          <EditService
+            serviceName={services!}
+            closeModal={() => setshowModal((p) => false)}
+          />
+        </Modal>
+      )}
       <h1 className="text-xl font-bold"> Add Service</h1>
       <div className="flex justify-between space-x-7 ">
-        <div className="bg-white dark:bg-body p-5 w-2/6">
-          <h1 className="text-xl font-bold dark:text-white">Service Categories</h1>
+        <div className="bg-white dark:bg-body p-5 w-2/6 space-y-2">
+          <h1 className="text-xl font-bold dark:text-white">
+            Service Categories
+          </h1>
+          {globalServices &&
+            globalServices.map((s) => (
+              <h1
+                className="text-xl bg-bodydark2 font-serif px-2 py-1 rounded-sm bg-opacity-10 text-black dark:text-white"
+                key={Object.keys(s)[0]}
+              >
+                {Object.keys(s)[0]}
+              </h1>
+            ))}
         </div>
         <div className="w-4/6  dark:bg-body bg-white p-5">
           <h1 className="text-xl font-bold dark:text-white">Services</h1>
@@ -49,14 +77,21 @@ function AddService() {
                   </g>
                 </svg>
               </span>
-              <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                <option value="">StandardWash</option>
-                <option value="">PremiumWash</option>
-                <option value="">Washing</option>
-                <option value="">Car Detailing</option>
-                <option value="">Gold Wash</option>
-                <option value="">Ceramic</option>
-                <option value="">Platinum Wash</option>
+              <select
+                className="relative z-0 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+                value={services}
+                onChange={(e) => {
+                  setservices(e.target.value! as ServiceName);
+                  setshowModal((p) => true);
+                }}
+              >
+                <option value="Standard Wash">StandardWash</option>
+                <option value="Premium Wash">PremiumWash</option>
+                <option value="Washing">Washing</option>
+                <option value="Car Detailing">Car Detailing</option>
+                <option value="Gold Wash">Gold Wash</option>
+                <option value="Ceramic">Ceramic</option>
+                <option value="Platinum Wash">Platinum Wash</option>
               </select>
               <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                 <svg
@@ -80,6 +115,12 @@ function AddService() {
           </div>
         </div>
       </div>
+      <button
+        className="w-52 rounded bg-primary p-3 font-medium text-gray"
+        onClick={() => settheStep()}
+      >
+        Save
+      </button>
     </div>
   );
 }

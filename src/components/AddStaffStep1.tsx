@@ -1,10 +1,23 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import userSix from '../images/user/user-06.png';
+import useWorkerStore from '../store/ServiceStore';
 type images = {
   url: File;
 };
-function AddStaffMember() {
+function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
   const [images, setimages] = useState<images[]>([]);
+  const { StaffMember, updateStaffMember } = useWorkerStore();
+  const Nameref = useRef<HTMLInputElement | null>(null);
+  const ArabicNameRef = useRef<HTMLInputElement | null>(null);
+  const PhoneRef = useRef<HTMLInputElement | null>(null);
+  const SaveStaffMemberInfo = useCallback(() => {
+    updateStaffMember({
+      ArabicName: ArabicNameRef.current?.value!,
+      file: images,
+      Name: Nameref.current?.value!,
+      phone: PhoneRef.current?.value!,
+    });
+  }, [images, Nameref, PhoneRef, ArabicNameRef]);
   return (
     <div>
       <div className="flex flex-col gap-5.5 p-6.5">
@@ -14,6 +27,8 @@ function AddStaffMember() {
               Name
             </label>
             <input
+              ref={Nameref}
+              defaultValue={StaffMember.Name}
               type="text"
               placeholder="Name"
               className="w-full bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -24,8 +39,10 @@ function AddStaffMember() {
               الاسم
             </label>
             <input
+              ref={ArabicNameRef}
+              defaultValue={StaffMember.ArabicName}
               type="text"
-              placeholder="Name"
+              placeholder="ArabicName"
               className="w-full rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
@@ -67,17 +84,23 @@ function AddStaffMember() {
                   name="profile"
                   id="profile"
                   className="sr-only"
-                  onChange={(e) =>
-                    setimages((p) => [...p, { url: e.target.files?.[0]! }])
-                  }
+                  onChange={(e) => {
+                    setimages((p) => [...p, { url: e.target.files?.[0]! }]);
+                    updateStaffMember({
+                      ArabicName: ArabicNameRef.current?.value!,
+                      file: images,
+                      Name: Nameref.current?.value!,
+                      phone: PhoneRef.current?.value!,
+                    });
+                  }}
                 />
               </label>
             </div>
           </div>
           <div className="flex flex-row flex-wrap justify-center items-center space-x-6 space-y-4 bg-white">
-            {images &&
-              images.map((i) => (
-                <div className="w-80 ">
+            {(images || StaffMember.file) &&
+              StaffMember.file.map((i) => (
+                <div className="w-80 " key={i.url.toString()}>
                   <img src={`${URL.createObjectURL(i.url)}`} />
                 </div>
               ))}
@@ -92,6 +115,8 @@ function AddStaffMember() {
               Phone
             </label>
             <input
+              ref={PhoneRef}
+              defaultValue={StaffMember.phone}
               type="number"
               placeholder="Phone Number"
               className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -99,6 +124,16 @@ function AddStaffMember() {
           </div>
         </div>
       </div>
+      <button
+        className="w-52 rounded bg-primary p-3 font-medium text-gray"
+        type="submit"
+        onClick={() => {
+          settheStep();
+          SaveStaffMemberInfo();
+        }}
+      >
+        Save
+      </button>
     </div>
   );
 }

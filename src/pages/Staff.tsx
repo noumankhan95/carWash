@@ -5,13 +5,13 @@ import { useNavigate } from 'react-router-dom';
 function Staff() {
   const navigate = useNavigate();
   return (
-    <div>
+    <div className=" space-y-5">
       <div className="flex flex-row justify-end">
         <button
-          className="inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+          className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
           onClick={() => navigate('/addstaff')}
         >
-          Proceed
+          Create
         </button>
       </div>
       <div className="flex flex-col">
