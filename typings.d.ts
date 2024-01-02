@@ -73,3 +73,13 @@ type StaffWorkerUser = {
   Timings: Timings;
   ServingArea: ServingArea[];
 };
+
+type Roles = 'Staff' | 'Admin' | 'User';
+
+type WebsiteUsers = {
+  id: string;
+  role: Roles;
+  email: string;
+  name: string;
+  phone: string;
+};

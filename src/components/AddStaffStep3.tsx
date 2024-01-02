@@ -19,7 +19,7 @@ function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
       <h1 className="text-xl font-bold">Timings Schedule</h1>
 
       <div className="flex justify-between space-x-2 w-full">
-        <div className="bg-white dark:bg-body p-5 w-5/6  space-y-4">
+        <div className="bg-white dark:bg-graydark text-white p-5 w-5/6  space-y-4">
           {weekDays.map((w) => (
             <div className="flex w-full items-center justify-between ">
               <div className="w-1/2">

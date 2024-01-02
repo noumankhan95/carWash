@@ -12,7 +12,32 @@ const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
 const Staff = lazy(() => import('../pages/Staff'));
 const AddStaff = lazy(() => import('../pages/AddStaffMember'));
 const Roles = lazy(() => import('../pages/Roles'));
+const Subscription = lazy(() => import('../components/Subscription'));
+const Orders = lazy(() => import('../pages/Orders'));
+const Providers = lazy(() => import('../pages/Providers'));
+const EditProviders = lazy(() => import('../pages/EditProviders'));
+
 const coreRoutes = [
+  {
+    path: '/orders',
+    title: 'Order',
+    component: Orders,
+  },
+  {
+    path: '/editproviders',
+    title: 'editProvider',
+    component: EditProviders,
+  },
+  // {
+  //   path: '/subscriptions',
+  //   title: 'Calender',
+  //   component: Subscription,
+  // },
+  {
+    path: '/providers',
+    title: 'Providers',
+    component: Providers,
+  },
   {
     path: '/calendar',
     title: 'Calender',

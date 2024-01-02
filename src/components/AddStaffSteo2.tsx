@@ -22,7 +22,7 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
       )}
       <h1 className="text-xl font-bold"> Add Service</h1>
       <div className="flex justify-between space-x-7 ">
-        <div className="bg-white dark:bg-body p-5 w-2/6 space-y-2">
+        <div className=" p-5 w-2/6 space-y-2">
           <h1 className="text-xl font-bold dark:text-white">
             Service Categories
           </h1>
@@ -36,7 +36,7 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
               </h1>
             ))}
         </div>
-        <div className="w-4/6  dark:bg-body bg-white p-5">
+        <div className="w-4/6  dark:bg-bodydark bg-white p-5">
           <h1 className="text-xl font-bold dark:text-white">Services</h1>
           <p>
             Enable available services at your store and set prices for different

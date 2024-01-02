@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import AddStaffMember from './AddStaffMember';
 import { useNavigate } from 'react-router-dom';
-import Loader from '../common/Loader';
+import { LoaderIcon } from 'react-hot-toast';
 import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
 // @ts-ignore
 import { db } from '../firebase.js';
@@ -12,10 +12,12 @@ type userItem = {
 };
 function Staff() {
   const navigate = useNavigate();
+  const [loading, setisloading] = useState<boolean>(false);
   const { EditItem, setIsEditing } = useWorkerStore();
   const [users, setusers] = useState<userItem[]>();
   const getUsers = useCallback(async () => {
     try {
+      setisloading((p) => true);
       const qs = await getDocs(collection(db, 'staff'));
       qs.forEach((doc) => {
         const newUserData = {
@@ -30,13 +32,15 @@ function Staff() {
       });
     } catch (e) {
       console.log(e);
+    } finally {
+      setisloading((p) => false);
     }
   }, []);
   useEffect(() => {
     getUsers();
   }, []);
   return (
-    <div className=" space-y-5">
+    <div className=" ">
       <div className="flex flex-row justify-end">
         <button
           className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
@@ -45,8 +49,8 @@ function Staff() {
           Create
         </button>
       </div>
-      <div className="flex flex-col">
-        <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-7">
+      <div className="flex flex-col my-4">
+        <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-form-strokedark sm:grid-cols-7">
           <div className="p-1.5 xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
               Name
@@ -79,7 +83,11 @@ function Staff() {
           </div>
         </div>
       </div>
-      {users &&
+      {loading && (
+        <LoaderIcon className="h-20 w-20 mx-auto " secondary="blue" />
+      )}
+      {!loading &&
+        users &&
         users.map((u) => (
           <div className="flex flex-col">
             <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-7">

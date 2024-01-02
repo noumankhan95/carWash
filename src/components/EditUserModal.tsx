@@ -1,6 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
+// @ts-ignore
+import { db } from '../firebase.js';
+import { updateDoc, doc } from 'firebase/firestore';
+import { LoaderIcon } from 'react-hot-toast';
+type pageprops = {
+  user: WebsiteUsers;
+};
+function EditUserModal({ user }: pageprops) {
+  const [userRole, setuserRole] = useState<Roles>();
+  const [isloading, setisloading] = useState<boolean>();
+  console.log(userRole);
+  const UpdateUserRole = async () => {
+    let docRef = doc(db, 'users', user.id);
+    try {
+      setisloading((p) => true);
 
-function EditUserModal() {
+      await updateDoc(docRef, {
+        role: userRole,
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setisloading((p) => false);
+    }
+  };
   return (
     <div>
       <h3 className="text-black dark:text-white font-bold font-serif text-2xl text-center">
@@ -16,7 +39,7 @@ function EditUserModal() {
               <input
                 type="email"
                 readOnly
-                placeholder="user@123"
+                placeholder={user?.email}
                 className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               />
             </div>
@@ -25,10 +48,14 @@ function EditUserModal() {
                 Change User Role
               </label>
               <div className="relative z-20 bg-white dark:bg-form-input">
-                <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                  <option value="">Admin</option>
-                  <option value="">SuperAdmin</option>
-                  <option value="">User</option>
+                <select
+                  className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+                  defaultValue={user?.role}
+                  onChange={(e) => setuserRole((p) => e.target.value as Roles)}
+                >
+                  <option value="Admin">Admin</option>
+                  <option value="Staff">Staff</option>
+                  <option value="User">User</option>
                 </select>
                 <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                   <svg
@@ -50,8 +77,15 @@ function EditUserModal() {
                 </span>
               </div>
             </div>
-            <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
-              Update
+            <button
+              disabled={isloading}
+              type="button"
+              className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
+              onClick={async () => {
+                UpdateUserRole();
+              }}
+            >
+              {isloading ? <LoaderIcon className="p-3" /> : 'Update'}
             </button>
           </div>
         </form>
