@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Logo from '../images/logo/logo-icon.svg';
+import Logo from '../images/logo/Logo.jpeg';
 import DarkModeSwitcher from './DarkModeSwitcher';
 import DropdownMessage from './DropdownMessage';
 import DropdownNotification from './DropdownNotification';
@@ -101,19 +101,23 @@ const Header = (props: {
           <ul className="flex items-center gap-2 2xsm:gap-4">
             {/* <!-- Dark Mode Toggler --> */}
             <DarkModeSwitcher />
+            <h1>Lamsat Alfakhama Car Care</h1>
+            <Link className="block flex-shrink-0" to="/">
+              <img src={Logo} alt="Logo" className="w-28 object-fit h-12" />
+            </Link>
             {/* <!-- Dark Mode Toggler --> */}
 
             {/* <!-- Notification Menu Area --> */}
-            <DropdownNotification />
+            {/* <DropdownNotification /> */}
             {/* <!-- Notification Menu Area --> */}
 
             {/* <!-- Chat Notification Area --> */}
-            <DropdownMessage />
+            {/* <DropdownMessage /> */}
             {/* <!-- Chat Notification Area --> */}
           </ul>
 
           {/* <!-- User Area --> */}
-          <DropdownUser />
+          {/* <DropdownUser /> */}
           {/* <!-- User Area --> */}
         </div>
       </div>

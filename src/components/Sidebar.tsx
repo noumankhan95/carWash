@@ -66,7 +66,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/">
           <img src={Logo} alt="Logo" />
-          <h1 className="text-center text-xl text-white"> lamsat alfakhama</h1>
         </NavLink>
 
         <button
@@ -104,7 +103,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
             <ul className="mb-6 flex flex-col gap-1.5">
               {/* <!-- Menu Item Dashboard --> */}
-              <SidebarLinkGroup
+              {/* <SidebarLinkGroup
                 activeCondition={
                   pathname === '/' || pathname.includes('dashboard')
                 }
@@ -112,7 +111,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
-                      <NavLink
+                      {/* <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                           (pathname === '/' ||
@@ -169,34 +168,33 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             fill=""
                           />
                         </svg>
-                      </NavLink>
-                      {/* <!-- Dropdown Menu Start --> */}
-                      <div
-                        className={`translate transform overflow-hidden ${
-                          !open && 'hidden'
-                        }`}
-                      >
-                        <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
-                          <li>
-                            <NavLink
-                              to="/"
-                              className={({ isActive }) =>
-                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-                                (isActive && '!text-white')
-                              }
-                            >
-                              eCommerce
-                            </NavLink>
-                          </li>
-                        </ul>
-                      </div>
-                      {/* <!-- Dropdown Menu End --> */}
-                    </React.Fragment>
-                  );
+                      </NavLink> */}
+              {/* <!-- Dropdown Menu Start --> */}
+              {/* <div
+                className={`translate transform overflow-hidden ${
+                  !open && 'hidden'
+                }`}
+              >
+                <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
+                  <li>
+                    <NavLink
+                      to="/"
+                      className={({ isActive }) =>
+                        'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                        (isActive && '!text-white')
+                      }
+                    >
+                      eCommerce
+                    </NavLink>
+                  </li>
+                </ul>
+              </div> */}
+              {/* <!-- Dropdown Menu End --> */}
+              {/* </React.Fragment> */}
+              {/* );
                 }}
-              </SidebarLinkGroup>
+              </SidebarLinkGroup> */}{' '}
               {/* <!-- Menu Item Dashboard --> */}
-
               {/* <!-- Menu Item Calendar --> */}
               {/* <li>
                 <NavLink
@@ -223,7 +221,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 </NavLink>
               </li> */}
               {/* <!-- Menu Item Calendar --> */}
-
               {/* <!-- Menu Item Profile --> */}
               <li>
                 <NavLink
@@ -389,7 +386,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 </NavLink>
               </li> */}
               {/* <!-- Menu Item Profile --> */}
-
               {/* <!-- Menu Item Forms --> */}
               {/* <SidebarLinkGroup
                 activeCondition={
@@ -604,7 +600,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 }}
               </SidebarLinkGroup> */}
               {/* <!-- Menu Item Forms --> */}
-
               {/* <!-- Menu Item Tables --> */}
               {/* <li>
                 <NavLink
@@ -642,9 +637,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 </NavLink>
               </li> */}
               {/* <!-- Menu Item Tables --> */}
-
               {/* <!-- Menu Item Settings --> */}
-
               {/* <li>
                 <NavLink
                   to="/settings"

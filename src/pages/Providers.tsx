@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 function Providers() {
   const navigate = useNavigate();
   return (
-    <div>
-      <div className="flex flex-col">
+    <div className="space-y-3">
+      <div className="flex flex-col ">
         <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-7">
           <div className="p-1.5 xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
@@ -29,7 +29,7 @@ function Providers() {
         </div>
       </div>
       <button
-        className="inline-flex items-center justify-center rounded-md border border-meta-3 py-4 px-5 text-center font-medium text-meta-3 hover:bg-opacity-90 lg:px-5 xl:px-4"
+        className=" rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
         onClick={() => {
           navigate('/editproviders');
         }}
