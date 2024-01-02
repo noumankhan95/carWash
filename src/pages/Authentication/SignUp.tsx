@@ -1,8 +1,19 @@
 import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
-
+import { useRef } from 'react';
+//@ts-ignore
+import { db, auth } from '../../firebase.js';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 const SignUp = () => {
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const nameRef = useRef<HTMLInputElement | null>(null);
+
+  const navigate = useNavigate();
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -157,6 +168,7 @@ const SignUp = () => {
                   </label>
                   <div className="relative">
                     <input
+                      ref={nameRef}
                       type="text"
                       placeholder="Enter your full name"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -192,6 +204,7 @@ const SignUp = () => {
                   </label>
                   <div className="relative">
                     <input
+                      ref={emailRef}
                       type="email"
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -258,6 +271,7 @@ const SignUp = () => {
                   </label>
                   <div className="relative">
                     <input
+                      ref={passwordRef}
                       type="password"
                       placeholder="Re-enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -288,13 +302,35 @@ const SignUp = () => {
                 </div>
 
                 <div className="mb-5">
-                  <input
+                  {/* <input
                     type="submit"
                     value="Create account"
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                  />
+                  /> */}
+                  <button
+                    type="button"
+                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    onClick={async () => {
+                      try {
+                        const u = await createUserWithEmailAndPassword(
+                          auth,
+                          emailRef.current?.value!,
+                          passwordRef.current?.value!,
+                        );
+                        // navigate('/');
+                        await addDoc(collection(db, 'users'), {
+                          email: emailRef.current?.value!,
+                          name: nameRef.current?.value!,
+                        });
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    }}
+                  >
+                    Sign Up
+                  </button>
                 </div>
-
+                {/* 
                 <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
                   <span>
                     <svg
@@ -330,7 +366,7 @@ const SignUp = () => {
                     </svg>
                   </span>
                   Sign up with Google
-                </button>
+                </button> */}
 
                 <div className="mt-6 text-center">
                   <p>

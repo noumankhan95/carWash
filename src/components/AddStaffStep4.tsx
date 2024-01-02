@@ -5,10 +5,21 @@ import Buttons from '../pages/UiElements/Buttons';
 import Modal from './Modal';
 import AddLocation from './AddLocation';
 import useWorkerStore from '../store/ServiceStore';
-
+import { useNavigate } from 'react-router-dom';
+// @ts-ignore
+import { db } from '../firebase.js';
+import { setDoc } from 'firebase/firestore';
 function AddServingArea() {
   const [enabled, setEnabled] = React.useState<boolean>(false);
-  const { ServingArea } = useWorkerStore();
+  const {
+    ServingArea,
+    addToDb,
+    EmptyFields,
+    isEditing,
+    addEditedItemtoDb,
+    setIsEditing,
+  } = useWorkerStore();
+  const navigate = useNavigate();
   const weekDays = [
     { day: 'Sunday' },
     { day: 'Monday' },
@@ -74,10 +85,29 @@ function AddServingArea() {
       </div>
       <button
         className="inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-        onClick={() => setEnabled((p) => true)}
+        onClick={() => {
+          setEnabled((p) => true);
+        }}
       >
         Add Location
       </button>
+      <div className="flex flex-row justify-end">
+        <button
+          className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+          onClick={() => {
+            if (isEditing) {
+              addEditedItemtoDb();
+            } else {
+              addToDb();
+            }
+            EmptyFields();
+            setIsEditing('');
+            navigate('/staff');
+          }}
+        >
+          Add To Database
+        </button>
+      </div>
     </div>
   );
 }

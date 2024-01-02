@@ -1,8 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
-
+//@ts-ignore
+import { db, auth } from '../../firebase.js';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useRef } from 'react';
 const SignIn = () => {
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -158,6 +164,7 @@ const SignIn = () => {
                   </label>
                   <div className="relative">
                     <input
+                      ref={emailRef}
                       type="email"
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -189,6 +196,7 @@ const SignIn = () => {
                   </label>
                   <div className="relative">
                     <input
+                      ref={passwordRef}
                       type="password"
                       placeholder="6+ Characters, 1 Capital letter"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -219,14 +227,32 @@ const SignIn = () => {
                 </div>
 
                 <div className="mb-5">
-                  <input
+                  {/* <input
                     type="submit"
                     value="Sign In"
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                  />
+                  /> */}
+                  <button
+                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const u = await signInWithEmailAndPassword(
+                          auth,
+                          emailRef.current?.value!,
+                          passwordRef.current?.value!,
+                        );
+                        navigate('/');
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    }}
+                  >
+                    Sign In
+                  </button>
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
+                {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
                   <span>
                     <svg
                       width="20"
@@ -261,7 +287,7 @@ const SignIn = () => {
                     </svg>
                   </span>
                   Sign in with Google
-                </button>
+                </button> */}
 
                 <div className="mt-6 text-center">
                   <p>

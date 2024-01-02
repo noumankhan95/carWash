@@ -3,6 +3,7 @@ type StaffWorker = {
   Service: {
     services: Services[];
   };
+  isEditing: { value: boolean; id: sting };
   Timings: Timings;
   ServingArea: ServingArea[];
   setServiceValue: (QVal: Services) => void;
@@ -11,6 +12,11 @@ type StaffWorker = {
   removeServingArea: (Qval: ServingArea) => void;
   updateStaffMember: (Qval: StaffMember) => void;
   updateTimings: (timings: Timings) => void;
+  addToDb: () => Promise<void>;
+  EditItem: (Qval: StaffWorkerUser) => void;
+  EmptyFields: () => void;
+  setIsEditing: (id: string) => void;
+  addEditedItemtoDb: () => void;
 };
 type Day =
   | 'Monday'
@@ -57,4 +63,13 @@ type ServingArea = {
 
 type AddStaffMemberChildrenProps = {
   settheStep: () => void;
+};
+
+type StaffWorkerUser = {
+  StaffMember: StaffMember;
+  Service: {
+    services: Services[];
+  };
+  Timings: Timings;
+  ServingArea: ServingArea[];
 };
