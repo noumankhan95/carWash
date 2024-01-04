@@ -7,7 +7,7 @@ import { db, auth } from '../../firebase.js';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { LoaderIcon } from 'react-hot-toast';
 const SignUp = () => {
   const emailRef = useRef<HTMLInputElement | null>(null);
@@ -300,8 +300,7 @@ const SignUp = () => {
                           emailRef.current?.value!,
                           passwordRef.current?.value!,
                         );
-                        // navigate('/');
-                        await addDoc(collection(db, 'users'), {
+                        await setDoc(doc(db, 'users', u.user.uid), {
                           email: emailRef.current?.value!,
                           name: nameRef.current?.value!,
                           phone: PhoneRef.current?.value,

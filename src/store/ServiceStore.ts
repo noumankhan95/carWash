@@ -1,7 +1,13 @@
 import { create } from 'zustand';
 // @ts-ignore
 import { db } from '../firebase.js';
-import { doc, setDoc, collection, addDoc } from 'firebase/firestore';
+import {
+  doc,
+  setDoc,
+  collection,
+  addDoc,
+  serverTimestamp,
+} from 'firebase/firestore';
 const useWorkerStore = create<StaffWorker>((set) => ({
   Service: { services: [] },
   isEditing: { value: false, id: '' },
@@ -60,6 +66,7 @@ const useWorkerStore = create<StaffWorker>((set) => ({
         ServingArea: state.ServingArea,
         StaffMember: state.StaffMember,
         Timings: state.Timings,
+        updatedAt: serverTimestamp(),
       })
         .then((r) => {
           console.log(r.id);
@@ -100,12 +107,14 @@ const useWorkerStore = create<StaffWorker>((set) => ({
     set((state) => ({ ...state, isEditing: { value: !state.isEditing, id } }));
   },
   addEditedItemtoDb() {
+    // const timeStamp = db.firestore.FieldValue.serverTimestamp();
     set((state) => {
       setDoc(doc(db, 'staff', state.isEditing.id), {
         Service: state.Service,
         ServingArea: state.ServingArea,
         StaffMember: state.StaffMember,
         Timings: state.Timings,
+        updatedAt: serverTimestamp(),
       });
       return { ...state };
     });

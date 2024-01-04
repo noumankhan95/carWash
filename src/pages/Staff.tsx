@@ -3,12 +3,17 @@ import AddStaffMember from './AddStaffMember';
 import { useNavigate } from 'react-router-dom';
 import { LoaderIcon } from 'react-hot-toast';
 import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
+import { type Timestamp } from 'firebase/firestore';
 // @ts-ignore
 import { db } from '../firebase.js';
 import useWorkerStore from '../store/ServiceStore.js';
+type workTime = StaffWorkerUser & {
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+};
 type userItem = {
   id: string;
-  worker: StaffWorkerUser;
+  worker: workTime;
 };
 function Staff() {
   const navigate = useNavigate();
@@ -22,7 +27,7 @@ function Staff() {
       qs.forEach((doc) => {
         const newUserData = {
           id: doc.id,
-          worker: doc.data() as StaffWorkerUser,
+          worker: doc.data() as workTime,
         };
         setusers((p) =>
           p?.some((item) => item.id === newUserData.id)
@@ -39,6 +44,7 @@ function Staff() {
   useEffect(() => {
     getUsers();
   }, []);
+  console.log(users, 'isers');
   return (
     <div className=" ">
       <div className="flex flex-row justify-end">
@@ -113,13 +119,17 @@ function Staff() {
               </div>
               <div className="hidden p-1.5 text-center sm:block xl:p-5">
                 <h5 className="text-sm font-medium uppercase xsm:text-base">
-                  Last Update
+                  {u.worker.createdAt?.toDate().toString() ||
+                    u.worker.updatedAt?.toDate().toString() ||
+                    ''}
                 </h5>
               </div>
               <div className="hidden p-1.5 text-center sm:block xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">
-                  Busy Timings
-                </h5>
+                {Object.entries(u.worker.Timings).map((w) => (
+                  <h5 className="text-sm font-medium uppercase xsm:text-base">
+                    {w[1].from && w[0]} {w[1].from}
+                  </h5>
+                ))}
               </div>
               <div className=" md:flex hidden p-1.5 text-center sm:block xl:p-5 space-x-3">
                 <button

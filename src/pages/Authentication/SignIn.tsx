@@ -6,9 +6,13 @@ import { db, auth } from '../../firebase.js';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRef } from 'react';
 import Toaster from 'react-hot-toast';
+import { LoaderIcon } from 'react-hot-toast';
+import { useState } from 'react';
 const SignIn = () => {
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
+  const [isloading, setisloading] = useState<boolean>(false);
+
   const navigate = useNavigate();
   return (
     <>
@@ -238,18 +242,29 @@ const SignIn = () => {
                     type="button"
                     onClick={async () => {
                       try {
+                        setisloading((p) => true);
                         const u = await signInWithEmailAndPassword(
                           auth,
                           emailRef.current?.value!,
                           passwordRef.current?.value!,
                         );
-                        navigate('/');
+
+                        // navigate('/');
                       } catch (e) {
                         console.log(e);
+                      } finally {
+                        setisloading((p) => false);
                       }
                     }}
                   >
-                    Sign In
+                    {isloading ? (
+                      <LoaderIcon
+                        style={{ margin: 'auto' }}
+                        className="w-4 h-4"
+                      />
+                    ) : (
+                      'Sign In'
+                    )}
                   </button>
                 </div>
 

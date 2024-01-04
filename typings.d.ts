@@ -83,3 +83,8 @@ type WebsiteUsers = {
   name: string;
   phone: string;
 };
+
+interface UserAuth extends WebsiteUsers {
+  isloggedIn: boolean;
+  setisloggedIn: (user: { isloggedIn: boolean } & WebsiteUsers) => void;
+}
