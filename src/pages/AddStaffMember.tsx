@@ -36,7 +36,7 @@ function AddStaffMember() {
       stepNumber: 4,
     },
   };
-  console.table(StaffMember);
+  // console.table(StaffMember);
   return (
     <div className="flex flex-col space-y-6">
       <div className="cursor-pointer flex space-x-5">

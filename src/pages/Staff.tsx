@@ -18,7 +18,8 @@ type userItem = {
 function Staff() {
   const navigate = useNavigate();
   const [loading, setisloading] = useState<boolean>(false);
-  const { EditItem, setIsEditing } = useWorkerStore();
+  const { EditItem, setIsEditing, setIsNotEditing, EmptyFields } =
+    useWorkerStore();
   const [users, setusers] = useState<userItem[]>();
   const getUsers = useCallback(async () => {
     try {
@@ -50,40 +51,45 @@ function Staff() {
       <div className="flex flex-row justify-end">
         <button
           className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-          onClick={() => navigate('/addstaff')}
+          onClick={() => {
+            setIsNotEditing();
+            EmptyFields();
+            navigate('/addstaff');
+          }}
         >
           Create
         </button>
       </div>
-      <div className="flex flex-col my-4">
-        <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-form-strokedark sm:grid-cols-7">
+
+      <div className="flex flex-col my-4  ">
+        <div className="grid rounded-sm bg-gray-2 dark:bg-form-strokedark grid-cols-7 overflow-x-auto gap-30 md:gap-7">
           <div className="p-1.5 xl:p-5">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">
+            <h5 className="text-sm  font-medium uppercase xsm:text-base">
               Name
             </h5>
           </div>
           <div className="p-1.5 text-center xl:p-5">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">
+            <h5 className="text-sm  font-medium uppercase xsm:text-base">
               Arabic Name
             </h5>
           </div>
           <div className="p-1.5 text-center xl:p-5">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">
+            <h5 className="text-sm  font-medium uppercase xsm:text-base">
               Service Provider
             </h5>
           </div>
-          <div className="hidden p-1.5 text-center sm:block xl:p-5">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">
+          <div className=" p-1.5 text-center xl:p-5">
+            <h5 className="text-sm  font-medium uppercase xsm:text-base">
               Phone
             </h5>
           </div>
-          <div className="hidden p-1.5 text-center sm:block xl:p-5">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">
+          <div className=" p-1.5 text-center xl:p-5">
+            <h5 className="text-sm  font-medium uppercase xsm:text-base">
               Last Update
             </h5>
           </div>
-          <div className="hidden p-1.5 text-center sm:block xl:p-5">
-            <h5 className="text-sm font-medium uppercase xsm:text-base">
+          <div className=" p-1.5 text-center xl:p-5">
+            <h5 className="text-sm  font-medium uppercase xsm:text-base">
               Busy Timings
             </h5>
           </div>
@@ -96,7 +102,7 @@ function Staff() {
         users &&
         users.map((u) => (
           <div className="flex flex-col">
-            <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-7">
+            <div className="grid  rounded-sm bg-gray-2 dark:bg-meta-4 grid-cols-7 overflow-x-auto gap-30 md:gap-7 items-start">
               <div className="p-1.5 xl:p-5">
                 <h5 className="text-sm font-medium uppercase xsm:text-base">
                   {u.worker.StaffMember.Name}
@@ -112,28 +118,28 @@ function Staff() {
                   Service Provider
                 </h5>
               </div>
-              <div className="hidden p-1.5 text-center sm:block xl:p-5">
+              <div className=" p-1.5 text-center sm:block xl:p-5">
                 <h5 className="text-sm font-medium uppercase xsm:text-base">
                   {u.worker.StaffMember.phone}
                 </h5>
               </div>
-              <div className="hidden p-1.5 text-center sm:block xl:p-5">
+              <div className=" p-1.5 text-center sm:block xl:p-5">
                 <h5 className="text-sm font-medium uppercase xsm:text-base">
                   {u.worker.createdAt?.toDate().toString() ||
                     u.worker.updatedAt?.toDate().toString() ||
                     ''}
                 </h5>
               </div>
-              <div className="hidden p-1.5 text-center sm:block xl:p-5">
+              <div className=" p-1.5 text-center sm:block ">
                 {Object.entries(u.worker.Timings).map((w) => (
                   <h5 className="text-sm font-medium uppercase xsm:text-base">
                     {w[1].from && w[0]} {w[1].from}
                   </h5>
                 ))}
               </div>
-              <div className=" md:flex hidden p-1.5 text-center sm:block xl:p-5 space-x-3">
+              <div className=" flex text-center sm:block  space-x-3">
                 <button
-                  className="inline-flex items-center justify-center rounded-md border border-meta-3 py-4 px-5 text-center font-medium text-meta-3 hover:bg-opacity-90 lg:px-5 xl:px-4"
+                  className="p-3.5  bg-meta-7 rounded-md border  text-center font-medium text-white hover:bg-opacity-90 "
                   onClick={() => {
                     navigate('/addstaff');
                     EditItem(u.worker);
@@ -143,7 +149,7 @@ function Staff() {
                   Edit
                 </button>
                 <button
-                  className="inline-flex items-center justify-center bg-black py-4 px-4 rounded-md bg-danger text-center font-medium text-white hover:bg-opacity-90 "
+                  className=" p-4 rounded-md bg-danger text-center font-medium text-white hover:bg-opacity-90 "
                   onClick={() => {
                     console.log(u.id);
                     deleteDoc(doc(db, 'staff', u.id));

@@ -3,7 +3,7 @@ import SwitcherOne from './SwitcherOne';
 import useWorkerStore from '../store/ServiceStore';
 
 function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
-  const { updateTimings, Timings } = useWorkerStore();
+  const { updateTimings, Timings, StaffMember } = useWorkerStore();
   const [weekDays, setweekdays] = useState([
     { day: 'Sunday', enabled: false, from: '', to: '' },
     { day: 'Monday', enabled: false, from: '', to: '' },
@@ -13,7 +13,7 @@ function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
     { day: 'Friday', enabled: false, from: '', to: '' },
     { day: 'Saturday', enabled: false, from: '', to: '' },
   ]);
-  console.log(Timings);
+  console.log(StaffMember);
   return (
     <div className="flex flex-col  space-y-2">
       <h1 className="text-xl font-bold">Timings Schedule</h1>

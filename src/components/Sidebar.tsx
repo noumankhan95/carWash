@@ -304,7 +304,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </svg>
                   Profile
                 </NavLink>
-              </li>
+              </li> */}
               <li>
                 <NavLink
                   to="/providers"
@@ -332,7 +332,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </svg>
                   Providers
                 </NavLink>
-              </li> */}
+              </li>
               <li>
                 <NavLink
                   to="/orders"
@@ -349,7 +349,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     version="1.1"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_bgCarrier"  strokeWidth="0"></g>
                     <g
                       id="SVGRepo_tracerCarrier"
                       stroke-linecap="round"
@@ -875,7 +875,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           height={18}
                           width={18}
                         >
-                          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                          <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                           <g
                             id="SVGRepo_tracerCarrier"
                             stroke-linecap="round"
@@ -887,13 +887,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               opacity="0.5"
                               d="M12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4"
                               stroke="#a1a9c4"
-                              stroke-width="1.5"
+                              strokeWidth="1.5"
                               stroke-linecap="round"
                             ></path>{' '}
                             <path
                               d="M10 12H20M20 12L17 9M20 12L17 15"
                               stroke="#a1a9c4"
-                              stroke-width="1.5"
+                              strokeWidth="1.5"
                               stroke-linecap="round"
                               stroke-linejoin="round"
                             ></path>{' '}

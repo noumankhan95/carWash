@@ -57,7 +57,7 @@ const Header = (props: {
           {/* <!-- Hamburger Toggle BTN --> */}
 
           <Link className="block flex-shrink-0 lg:hidden" to="/">
-            <img src={Logo} alt="Logo" />
+            <img src={Logo} alt="Logo" className="max-h-10" />
           </Link>
         </div>
 
@@ -102,8 +102,11 @@ const Header = (props: {
             {/* <!-- Dark Mode Toggler --> */}
             <DarkModeSwitcher />
             <h1>Lamsat Alfakhama Car Care</h1>
-            <Link className="block flex-shrink-0" to="/">
-              <img src={Logo} alt="Logo" className="w-28 object-fit h-12" />
+            <Link
+              className="hidden md:block  max-h-10 max-w-15 flex-shrink-0"
+              to="/"
+            >
+              <img src={Logo} alt="Logo" className="w-28 object-fit " />
             </Link>
             {/* <!-- Dark Mode Toggler --> */}
 

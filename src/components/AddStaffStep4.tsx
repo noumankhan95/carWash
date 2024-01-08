@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SwitcherOne from './SwitcherOne';
 import Buttons from '../pages/UiElements/Buttons';
 // import { Modal } from './ModalSettings';
@@ -7,10 +7,13 @@ import AddLocation from './AddLocation';
 import useWorkerStore from '../store/ServiceStore';
 import { useNavigate } from 'react-router-dom';
 // @ts-ignore
-import { db } from '../firebase.js';
-import { setDoc } from 'firebase/firestore';
+import { db, auth } from '../firebase.js';
+import { setDoc, doc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { LoaderIcon } from 'react-hot-toast';
 function AddServingArea() {
   const [enabled, setEnabled] = React.useState<boolean>(false);
+  const [isloading, setisloading] = useState<boolean>();
   const {
     ServingArea,
     addToDb,
@@ -18,6 +21,10 @@ function AddServingArea() {
     isEditing,
     addEditedItemtoDb,
     setIsEditing,
+    userAuth,
+    StaffMember,
+    Timings,
+    setIsNotEditing,
   } = useWorkerStore();
   const navigate = useNavigate();
   const weekDays = [
@@ -29,6 +36,12 @@ function AddServingArea() {
     { day: 'Friday' },
     { day: 'Saturday' },
   ];
+  console.log('Serv', ServingArea);
+  console.log('Serv', userAuth);
+  console.log('Serv', StaffMember);
+  console.log('Serv', Timings);
+  console.log('Serv', isEditing);
+
   return (
     <div className="flex flex-col space-y-4">
       {enabled && (
@@ -94,18 +107,43 @@ function AddServingArea() {
       <div className="flex flex-row justify-end">
         <button
           className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-          onClick={() => {
-            if (isEditing) {
-              addEditedItemtoDb();
-            } else {
-              addToDb();
+          onClick={async () => {
+            try {
+              setisloading(true);
+              if (isEditing.value) {
+                console.log('Reached in Editing');
+                addEditedItemtoDb();
+              } else {
+                console.log('Reached');
+                addToDb();
+                const u = await createUserWithEmailAndPassword(
+                  auth,
+                  userAuth.email,
+                  userAuth.password,
+                );
+                await setDoc(doc(db, 'users', u.user.uid), {
+                  email: userAuth.email,
+                  name: StaffMember.Name,
+                  phone: StaffMember.phone,
+                  role: StaffMember.permissions,
+                });
+              }
+              EmptyFields();
+              setIsNotEditing();
+              navigate('/staff');
+            } catch (e) {
+              console.log(e);
+              alert(e);
+            } finally {
+              setisloading(false);
             }
-            EmptyFields();
-            setIsEditing('');
-            navigate('/staff');
           }}
         >
-          Add To Database
+          {isloading ? (
+            <LoaderIcon style={{ margin: 'auto' }} className="w-4 h-4" />
+          ) : (
+            'Add To Database'
+          )}
         </button>
       </div>
     </div>

@@ -9,10 +9,18 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 const useWorkerStore = create<StaffWorker>((set) => ({
+  userAuth: { email: '', password: '' },
   Service: { services: [] },
   isEditing: { value: false, id: '' },
   ServingArea: [],
-  StaffMember: { ArabicName: '', file: [], Name: '', phone: '' },
+  StaffMember: {
+    ArabicName: '',
+    file: [],
+    Name: '',
+    phone: '',
+    email: '',
+    permissions: [],
+  },
   Timings: {
     Monday: { from: '', to: '', enabled: false },
     Tuesday: { from: '', to: '', enabled: false },
@@ -61,11 +69,13 @@ const useWorkerStore = create<StaffWorker>((set) => ({
   },
   addToDb: async () => {
     set((state) => {
+      console.log(state, 'staff');
       addDoc(collection(db, 'staff'), {
         Service: state.Service,
         ServingArea: state.ServingArea,
         StaffMember: state.StaffMember,
         Timings: state.Timings,
+
         updatedAt: serverTimestamp(),
       })
         .then((r) => {
@@ -91,7 +101,14 @@ const useWorkerStore = create<StaffWorker>((set) => ({
     set((state) => ({
       Service: { services: [] },
       ServingArea: [],
-      StaffMember: { ArabicName: '', file: [], Name: '', phone: '' },
+      StaffMember: {
+        ArabicName: '',
+        file: [],
+        Name: '',
+        phone: '',
+        email: '',
+        permissions: [],
+      },
       Timings: {
         Monday: { from: '', to: '', enabled: false },
         Tuesday: { from: '', to: '', enabled: false },
@@ -101,10 +118,14 @@ const useWorkerStore = create<StaffWorker>((set) => ({
         Saturday: { from: '', to: '', enabled: false },
         Sunday: { from: '', to: '', enabled: false },
       },
+      userAuth: { email: '', password: '' },
     }));
   },
   setIsEditing(id: string) {
-    set((state) => ({ ...state, isEditing: { value: !state.isEditing, id } }));
+    set((state) => ({
+      ...state,
+      isEditing: { value: true, id },
+    }));
   },
   addEditedItemtoDb() {
     // const timeStamp = db.firestore.FieldValue.serverTimestamp();
@@ -118,6 +139,12 @@ const useWorkerStore = create<StaffWorker>((set) => ({
       });
       return { ...state };
     });
+  },
+  setIsNotEditing() {
+    set((state) => ({ ...state, isEditing: { value: false, id: '' } }));
+  },
+  setUserAuth(email, password) {
+    set((state) => ({ ...state, userAuth: { email, password } }));
   },
 }));
 

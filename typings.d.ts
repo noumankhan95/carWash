@@ -1,4 +1,5 @@
 type StaffWorker = {
+  userAuth: { email: string; password: string };
   StaffMember: StaffMember;
   Service: {
     services: Services[];
@@ -16,7 +17,9 @@ type StaffWorker = {
   EditItem: (Qval: StaffWorkerUser) => void;
   EmptyFields: () => void;
   setIsEditing: (id: string) => void;
+  setIsNotEditing: () => void;
   addEditedItemtoDb: () => void;
+  setUserAuth: (email: string, password: string) => void;
 };
 type Day =
   | 'Monday'
@@ -53,6 +56,8 @@ type StaffMember = {
   ArabicName: string;
   file: Array<{ url: File }>;
   phone: string;
+  email: string;
+  permissions: PermissionsRoles[];
 };
 
 type ServingArea = {
@@ -75,13 +80,14 @@ type StaffWorkerUser = {
 };
 
 type Roles = 'Staff' | 'Admin' | 'User';
-
+type PermissionsRoles = string;
 type WebsiteUsers = {
   id: string;
   role: Roles;
   email: string;
   name: string;
   phone: string;
+  permissions: PermissionsRoles[];
 };
 
 interface UserAuth extends WebsiteUsers {

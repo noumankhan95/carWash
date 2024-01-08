@@ -2,25 +2,46 @@ import React from 'react';
 import { useState, useRef, useCallback } from 'react';
 import userSix from '../images/user/user-06.png';
 import useWorkerStore from '../store/ServiceStore';
+import MapComponent from './MapComponent';
 type images = {
   url: File;
 };
 function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
   const [images, setimages] = useState<images[]>([]);
   const { StaffMember, updateStaffMember } = useWorkerStore();
-  const Nameref = useRef<HTMLInputElement | null>(null);
-  const ArabicNameRef = useRef<HTMLInputElement | null>(null);
-  const Details = useRef<HTMLTextAreaElement | null>(null);
-  const ArabicDetails = useRef<HTMLTextAreaElement | null>(null);
+  const [Area, setArea] = useState<string>('');
+  const [ArabicArea, setArabicArea] = useState<string>('');
+  const [Address, setAddress] = useState<string>('');
+  const [ArabicAddress, seteArabicAddress] = useState<string>('');
   const PhoneRef = useRef<HTMLInputElement | null>(null);
+  const NameRef = useRef<HTMLInputElement | null>(null);
+  const ArabicName = useRef<HTMLInputElement | null>(null);
+  const DetailsRef = useRef<HTMLTextAreaElement | null>(null);
+  const ArabicDetailsRef = useRef<HTMLTextAreaElement | null>(null);
+  const EmailRef = useRef<HTMLInputElement | null>(null);
+
   const SaveStaffMemberInfo = useCallback(() => {
     updateStaffMember({
-      ArabicName: ArabicNameRef.current?.value!,
+      ArabicName: ArabicName.current?.value!,
       file: images,
-      Name: Nameref.current?.value!,
+      Name: NameRef.current?.value!,
       phone: PhoneRef.current?.value!,
     });
-  }, [images, Nameref, PhoneRef, ArabicNameRef]);
+  }, [images, NameRef, PhoneRef, ArabicArea]);
+  const updateRefs = (address: any, area: any) => {
+    console.log('Address:', address);
+    console.log('Area:', area);
+    // setNameref(area);
+    setArabicArea(area);
+    setAddress(address);
+    seteArabicAddress(address);
+    setArea(area);
+    // console.log('nArea:', Nameref);
+    // console.log('2nArea:', ArabicArea);
+    // console.log('3nArea:', DetailsRef);
+    // console.log('4nArea:', ArabicDetailsRef);
+  };
+
   return (
     <div>
       <h1 className="mb-3 block text-black dark:text-white text-3xl">
@@ -66,9 +87,9 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
                   onChange={(e) => {
                     setimages((p) => [...p, { url: e.target.files?.[0]! }]);
                     updateStaffMember({
-                      ArabicName: ArabicNameRef.current?.value!,
+                      ArabicName: ArabicName.current?.value!,
                       file: images,
-                      Name: Nameref.current?.value!,
+                      Name: NameRef.current?.value!,
                       phone: PhoneRef.current?.value!,
                     });
                   }}
@@ -87,25 +108,25 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
         </div>
       </div>
       <div className="flex flex-col gap-5.5 p-6.5">
-        <div className="flex items-center space-x-4 justify-around">
-          <div className="w-2/5">
+        <div className="flex flex-col md:flex-row md:space-x-4">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Name
             </label>
             <input
-              ref={Nameref}
+              ref={NameRef}
               defaultValue={StaffMember.Name}
               type="text"
               placeholder="Name"
               className="w-full bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
-          <div className="w-2/5">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               الاسم
             </label>
             <input
-              ref={ArabicNameRef}
+              ref={ArabicName}
               defaultValue={StaffMember.ArabicName}
               type="text"
               placeholder="ArabicName"
@@ -114,25 +135,25 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-5.5 p-6.5">
-        <div className="flex items-center space-x-4 justify-around">
-          <div className="w-2/5">
+      <div className="flex flex-col gap-5.5 p-6.5 w-full">
+        <div className="flex items-center space-x-4 justify-start w-full">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Details
             </label>
             <textarea
-              ref={Details}
+              ref={DetailsRef}
               defaultValue={StaffMember.Name}
               placeholder="Name"
               className="w-full bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
-          <div className="w-2/5">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Arabic Details
             </label>
             <textarea
-              ref={ArabicDetails}
+              ref={ArabicDetailsRef}
               defaultValue={StaffMember.ArabicName}
               placeholder="ArabicName"
               className="w-full rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -144,20 +165,20 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
         <h1 className="mb-3 block text-black dark:text-white text-3xl">
           Account Information
         </h1>
-        <div className="flex space-x-4">
-          <div className="w-2/5">
+        <div className="flex flex-col md:flex-row  md:space-x-4">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Email
             </label>
             <input
-              ref={PhoneRef}
-              defaultValue={StaffMember.phone}
+              ref={EmailRef}
+              // defaultValue={StaffMember.phone}
               type="number"
               placeholder="Phone Number"
               className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
-          <div className="w-2/5">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Phone
             </label>
@@ -169,7 +190,7 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
               className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
-          <div className="w-2/5">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Call Center
             </label>
@@ -187,54 +208,59 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
         <h1 className="mb-3 block text-black dark:text-white text-3xl">
           Address Information
         </h1>
-        <div className="flex space-x-4">
-          <div className="w-2/5">
+        <MapComponent updateRefs={updateRefs} />
+        <div className="flex flex-col md:flex-row md:space-x-4">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Address
             </label>
             <input
-              ref={PhoneRef}
-              defaultValue={StaffMember.phone}
-              type="number"
-              placeholder="Phone Number"
+              // ref={PhoneRef}
+              value={Address}
+              // defaultValue={StaffMember.phone}
+              type="text"
+              placeholder="Address"
               className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
-          <div className="w-2/5">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Arabic Address
             </label>
             <input
-              ref={PhoneRef}
-              defaultValue={StaffMember.phone}
-              type="number"
-              placeholder="Phone Number"
+              // ref={PhoneRef}
+              // defaultValue={StaffMember.phone}
+              value={ArabicAddress}
+              type="text"
+              placeholder="Arabic Address"
               className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
         </div>
-        <div className="flex space-x-4">
-          <div className="w-2/5">
+        <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Area
             </label>
             <input
-              ref={PhoneRef}
-              defaultValue={StaffMember.phone}
-              type="number"
-              placeholder="Phone Number"
+              // ref={Nameref}
+              value={Area}
+              // defaultValue={StaffMember.phone}
+              type="text"
+              placeholder="Area"
               className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
-          <div className="w-2/5">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Arabic Area
             </label>
             <input
-              ref={PhoneRef}
-              defaultValue={StaffMember.phone}
-              type="number"
-              placeholder="Phone Number"
+              // ref={ArabicArea}
+              value={ArabicArea}
+              // defaultValue={StaffMember.phone}
+              type="text"
+              placeholder="Arabic Area"
               className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
