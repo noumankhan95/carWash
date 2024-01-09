@@ -21,17 +21,7 @@ function EditService({
   const DurationRefs = useRef<DurationRefsType>([]);
   useRef<HTMLInputElement | null>(null);
   const { setServiceValue } = useWorkerStore();
-  console.log(
-    modifier?.map((m, index) => {
-      return {
-        description: descriptionRef.current?.value!,
-        arabicDescription: ArabicdescriptionRef.current?.value!,
-        modifiername: m.modifiername,
-        price: PriceRefs.current[index]?.value!,
-        duration: m.duration,
-      };
-    }),
-  );
+  console.log(PriceRefs);
   const SaveServiceSettings = useCallback(() => {
     setServiceValue({
       [serviceName as ServiceName]: modifier?.map((m, index) => {
@@ -81,16 +71,21 @@ function EditService({
           <select
             className="relative z-0 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
             onChange={(e) => {
-              setmodifier((p) => [
-                ...(p || []),
-                {
-                  modifiername: e.target.value!,
-                  price: '',
-                  duration: '',
-                  arabicDescription: '',
-                  description: '',
-                },
-              ]);
+              console.log(e.target.value);
+              setmodifier((p) =>
+                p?.some((i) => i.modifiername === e.target.value)
+                  ? p
+                  : [
+                      ...(p || []),
+                      {
+                        modifiername: e.target.value!,
+                        price: '',
+                        duration: '',
+                        arabicDescription: '',
+                        description: '',
+                      },
+                    ],
+              );
             }}
             ref={ModifierRef}
           >
@@ -129,7 +124,7 @@ function EditService({
               <tbody>
                 {modifier &&
                   modifier.map((m, index) => (
-                    <tr key={m.price + Date.now().toString()}>
+                    <tr key={m.modifiername + Date.now().toString()}>
                       <td className="border-b border-[#eee] py-5 px-1  dark:border-strokedark xl:pl-1">
                         <h5 className="font-medium text-black dark:text-white">
                           {m.modifiername}
@@ -138,6 +133,7 @@ function EditService({
                       <td className="border-b border-[#eee] py-5 px-1 dark:border-strokedark">
                         <input
                           ref={(el) => (PriceRefs.current[index] = el)}
+                          defaultValue={PriceRefs.current[index]?.value}
                           type="text"
                           placeholder="AED"
                           className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -147,6 +143,7 @@ function EditService({
                         <div className="mb-4.5">
                           <h1 className="text-sm">Time</h1>
                           <select
+                            defaultValue={DurationRefs.current[index]?.value}
                             ref={(el) => (DurationRefs.current[index] = el)}
                             className="relative z-0 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                             onChange={(e) => {

@@ -18,6 +18,7 @@ const useUserAuth = create<UserAuth>((set) => ({
       id,
     }));
   },
+  permissions: [],
 }));
 
 export default useUserAuth;

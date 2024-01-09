@@ -11,7 +11,7 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
   const [showModal, setshowModal] = useState<boolean>(false);
   console.log(globalServices);
   return (
-    <div className="flex flex-col  space-y-4">
+    <div>
       {showModal && (
         <Modal closeModal={() => setshowModal((p) => false)}>
           <EditService

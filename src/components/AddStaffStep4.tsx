@@ -125,7 +125,7 @@ function AddServingArea() {
                   email: userAuth.email,
                   name: StaffMember.Name,
                   phone: StaffMember.phone,
-                  role: StaffMember.permissions,
+                  permissions: StaffMember.permissions,
                 });
               }
               EmptyFields();
