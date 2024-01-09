@@ -15,8 +15,12 @@ function Providers() {
   const navigate = useNavigate();
   const [providers, setproviders] = useState<ProvidersList[]>();
   const [isloading, setisloading] = useState<boolean>(false);
-  const { setisEditing, setAllProviderInformation, setallsubscriptions } =
-    useProviderStore();
+  const {
+    setisEditing,
+    setAllProviderInformation,
+    setallsubscriptions,
+    providerAddressInfo,
+  } = useProviderStore();
   const [showeditProvider, setshoweditProvider] = useState<boolean>(false);
   useEffect(() => {
     getProviders();
@@ -26,16 +30,20 @@ function Providers() {
       setisloading(true);
       const docs = await getDocs(collection(db, 'providers'));
       docs.forEach((doc) =>
-        setproviders((p) => [
-          ...(p || []),
-          {
-            providerAccountInfo: doc.data().providerAccountInfo,
-            providerAddressInfo: doc.data().providerAddressInfo,
-            providerInfo: doc.data().providerInfo,
-            id: doc.id,
-            Subscriptions: doc.data().Subscriptions,
-          },
-        ]),
+        setproviders((p) =>
+          p?.some((i) => i.id === doc.id)
+            ? p
+            : [
+                ...(p || []),
+                {
+                  providerAccountInfo: doc.data().providerAccountInfo,
+                  providerAddressInfo: doc.data().providerAddressInfo,
+                  providerInfo: doc.data().providerInfo,
+                  id: doc.id,
+                  Subscriptions: doc.data().Subscriptions,
+                },
+              ],
+        ),
       );
     } catch (e) {
       alert(e);
@@ -43,6 +51,7 @@ function Providers() {
       setisloading((p) => false);
     }
   };
+  console.log(providerAddressInfo);
   return (
     <div className="space-y-3">
       <div className="flex flex-col  overflow-x-auto ">
@@ -140,6 +149,7 @@ function Providers() {
                         <button
                           className="hover:text-primary"
                           onClick={() => {
+                            console.log('Prov', u.providerAddressInfo);
                             setisEditing(u.id);
                             setAllProviderInformation({
                               providerAccountInfo: u.providerAccountInfo,

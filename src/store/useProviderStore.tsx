@@ -68,6 +68,7 @@ const useProviderStore = create<ProviderInformation>((set) => ({
   },
   updateinDb: async () => {
     set((state) => {
+      console.log(state, 'State in Update');
       updateDoc(doc(db, 'providers', state.isEditing.id), {
         providerInfo: state.providerInfo,
         providerAccountInfo: state.providerAccountInfo,
@@ -90,7 +91,7 @@ const useProviderStore = create<ProviderInformation>((set) => ({
   },
   setallsubscriptions(subs) {
     set((state) => {
-      return { ...state, Subscriptions:subs };
+      return { ...state, Subscriptions: subs };
     });
   },
 }));

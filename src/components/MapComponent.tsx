@@ -74,7 +74,7 @@ const MyComponent = ({ updateRefs }: componentProps) => {
       console.log('Location', location);
       //   AreaRef.current!.value = area;
     }
-  }, [map]);
+  }, [map, location]);
   const handleMarkerDragEnd = (e: google.maps.MapMouseEvent) => {
     const newSelectedPlace = {
       lat: e.latLng!.lat(),

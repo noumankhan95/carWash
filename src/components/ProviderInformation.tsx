@@ -11,16 +11,15 @@ type images = {
 function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
   const [images, setimages] = useState<images[]>([]);
   // const { StaffMember, updateStaffMember } = useWorkerStore();
-  const [location, setlocation] = useState<itemLocation | null>({
-    lat: 45,
-    lng: 34,
-  });
   const {
     setAllProviderInformation,
     providerInfo,
     providerAccountInfo,
     providerAddressInfo,
   } = useProviderStore();
+  const [location, setlocation] = useState<itemLocation>(
+    providerAddressInfo.location,
+  );
   const [Area, setArea] = useState<string>(providerAddressInfo.area);
   const [ArabicArea, setArabicArea] = useState<string>(
     providerAddressInfo.arabicArea,
