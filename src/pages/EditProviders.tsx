@@ -17,7 +17,6 @@ type StepComponent = {
 };
 function EditProviders() {
   const [steps, setsteps] = useState(1);
-  const { StaffMember } = useWorkerStore();
   const stepAndComponent: StepComponent = {
     1: {
       component: (props) => <ProviderInformation {...props} />,
@@ -30,7 +29,6 @@ function EditProviders() {
       stepNumber: 2,
     },
   };
-  console.table(StaffMember);
   return (
     <div className="flex flex-col space-y-6">
       <div className="cursor-pointer flex space-x-5">

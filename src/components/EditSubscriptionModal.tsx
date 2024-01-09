@@ -1,16 +1,61 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useState } from 'react';
-function EditSubscriptionModal() {
-  const [enabled, setEnabled] = useState(false);
+import useProviderStore from '../store/useProviderStore';
+function EditSubscriptionModal({ name }: { name: string }) {
+  const { Subscriptions, setsubscriptions } = useProviderStore();
+  const thisSub = Subscriptions.find((o) => o.name === name);
+  const [firstenabled, setfirstenabled] = useState<boolean>(
+    thisSub?.packages[0].Once.isrunning || false,
+  );
+  const [secondenabled, setsecondenabled] = useState<boolean>(
+    thisSub?.packages[0].Twice.isrunning || false,
+  );
+  const [thirdenabled, setthirdenabled] = useState<boolean>(
+    thisSub?.packages[0].Thrice.isrunning || false,
+  );
+  const firstDiscountRef = useRef<HTMLInputElement | null>(null);
+  const secondDiscountRef = useRef<HTMLInputElement | null>(null);
+  const thirdDiscountRef = useRef<HTMLInputElement | null>(null);
+  console.log(Subscriptions);
+  console.log(thisSub, 'this sub');
 
+  const addSubscription = useCallback(() => {
+    setsubscriptions({
+      name,
+      packages: [
+        {
+          Once: {
+            isrunning: firstenabled,
+            discount: firstDiscountRef.current?.value!,
+            duration: 'Once',
+          },
+          Twice: {
+            isrunning: secondenabled,
+            discount: secondDiscountRef.current?.value!,
+            duration: 'Twice',
+          },
+          Thrice: {
+            isrunning: thirdenabled,
+            discount: thirdDiscountRef.current?.value!,
+            duration: 'Thrice',
+          },
+        },
+      ],
+    });
+  }, [
+    firstDiscountRef,
+    secondDiscountRef,
+    thirdDiscountRef,
+    firstenabled,
+    secondenabled,
+    thirdenabled,
+  ]);
   return (
     <div>
       <div className="flex flex-col gap-9">
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">
-              Edit Packages
-            </h3>
+            <h3 className="font-medium text-black dark:text-white">{name}</h3>
           </div>
           <form action="#">
             <div className="flex w-full items-center justify-between px-3 ">
@@ -39,26 +84,28 @@ function EditSubscriptionModal() {
                 <div className="grid grid-cols-4 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-4 md:px-6 2xl:px-7.5">
                   <div>
                     <label
-                      htmlFor="toggle3"
+                      htmlFor="toggle1"
                       className="flex cursor-pointer select-none items-center"
                     >
                       <div className="relative">
                         <input
                           type="checkbox"
-                          id="toggle3"
+                          id="toggle1"
                           className="sr-only"
                           onChange={() => {
-                            setEnabled(!enabled);
+                            setfirstenabled((p) => !p);
                           }}
                         />
                         <div className="block h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]"></div>
                         <div
                           className={`dot absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
-                            enabled &&
+                            firstenabled &&
                             '!right-1 !translate-x-full !bg-primary dark:!bg-white'
                           }`}
                         >
-                          <span className={`hidden ${enabled && '!block'}`}>
+                          <span
+                            className={`hidden ${firstenabled && '!block'}`}
+                          >
                             <svg
                               className="fill-white dark:fill-black"
                               width="11"
@@ -75,7 +122,7 @@ function EditSubscriptionModal() {
                               ></path>
                             </svg>
                           </span>
-                          <span className={`${enabled && 'hidden'}`}>
+                          <span className={`${firstenabled && 'hidden'}`}>
                             <svg
                               className="h-4 w-4 stroke-current"
                               fill="none"
@@ -110,6 +157,8 @@ function EditSubscriptionModal() {
                   </div>
                   <div className="col-span-1 hidden items-center sm:flex">
                     <input
+                      ref={firstDiscountRef}
+                      defaultValue={thisSub?.packages[0].Once.discount}
                       type="text"
                       placeholder="%"
                       className="w-full bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -119,26 +168,28 @@ function EditSubscriptionModal() {
                 <div className="grid grid-cols-4 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-4 md:px-6 2xl:px-7.5">
                   <div>
                     <label
-                      htmlFor="toggle3"
+                      htmlFor="toggle2"
                       className="flex cursor-pointer select-none items-center"
                     >
                       <div className="relative">
                         <input
                           type="checkbox"
-                          id="toggle3"
+                          id="toggle2"
                           className="sr-only"
                           onChange={() => {
-                            setEnabled(!enabled);
+                            setsecondenabled((p) => !p);
                           }}
                         />
                         <div className="block h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]"></div>
                         <div
                           className={`dot absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
-                            enabled &&
+                            secondenabled &&
                             '!right-1 !translate-x-full !bg-primary dark:!bg-white'
                           }`}
                         >
-                          <span className={`hidden ${enabled && '!block'}`}>
+                          <span
+                            className={`hidden ${secondenabled && '!block'}`}
+                          >
                             <svg
                               className="fill-white dark:fill-black"
                               width="11"
@@ -155,7 +206,7 @@ function EditSubscriptionModal() {
                               ></path>
                             </svg>
                           </span>
-                          <span className={`${enabled && 'hidden'}`}>
+                          <span className={`${secondenabled && 'hidden'}`}>
                             <svg
                               className="h-4 w-4 stroke-current"
                               fill="none"
@@ -191,6 +242,8 @@ function EditSubscriptionModal() {
 
                   <div className="col-span-1 hidden items-center sm:flex">
                     <input
+                      ref={secondDiscountRef}
+                      defaultValue={thisSub?.packages[0].Twice.discount}
                       type="text"
                       placeholder="%"
                       className="w-full bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -209,17 +262,19 @@ function EditSubscriptionModal() {
                           id="toggle3"
                           className="sr-only"
                           onChange={() => {
-                            setEnabled(!enabled);
+                            setthirdenabled((p) => !p);
                           }}
                         />
                         <div className="block h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]"></div>
                         <div
                           className={`dot absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
-                            enabled &&
+                            thirdenabled &&
                             '!right-1 !translate-x-full !bg-primary dark:!bg-white'
                           }`}
                         >
-                          <span className={`hidden ${enabled && '!block'}`}>
+                          <span
+                            className={`hidden ${thirdenabled && '!block'}`}
+                          >
                             <svg
                               className="fill-white dark:fill-black"
                               width="11"
@@ -236,7 +291,7 @@ function EditSubscriptionModal() {
                               ></path>
                             </svg>
                           </span>
-                          <span className={`${enabled && 'hidden'}`}>
+                          <span className={`${thirdenabled && 'hidden'}`}>
                             <svg
                               className="h-4 w-4 stroke-current"
                               fill="none"
@@ -272,6 +327,8 @@ function EditSubscriptionModal() {
 
                   <div className="col-span-1 hidden items-center sm:flex">
                     <input
+                      ref={thirdDiscountRef}
+                      defaultValue={thisSub?.packages[0].Thrice.discount}
                       type="text"
                       placeholder="%"
                       className="w-full bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -285,6 +342,7 @@ function EditSubscriptionModal() {
             <button
               type="button"
               className="inline-flex bg-primary items-center justify-center rounded-md border border-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+              onClick={() => addSubscription()}
             >
               Save
             </button>{' '}
@@ -295,7 +353,6 @@ function EditSubscriptionModal() {
               Cancel
             </button>
           </div>
-          
         </div>
       </div>
     </div>

@@ -94,3 +94,67 @@ interface UserAuth extends WebsiteUsers {
   isloggedIn: boolean;
   setisloggedIn: (user: { isloggedIn: boolean } & WebsiteUsers) => void;
 }
+
+type providerSetValue = {
+  providerInfo: ProviderInfo;
+  providerAccountInfo: ProviderAccountInfo;
+  providerAddressInfo: ProviderAddressInfo;
+};
+type providerGetInfo = {
+  providerInfo: ProviderInfo;
+  providerAccountInfo: ProviderAccountInfo;
+  providerAddressInfo: ProviderAddressInfo;
+  Subscriptions: ProviderSubscription[];
+  isEditing: { value: boolean; id: string };
+};
+type ProviderInformation = {
+  providerInfo: ProviderInfo;
+  providerAccountInfo: ProviderAccountInfo;
+  providerAddressInfo: ProviderAddressInfo;
+  Subscriptions: ProviderSubscription[];
+  isEditing: { value: boolean; id: string };
+  setisEditing: (id: string) => void;
+  setisNotEditing: () => void;
+  setsubscriptions: (subs: ProviderSubscription) => void;
+  addToDb: () => Promise<void>;
+  updateinDb: () => Promise<void>;
+  EmptyFields: () => void;
+  setAllProviderInformation: (pinfo: providerSetValue) => void;
+  setallsubscriptions: (sub: ProviderSubscription[]) => void;
+};
+interface itemLocation {
+  lat: number;
+  lng: number;
+}
+type ProviderInfo = {
+  name: string;
+  arabicname: string;
+  details: string;
+  arabicDetails: string;
+};
+type ProviderAccountInfo = {
+  email: string;
+  number: string;
+  callCenter: string;
+};
+type ProviderAddressInfo = {
+  address: string;
+  arabicAddress: string;
+  area: string;
+  arabicArea: string;
+  location: itemLocation;
+};
+type ProviderSubscription = {
+  name: string;
+  packages: Packages[];
+};
+
+type Packages = {
+  [key in PackageDuration]: {
+    discount: string;
+    isrunning: boolean;
+    duration: string;
+  };
+};
+
+type PackageDuration = 'Once' | 'Twice' | 'Thrice';

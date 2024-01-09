@@ -3,32 +3,80 @@ import { useState, useRef, useCallback } from 'react';
 import userSix from '../images/user/user-06.png';
 import useWorkerStore from '../store/ServiceStore';
 import MapComponent from './MapComponent';
+import useProviderStore from '../store/useProviderStore';
 type images = {
   url: File;
 };
+
 function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
   const [images, setimages] = useState<images[]>([]);
-  const { StaffMember, updateStaffMember } = useWorkerStore();
-  const [Area, setArea] = useState<string>('');
-  const [ArabicArea, setArabicArea] = useState<string>('');
-  const [Address, setAddress] = useState<string>('');
-  const [ArabicAddress, seteArabicAddress] = useState<string>('');
+  // const { StaffMember, updateStaffMember } = useWorkerStore();
+  const [location, setlocation] = useState<itemLocation | null>({
+    lat: 45,
+    lng: 34,
+  });
+  const {
+    setAllProviderInformation,
+    providerInfo,
+    providerAccountInfo,
+    providerAddressInfo,
+  } = useProviderStore();
+  const [Area, setArea] = useState<string>(providerAddressInfo.area);
+  const [ArabicArea, setArabicArea] = useState<string>(
+    providerAddressInfo.arabicArea,
+  );
+  const [Address, setAddress] = useState<string>(providerAddressInfo.address);
+  const [ArabicAddress, seteArabicAddress] = useState<string>(
+    providerAddressInfo.arabicAddress,
+  );
   const PhoneRef = useRef<HTMLInputElement | null>(null);
   const NameRef = useRef<HTMLInputElement | null>(null);
   const ArabicName = useRef<HTMLInputElement | null>(null);
   const DetailsRef = useRef<HTMLTextAreaElement | null>(null);
   const ArabicDetailsRef = useRef<HTMLTextAreaElement | null>(null);
   const EmailRef = useRef<HTMLInputElement | null>(null);
+  const CallCenterRef = useRef<HTMLInputElement | null>(null);
 
-  const SaveStaffMemberInfo = useCallback(() => {
-    updateStaffMember({
-      ArabicName: ArabicName.current?.value!,
-      file: images,
-      Name: NameRef.current?.value!,
-      phone: PhoneRef.current?.value!,
+  const SaveProviderInfo = useCallback(() => {
+    setAllProviderInformation({
+      providerAccountInfo: {
+        callCenter: CallCenterRef.current?.value!,
+        email: EmailRef.current?.value!,
+        number: PhoneRef.current?.value!,
+      },
+      providerAddressInfo: {
+        address: Address,
+        arabicAddress: ArabicAddress,
+        arabicArea: ArabicArea,
+        area: Area,
+        location: location as itemLocation,
+      },
+      providerInfo: {
+        arabicDetails: ArabicDetailsRef.current?.value!,
+        arabicname: ArabicName.current?.value!,
+        details: DetailsRef.current?.value!,
+        name: NameRef.current?.value!,
+      },
     });
-  }, [images, NameRef, PhoneRef, ArabicArea]);
-  const updateRefs = (address: any, area: any) => {
+  }, [
+    images,
+    NameRef,
+    PhoneRef,
+    ArabicArea,
+    CallCenterRef,
+    EmailRef,
+    Address,
+    ArabicAddress,
+    Area,
+    ArabicDetailsRef,
+    ArabicName,
+    DetailsRef,
+  ]);
+  const updateRefs = (
+    address: string,
+    area: string,
+    location: itemLocation,
+  ) => {
     console.log('Address:', address);
     console.log('Area:', area);
     // setNameref(area);
@@ -36,6 +84,7 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
     setAddress(address);
     seteArabicAddress(address);
     setArea(area);
+    setlocation(location);
     // console.log('nArea:', Nameref);
     // console.log('2nArea:', ArabicArea);
     // console.log('3nArea:', DetailsRef);
@@ -86,24 +135,24 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
                   className="sr-only"
                   onChange={(e) => {
                     setimages((p) => [...p, { url: e.target.files?.[0]! }]);
-                    updateStaffMember({
-                      ArabicName: ArabicName.current?.value!,
-                      file: images,
-                      Name: NameRef.current?.value!,
-                      phone: PhoneRef.current?.value!,
-                    });
+                    // updateStaffMember({
+                    //   ArabicName: ArabicName.current?.value!,
+                    //   file: images,
+                    //   Name: NameRef.current?.value!,
+                    //   phone: PhoneRef.current?.value!,
+                    // });
                   }}
                 />
               </label>
             </div>
           </div>
           <div className="flex flex-row flex-wrap justify-center items-center space-x-6 space-y-4 bg-white">
-            {(images || StaffMember.file) &&
+            {/* {(images || StaffMember.file) &&
               StaffMember.file.map((i) => (
                 <div className="w-80 " key={i.url.toString()}>
                   <img src={`${URL.createObjectURL(i.url)}`} />
                 </div>
-              ))}
+              ))} */}
           </div>
         </div>
       </div>
@@ -115,7 +164,7 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
             </label>
             <input
               ref={NameRef}
-              defaultValue={StaffMember.Name}
+              defaultValue={providerInfo.name}
               type="text"
               placeholder="Name"
               className="w-full bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -127,7 +176,7 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
             </label>
             <input
               ref={ArabicName}
-              defaultValue={StaffMember.ArabicName}
+              defaultValue={providerInfo.arabicname}
               type="text"
               placeholder="ArabicName"
               className="w-full rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -143,7 +192,7 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
             </label>
             <textarea
               ref={DetailsRef}
-              defaultValue={StaffMember.Name}
+              defaultValue={providerInfo.details}
               placeholder="Name"
               className="w-full bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
@@ -154,7 +203,7 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
             </label>
             <textarea
               ref={ArabicDetailsRef}
-              defaultValue={StaffMember.ArabicName}
+              defaultValue={providerInfo.arabicDetails}
               placeholder="ArabicName"
               className="w-full rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
@@ -173,8 +222,9 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
             <input
               ref={EmailRef}
               // defaultValue={StaffMember.phone}
-              type="number"
-              placeholder="Phone Number"
+              defaultValue={providerAccountInfo.email}
+              type="email"
+              placeholder="Email"
               className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
@@ -184,7 +234,7 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
             </label>
             <input
               ref={PhoneRef}
-              defaultValue={StaffMember.phone}
+              defaultValue={providerAccountInfo.number}
               type="number"
               placeholder="Phone Number"
               className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -195,10 +245,10 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
               Call Center
             </label>
             <input
-              ref={PhoneRef}
-              defaultValue={StaffMember.phone}
+              ref={CallCenterRef}
+              defaultValue={providerAccountInfo.callCenter}
               type="number"
-              placeholder="Phone Number"
+              placeholder="Call Center"
               className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
@@ -270,6 +320,7 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
         className="w-52 rounded bg-primary p-3 font-medium text-gray"
         type="submit"
         onClick={() => {
+          SaveProviderInfo();
           settheStep();
         }}
       >
