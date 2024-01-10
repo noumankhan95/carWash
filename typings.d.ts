@@ -83,7 +83,7 @@ type Roles = 'Staff' | 'Admin' | 'User';
 type PermissionsRoles = string;
 type WebsiteUsers = {
   id: string;
-  role: Roles;
+  role?: Roles;
   email: string;
   name: string;
   phone: string;

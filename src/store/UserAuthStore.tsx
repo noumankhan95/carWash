@@ -7,7 +7,7 @@ const useUserAuth = create<UserAuth>((set) => ({
   email: '',
   name: '',
   role: 'User' as Roles,
-  setisloggedIn({ email, name, phone, role, id, isloggedIn }) {
+  setisloggedIn({ email, name, phone, role, id, isloggedIn, permissions }) {
     set((state) => ({
       ...state,
       email,
@@ -16,6 +16,7 @@ const useUserAuth = create<UserAuth>((set) => ({
       role,
       isloggedIn,
       id,
+      permissions,
     }));
   },
   permissions: [],

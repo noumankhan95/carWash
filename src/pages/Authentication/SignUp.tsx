@@ -307,7 +307,7 @@ const SignUp = () => {
                           role: 'User',
                         });
                       } catch (e) {
-                        console.log(e);
+                        alert(e);
                       } finally {
                         setisloading((p) => false);
                       }

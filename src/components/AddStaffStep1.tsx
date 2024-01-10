@@ -202,7 +202,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
             <select
               name=""
               id=""
-              className="absolute top-0 p-6 left-0 z-20 h-full w-full bg-transparent opacity-0"
+              className="absolute text-black top-0 p-6 left-0 z-20 h-full w-full bg-transparent opacity-0"
               onChange={(e) => {
                 console.log(e.target.value);
                 setpermissions((p) =>
@@ -213,9 +213,9 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
               }}
             >
               <option value=""></option>
-              <option value="write">Write</option>
-              <option value="read">Read</option>
-              <option value="..">_</option>
+              <option value="Staff">Staff</option>
+              <option value="Roles">Roles</option>
+              <option value="Providers">Provider</option>
             </select>
             <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
               <svg

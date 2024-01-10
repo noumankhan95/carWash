@@ -61,8 +61,8 @@ function Staff() {
         </button>
       </div>
 
-      <div className="flex flex-col my-4  ">
-        <div className="grid rounded-sm bg-gray-2 dark:bg-form-strokedark grid-cols-7 overflow-x-auto gap-30 md:gap-7">
+      <div className="flex flex-col my-4 overflow-x-auto  ">
+        <div className="grid rounded-sm w-fit bg-gray-2 dark:bg-form-strokedark grid-cols-7 gap-40 md:gap-8">
           <div className="p-1.5 xl:p-5">
             <h5 className="text-sm  font-medium uppercase xsm:text-base">
               Name
@@ -94,27 +94,25 @@ function Staff() {
             </h5>
           </div>
         </div>
-      </div>
-      {loading && (
-        <LoaderIcon className="h-20 w-20 mx-auto " secondary="blue" />
-      )}
-      {!loading &&
-        users &&
-        users.map((u) => (
-          <div className="flex flex-col">
-            <div className="grid  rounded-sm bg-gray-2 dark:bg-meta-4 grid-cols-7 overflow-x-auto gap-30 md:gap-7 items-start">
+        {loading && (
+          <LoaderIcon className="h-20 w-20 mx-auto " secondary="blue" />
+        )}
+        {!loading &&
+          users &&
+          users.map((u) => (
+            <div className="grid w-fit  rounded-sm bg-gray-2 dark:bg-meta-4 grid-cols-7 gap-40 md:gap-5 items-start">
               <div className="p-1.5 xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">
+                <h5 className="text-sm font-medium uppercase text-wrap  xsm:text-base">
                   {u.worker.StaffMember.Name}
                 </h5>
               </div>
               <div className="p-1.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">
+                <h5 className="text-sm font-medium  xsm:text-base">
                   {u.worker.StaffMember.ArabicName}
                 </h5>
               </div>
               <div className="p-1.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">
+                <h5 className="text-sm font-medium xsm:text-base">
                   Service Provider
                 </h5>
               </div>
@@ -130,16 +128,21 @@ function Staff() {
                     ''}
                 </h5>
               </div>
-              <div className=" p-1.5 text-center sm:block ">
-                {Object.entries(u.worker.Timings).map((w) => (
-                  <h5 className="text-sm font-medium uppercase xsm:text-base">
-                    {w[1].from && w[0]} {w[1].from}
-                  </h5>
-                ))}
+              <div className=" p-1.5 text-center sm:block  xl:p-5 ">
+                {Object.entries(u.worker.Timings).map(
+                  (w) =>
+                    w[1].enabled && (
+                      <>
+                        <h5 className="text-sm font-medium xsm:text-base">
+                          {w[1].from && w[0]} From {w[1].from} To {w[1].to}
+                        </h5>
+                      </>
+                    ),
+                )}
               </div>
-              <div className=" flex text-center sm:block  space-x-3">
+              <div className="flex flex-row justify-start text-center sm:block my-4">
                 <button
-                  className="p-3.5  bg-meta-7 rounded-md border  text-center font-medium text-white hover:bg-opacity-90 "
+                  className="p-3.5  bg-primary rounded-md border  text-center font-medium text-white hover:bg-opacity-90 "
                   onClick={() => {
                     navigate('/addstaff');
                     EditItem(u.worker);
@@ -149,7 +152,7 @@ function Staff() {
                   Edit
                 </button>
                 <button
-                  className=" p-4 rounded-md bg-danger text-center font-medium text-white hover:bg-opacity-90 "
+                  className="my-8 p-4 rounded-md bg-danger text-center font-medium text-white hover:bg-opacity-90 "
                   onClick={() => {
                     console.log(u.id);
                     deleteDoc(doc(db, 'staff', u.id));
@@ -159,8 +162,8 @@ function Staff() {
                 </button>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+      </div>
     </div>
   );
 }

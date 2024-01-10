@@ -1,4 +1,4 @@
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo.png';
 import Logo from '../../images/logo/logo.png';
 //@ts-ignore
@@ -6,7 +6,7 @@ import { db, auth } from '../../firebase.js';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRef } from 'react';
 import Toaster from 'react-hot-toast';
-
+import { Link } from 'react-router-dom';
 import { LoaderIcon } from 'react-hot-toast';
 import { useState } from 'react';
 const SignIn = () => {
@@ -21,12 +21,10 @@ const SignIn = () => {
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
             <div className="py-17.5 px-26 text-center">
-                <img className="hidden dark:block" src={Logo} alt="Logo" />
-                <img className="dark:hidden" src={LogoDark} alt="Logo" />
+              <img className="hidden dark:block" src={Logo} alt="Logo" />
+              <img className="dark:hidden" src={LogoDark} alt="Logo" />
 
-              <p className="2xl:px-20">
-            
-              </p>
+              <p className="2xl:px-20"></p>
 
               <span className="mt-15 inline-block">
                 <svg
@@ -248,7 +246,7 @@ const SignIn = () => {
 
                         // navigate('/');
                       } catch (e) {
-                        console.log(e);
+                        alert(e);
                       } finally {
                         setisloading((p) => false);
                       }
@@ -301,7 +299,7 @@ const SignIn = () => {
                   </span>
                   Sign in with Google
                 </button> */}
-{/* 
+
                 <div className="mt-6 text-center">
                   <p>
                     Don’t have any account?{' '}
@@ -309,7 +307,7 @@ const SignIn = () => {
                       Sign Up
                     </Link>
                   </p>
-                </div> */}
+                </div>
               </form>
             </div>
           </div>

@@ -24,14 +24,16 @@ function App() {
       if (user) {
         getDoc(doc(db, 'users', user.uid))
           .then((u) => {
+            console.log(u?.data()?.permissions, 'per');
             setisloggedIn({
               ...u?.data(),
               id: user.uid,
               isloggedIn: true,
+              permissions: u?.data()?.permissions,
             } as UserAuth);
           })
           .catch((e) => {
-            console.log(e);
+            alert(e);
           })
           .finally(() => {
             setLoading(false);
@@ -44,6 +46,7 @@ function App() {
           phone: '',
           role: 'User',
           isloggedIn: false,
+          permissions: [],
         });
         setLoading(false);
       }
@@ -54,7 +57,7 @@ function App() {
   //   setTimeout(() => setLoading(false), 1000);
   //   //For timeout
   // }, []);
-  console.log('loading', loading);
+  // console.log('loading', loading);
 
   console.log('islogged Auth', isloggedIn, 'and ', u);
   return loading ? (
