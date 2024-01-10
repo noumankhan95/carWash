@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 // @ts-ignore
-import { db } from '../firebase.js';
+import { db, storage } from '../firebase.js';
 import {
   doc,
   setDoc,
@@ -8,6 +8,7 @@ import {
   addDoc,
   serverTimestamp,
 } from 'firebase/firestore';
+import { uploadBytes, ref } from 'firebase/storage';
 const useWorkerStore = create<StaffWorker>((set) => ({
   userAuth: { email: '', password: '' },
   Service: { services: [] },
@@ -70,16 +71,40 @@ const useWorkerStore = create<StaffWorker>((set) => ({
   addToDb: async () => {
     set((state) => {
       console.log(state, 'staff');
-      addDoc(collection(db, 'staff'), {
-        Service: state.Service,
-        ServingArea: state.ServingArea,
-        StaffMember: state.StaffMember,
-        Timings: state.Timings,
+      const images: { url: string }[] = [];
 
-        updatedAt: serverTimestamp(),
-      })
-        .then((r) => {
-          console.log(r.id);
+      const uploadPromises = state.StaffMember.file.map(async (file) => {
+        if (file.url == typeof String) {
+          return;
+        } else if (file.url instanceof File) {
+          let name = `staff/${state.StaffMember.Name}/${file.url.name}`;
+
+          try {
+            await uploadBytes(ref(storage, name), file.url);
+            images.push({ url: name });
+            console.log('File Uploaded');
+          } catch (e) {
+            alert(e);
+            throw e;
+          }
+        }
+      });
+
+      // Wait for all file uploads to complete
+      Promise.all(uploadPromises)
+        .then((result) => {
+          addDoc(collection(db, 'staff'), {
+            Service: state.Service,
+            ServingArea: state.ServingArea,
+            StaffMember: { ...state.StaffMember, file: images },
+            Timings: state.Timings,
+
+            updatedAt: serverTimestamp(),
+          })
+            .then((r) => {
+              console.log(r.id);
+            })
+            .catch((e) => console.log(e));
         })
         .catch((e) => console.log(e));
 

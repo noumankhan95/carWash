@@ -22,6 +22,22 @@ function Subscription({ settheStep }: AddStaffMemberChildrenProps) {
   const [isloading, setisloading] = useState<boolean>(false);
   const navigate = useNavigate();
   console.log(isEditing);
+  const completeUpload = async () => {
+    try {
+      setisloading(true);
+      if (isEditing.value) {
+        await updateinDb();
+      } else {
+        await addToDb();
+      }
+      EmptyFields();
+      navigate('/staff');
+    } catch (e) {
+      alert(e);
+    } finally {
+      setisloading(false);
+    }
+  };
   return (
     <div>
       {showAlert && (
@@ -199,22 +215,7 @@ function Subscription({ settheStep }: AddStaffMemberChildrenProps) {
       <button
         type="button"
         className="my-6 inline-flex bg-primary items-center justify-center rounded-md border border-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-        onClick={async () => {
-          try {
-            setisloading(true);
-            if (isEditing.value) {
-              await updateinDb();
-            } else {
-              await addToDb();
-            }
-            EmptyFields();
-            navigate('/staff');
-          } catch (e) {
-            alert(e);
-          } finally {
-            setisloading(false);
-          }
-        }}
+        onClick={completeUpload}
       >
         {isloading ? (
           <LoaderIcon style={{ margin: 'auto' }} className="w-4 h-4" />

@@ -1,14 +1,16 @@
 import { useState, useRef, useCallback } from 'react';
 import userSix from '../images/user/user-06.png';
 import useWorkerStore from '../store/ServiceStore';
+import DynamicFirebaseImageComponent from './DynamicFirebaseImageComponent';
 type images = {
-  url: File;
+  url: File | string;
 };
 function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
-  const [images, setimages] = useState<images[]>([]);
   const { StaffMember, updateStaffMember, isEditing, setUserAuth, userAuth } =
     useWorkerStore();
   const Nameref = useRef<HTMLInputElement | null>(null);
+  const [images, setimages] = useState<images[]>(StaffMember.file);
+
   const ArabicNameRef = useRef<HTMLInputElement | null>(null);
   const PhoneRef = useRef<HTMLInputElement | null>(null);
   const UserEmailRef = useRef<HTMLInputElement | null>(null);
@@ -26,12 +28,26 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
       permissions,
     });
   }, [images, Nameref, PhoneRef, ArabicNameRef, permissions]);
-  console.log('Editing', isEditing);
+  const removeImageFromImages = useCallback((img: string | File) => {
+    if (typeof img == 'string') {
+      setimages((p) =>
+        p.filter((image) => {
+          return typeof image.url == 'string' ? image.url !== img : true;
+        }),
+      );
+    } else if (img instanceof File) {
+      setimages((p) =>
+        p.filter((image) => {
+          return image.url instanceof File ? image.url.name !== img.name : true;
+        }),
+      );
+    }
+  }, []);
   return (
     <div>
       <div className="flex flex-col gap-5.5 p-6.5">
-        <div className="flex items-center space-x-4 justify-around">
-          <div className="w-2/5">
+        <div className="flex flex-col md:flex-row items-center space-x-0 md:space-x-4 justify-around">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Name
             </label>
@@ -43,7 +59,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
               className="w-full bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />
           </div>
-          <div className="w-2/5">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               الاسم
             </label>
@@ -94,25 +110,58 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
                   id="profile"
                   className="sr-only"
                   onChange={(e) => {
+                    console.log('File', e.target.files?.[0]);
                     setimages((p) => [...p, { url: e.target.files?.[0]! }]);
-                    updateStaffMember({
-                      email: UserEmailRef.current?.value!,
-                      ArabicName: ArabicNameRef.current?.value!,
-                      file: images,
-                      Name: Nameref.current?.value!,
-                      phone: PhoneRef.current?.value!,
-                      permissions,
-                    });
                   }}
                 />
               </label>
             </div>
           </div>
-          <div className="flex flex-row flex-wrap justify-center items-center space-x-6 space-y-4 bg-white">
-            {(images || StaffMember.file) &&
-              StaffMember.file.map((i) => (
-                <div className="w-80 " key={i.url.toString()}>
-                  <img src={`${URL.createObjectURL(i.url)}`} />
+          <div className="flex flex-row flex-wrap justify-center items-center py-3">
+            {images &&
+              images?.map((i) => (
+                <div
+                  className="w-80 my-3 mx-3 md:my-0 relative "
+                  key={i.url.toString() + Math.random() * 100000}
+                >
+                  {i.url instanceof File ? (
+                    <>
+                      <svg
+                        fill="#ff0000"
+                        width="18px"
+                        height="18px"
+                        viewBox="0 0 32 32"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        stroke="#ff0000"
+                        className="cursor-pointer"
+                        onClick={() => {
+                          removeImageFromImages(i.url);
+                        }}
+                      >
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g
+                          id="SVGRepo_tracerCarrier"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        ></g>
+                        <g id="SVGRepo_iconCarrier">
+                          {' '}
+                          <title>cancel</title>{' '}
+                          <path d="M10.771 8.518c-1.144 0.215-2.83 2.171-2.086 2.915l4.573 4.571-4.573 4.571c-0.915 0.915 1.829 3.656 2.744 2.742l4.573-4.571 4.573 4.571c0.915 0.915 3.658-1.829 2.744-2.742l-4.573-4.571 4.573-4.571c0.915-0.915-1.829-3.656-2.744-2.742l-4.573 4.571-4.573-4.571c-0.173-0.171-0.394-0.223-0.657-0.173v0zM16 1c-8.285 0-15 6.716-15 15s6.715 15 15 15 15-6.716 15-15-6.715-15-15-15zM16 4.75c6.213 0 11.25 5.037 11.25 11.25s-5.037 11.25-11.25 11.25-11.25-5.037-11.25-11.25c0.001-6.213 5.037-11.25 11.25-11.25z"></path>{' '}
+                        </g>
+                      </svg>
+                      <img
+                        src={`${URL.createObjectURL(i.url)}`}
+                        className="max-w-full object-contain"
+                      />
+                    </>
+                  ) : (
+                    <DynamicFirebaseImageComponent
+                      storagePath={i.url}
+                      removeImage={removeImageFromImages}
+                    />
+                  )}
                 </div>
               ))}
           </div>
@@ -121,7 +170,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
       <div className="flex flex-col gap-5.5 p-6.5">
         <h1>User Information</h1>
         <div className="flex space-x-4">
-          <div className="w-2/5">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               Phone
             </label>
@@ -134,8 +183,8 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
             />
           </div>
         </div>
-        <div className="flex space-x-4">
-          <div className="w-2/5">
+        <div className="flex flex-col md:flex-row md:space-x-4">
+          <div className="w-full md:w-2/5">
             <label className="mb-3 block text-black dark:text-white">
               User Email
             </label>
@@ -151,7 +200,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
         </div>
         {!isEditing.value && (
           <div className="flex space-x-4">
-            <div className="w-2/5">
+            <div className="w-full md:w-2/5">
               <label className="mb-3 block text-black dark:text-white">
                 Password
               </label>
@@ -170,7 +219,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
             User Roles
           </label>
           {/* Dropdown Select */}
-          <div className="relative z-20 p-4 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+          <div className="relative z-20  w-full rounded border border-stroke p-5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
             <div className="flex flex-wrap items-center">
               {permissions?.map((I: String) => (
                 <span
@@ -178,6 +227,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
                   onClick={(e) => {
                     setpermissions(permissions.filter((item) => item !== I));
                   }}
+                  key={I.toString()}
                 >
                   {I}
                   <span className="cursor-pointer pl-2 hover:text-danger">
@@ -216,6 +266,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
               <option value="Staff">Staff</option>
               <option value="Roles">Roles</option>
               <option value="Providers">Provider</option>
+              <option value="Orders">Orders</option>
             </select>
             <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
               <svg

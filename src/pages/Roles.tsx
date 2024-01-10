@@ -2,16 +2,28 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Alerts from './UiElements/Alerts';
 import Modal from '../components/Modal';
 import EditUserModal from '../components/EditUserModal';
-import { collection, doc, getDocs } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDocs,
+  deleteDoc,
+  query,
+  where,
+  runTransaction,
+} from 'firebase/firestore';
 //@ts-ignore
 import { db } from '../firebase.js';
 import { LoaderIcon } from 'react-hot-toast';
-import { useToast } from 'react-toastify';
+import { useToast, toast } from 'react-toastify';
 function Roles() {
   const [showAlert, setshowAlert] = useState(false);
   const [showEditUser, setshowEditUser] = useState(false);
   const [users, setusers] = useState<WebsiteUsers[]>();
   const [isloading, setisloading] = useState<boolean>(false);
+  const [selectedUser, setSelectedUser] = useState<WebsiteUsers>();
+  const [todelete, settodelete] = useState<{ id: string; email: string }>();
+  const [isdeleting, setisdeleting] = useState<boolean>(false);
+  const [reload, setreload] = useState<boolean>(false);
   const getUsers = useCallback(async () => {
     try {
       setisloading((p) => true);
@@ -27,33 +39,80 @@ function Roles() {
       console.log(e);
     } finally {
       setisloading((p) => false);
+      setreload(false);
     }
   }, []);
   useEffect(() => {
     getUsers();
-  }, []);
+  }, [reload]);
   return (
     <div>
       {showAlert && (
-        <div className="absolute z-999 w-3/6 right-0 flex border-l-6 border-[#000000] bg-danger  px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9">
+        <div className="w-1/5 md:w-4/5 right-0 absolute flex bg-boxdark-2  border-l-6 border-[#F87171] z-50   px-7 py-8 shadow-md  md:p-9">
+          <div className="mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg ">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 13 13"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              onClick={() => setshowAlert(false)}
+              className="cursor-pointer"
+            >
+              <path
+                d="M6.4917 7.65579L11.106 12.2645C11.2545 12.4128 11.4715 12.5 11.6738 12.5C11.8762 12.5 12.0931 12.4128 12.2416 12.2645C12.5621 11.9445 12.5623 11.4317 12.2423 11.1114C12.2422 11.1113 12.2422 11.1113 12.2422 11.1113C12.242 11.1111 12.2418 11.1109 12.2416 11.1107L7.64539 6.50351L12.2589 1.91221L12.2595 1.91158C12.5802 1.59132 12.5802 1.07805 12.2595 0.757793C11.9393 0.437994 11.4268 0.437869 11.1064 0.757418C11.1063 0.757543 11.1062 0.757668 11.106 0.757793L6.49234 5.34931L1.89459 0.740581L1.89396 0.739942C1.57364 0.420019 1.0608 0.420019 0.740487 0.739944C0.42005 1.05999 0.419837 1.57279 0.73985 1.89309L6.4917 7.65579ZM6.4917 7.65579L1.89459 12.2639L1.89395 12.2645C1.74546 12.4128 1.52854 12.5 1.32616 12.5C1.12377 12.5 0.906853 12.4128 0.758361 12.2645L1.1117 11.9108L0.758358 12.2645C0.437984 11.9445 0.437708 11.4319 0.757539 11.1116C0.757812 11.1113 0.758086 11.111 0.75836 11.1107L5.33864 6.50287L0.740487 1.89373L6.4917 7.65579Z"
+                fill="#ffffff"
+                stroke="#ffffff"
+              ></path>
+            </svg>
+          </div>
           <div className="w-full">
-            <h5 className="mb-3 text-lg font-semibold text-black dark:text-[#34D399] ">
-              Sure You Want To Delete User
+            <h5 className="mb-3 font-semibold text-[#B45454]">
+              Are You Sure You Want To Delete This Item
             </h5>
-            <div className="flex space-x-5">
+            <ul>
               <li
-                className="inline-flex cursor-pointer items-center justify-center rounded-md bg-body py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-                onClick={() => setshowAlert((p) => false)}
+                className="leading-relaxed text-[#CD5D5D]"
+                onClick={async () => {
+                  try {
+                    setisdeleting(true);
+                    console.log(todelete);
+                    let myquery = query(
+                      collection(db, 'staff'),
+                      where('email', '==', todelete?.email),
+                    );
+                    const userDoc = doc(db, 'users', todelete?.id!);
+                    runTransaction(db, async (transaction) => {
+                      // await deleteDoc(userDoc);
+                      transaction.delete(userDoc);
+                      // Execute the query
+                      const querySnapshot = await getDocs(myquery);
+                      if (!querySnapshot.empty)
+                        querySnapshot.forEach(async (d) => {
+                          const staffDoc = doc(db, 'staff', d.id);
+
+                          transaction.delete(staffDoc);
+                        });
+                      settodelete({ email: '', id: '' });
+                      setshowAlert(false);
+                      setreload(true);
+                    });
+                  } catch (e) {
+                    console.log(e);
+                    toast.error('Failed To Delete');
+                  } finally {
+                    setisdeleting(false);
+                  }
+                }}
               >
-                Yes
+                <button
+                  className="inline-flex items-center justify-center gap-2.5 rounded-full border border-danger py-4 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10"
+                  disabled={isdeleting}
+                >
+                  {isdeleting ? <LoaderIcon className="h-5 w-5" /> : 'Yes'}
+                </button>
               </li>
-              <li
-                className="inline-flex cursor-pointer items-center justify-center rounded-md bg-body py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-                onClick={() => setshowAlert((p) => false)}
-              >
-                No
-              </li>
-            </div>
+            </ul>
           </div>
         </div>
       )}
@@ -82,18 +141,7 @@ function Roles() {
                 users &&
                 users?.map((u) => (
                   <>
-                    {showEditUser && (
-                      <div className="flex">
-                        <Modal
-                          closeModal={() => {
-                            setshowEditUser(false);
-                          }}
-                        >
-                          <EditUserModal user={u} />
-                        </Modal>
-                      </div>
-                    )}
-                    <tr>
+                    <tr key={u.id}>
                       <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                         <h5 className="font-medium text-black dark:text-white">
                           {u.name}
@@ -111,7 +159,10 @@ function Roles() {
                         <div className="flex items-center space-x-3.5">
                           <button
                             className="hover:text-danger"
-                            onClick={() => setshowAlert((p) => true)}
+                            onClick={() => {
+                              setshowAlert((p) => true);
+                              settodelete({ id: u.id, email: u.email });
+                            }}
                           >
                             <svg
                               className="fill-current"
@@ -141,7 +192,10 @@ function Roles() {
                           </button>
                           <button
                             className="hover:text-primary"
-                            onClick={() => setshowEditUser((p) => true)}
+                            onClick={() => {
+                              setshowEditUser((p) => true);
+                              setSelectedUser(u);
+                            }}
                           >
                             <svg
                               viewBox="0 0 18 18"
@@ -181,6 +235,17 @@ function Roles() {
                     </tr>
                   </>
                 ))}
+              {showEditUser && (
+                <div className="flex">
+                  <Modal
+                    closeModal={() => {
+                      setshowEditUser(false);
+                    }}
+                  >
+                    <EditUserModal user={selectedUser as WebsiteUsers} />
+                  </Modal>
+                </div>
+              )}
             </tbody>
           </table>
           {isloading && (

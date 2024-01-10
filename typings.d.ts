@@ -54,7 +54,7 @@ type ServiceName =
 type StaffMember = {
   Name: string;
   ArabicName: string;
-  file: Array<{ url: File }>;
+  file: Array<{ url: File | string }>;
   phone: string;
   email: string;
   permissions: PermissionsRoles[];
@@ -131,6 +131,7 @@ type ProviderInfo = {
   arabicname: string;
   details: string;
   arabicDetails: string;
+  file: Array<{ url: File | string }>;
 };
 type ProviderAccountInfo = {
   email: string;

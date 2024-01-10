@@ -4,12 +4,12 @@ import userSix from '../images/user/user-06.png';
 import useWorkerStore from '../store/ServiceStore';
 import MapComponent from './MapComponent';
 import useProviderStore from '../store/useProviderStore';
+import DynamicFirebaseImageComponent from './DynamicFirebaseImageComponent';
 type images = {
-  url: File;
+  url: File | string;
 };
 
 function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
-  const [images, setimages] = useState<images[]>([]);
   // const { StaffMember, updateStaffMember } = useWorkerStore();
   const {
     setAllProviderInformation,
@@ -17,6 +17,8 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
     providerAccountInfo,
     providerAddressInfo,
   } = useProviderStore();
+  const [images, setimages] = useState<images[]>(providerInfo.file);
+
   const [location, setlocation] = useState<itemLocation>(
     providerAddressInfo.location,
   );
@@ -55,6 +57,7 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
         arabicname: ArabicName.current?.value!,
         details: DetailsRef.current?.value!,
         name: NameRef.current?.value!,
+        file: images,
       },
     });
   }, [
@@ -89,7 +92,22 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
     // console.log('3nArea:', DetailsRef);
     // console.log('4nArea:', ArabicDetailsRef);
   };
-
+  const removeImageFromImages = useCallback((img: string | File) => {
+    if (typeof img == 'string') {
+      setimages((p) =>
+        p.filter((image) => {
+          return typeof image.url == 'string' ? image.url !== img : true;
+        }),
+      );
+    } else if (img instanceof File) {
+      setimages((p) =>
+        p.filter((image) => {
+          return image.url instanceof File ? image.url.name !== img.name : true;
+        }),
+      );
+    }
+  }, []);
+  console.log('Provveder info ', providerInfo);
   return (
     <div>
       <h1 className="mb-3 block text-black dark:text-white text-3xl">
@@ -145,13 +163,26 @@ function ProviderInformation({ settheStep }: AddStaffMemberChildrenProps) {
               </label>
             </div>
           </div>
-          <div className="flex flex-row flex-wrap justify-center items-center space-x-6 space-y-4 bg-white">
-            {/* {(images || StaffMember.file) &&
-              StaffMember.file.map((i) => (
-                <div className="w-80 " key={i.url.toString()}>
-                  <img src={`${URL.createObjectURL(i.url)}`} />
+          <div className="flex flex-row flex-wrap justify-center items-center py-4">
+            {images &&
+              images?.map((i) => (
+                <div
+                  className="w-80 my-3 mx-3 md:my-0"
+                  key={i.url.toString() + Math.random() * 100000}
+                >
+                  {i.url instanceof File ? (
+                    <img
+                      src={`${URL.createObjectURL(i.url)}`}
+                      className="max-w-full object-contain"
+                    />
+                  ) : (
+                    <DynamicFirebaseImageComponent
+                      storagePath={i.url}
+                      removeImage={removeImageFromImages}
+                    />
+                  )}
                 </div>
-              ))} */}
+              ))}
           </div>
         </div>
       </div>

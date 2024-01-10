@@ -9,7 +9,6 @@ type pageprops = {
 function EditUserModal({ user }: pageprops) {
   const [isloading, setisloading] = useState<boolean>();
   const [permissions, setpermissions] = useState<string[]>(user.permissions);
-  console.log(user, 'user');
   const UpdateUserRole = async () => {
     let docRef = doc(db, 'users', user.id);
     try {
@@ -24,6 +23,7 @@ function EditUserModal({ user }: pageprops) {
       setisloading((p) => false);
     }
   };
+  console.log('User', user);
   return (
     <div>
       <h3 className="text-black dark:text-white font-bold font-serif text-2xl text-center">
@@ -127,9 +127,9 @@ function EditUserModal({ user }: pageprops) {
                   }}
                 >
                   <option value=""></option>
-                  <option value="write">Write</option>
-                  <option value="read">Read</option>
-                  <option value="..">_</option>
+                  <option value="Staff">Staff</option>
+                  <option value="Roles">Roles</option>
+                  <option value="Providers">Provider</option>
                 </select>
                 <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                   <svg

@@ -100,7 +100,10 @@ function Staff() {
         {!loading &&
           users &&
           users.map((u) => (
-            <div className="grid w-fit  rounded-sm bg-gray-2 dark:bg-meta-4 grid-cols-7 gap-40 md:gap-5 items-start">
+            <div
+              className="grid w-fit  rounded-sm bg-gray-2 dark:bg-meta-4 grid-cols-7 gap-40 md:gap-5 items-start"
+              key={u.id}
+            >
               <div className="p-1.5 xl:p-5">
                 <h5 className="text-sm font-medium uppercase text-wrap  xsm:text-base">
                   {u.worker.StaffMember.Name}
@@ -133,7 +136,10 @@ function Staff() {
                   (w) =>
                     w[1].enabled && (
                       <>
-                        <h5 className="text-sm font-medium xsm:text-base">
+                        <h5
+                          className="text-sm font-medium xsm:text-base"
+                          key={w[0]}
+                        >
                           {w[1].from && w[0]} From {w[1].from} To {w[1].to}
                         </h5>
                       </>

@@ -7,7 +7,7 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
   const {
     Service: { services: globalServices },
   } = useWorkerStore();
-  const [services, setservices] = useState<ServiceName>();
+  const [services, setservices] = useState<ServiceName | string>('');
   const [showModal, setshowModal] = useState<boolean>(false);
   console.log(globalServices);
   return (
@@ -15,7 +15,7 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
       {showModal && (
         <Modal closeModal={() => setshowModal((p) => false)}>
           <EditService
-            serviceName={services!}
+            serviceName={services! as ServiceName}
             closeModal={() => setshowModal((p) => false)}
           />
         </Modal>
@@ -36,7 +36,7 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
               </h1>
             ))}
         </div>
-        <div className="w-4/6  dark:bg-bodydark bg-white p-5">
+        <div className="w-3/6 md:w-4/6  dark:bg-bodydark bg-white p-5">
           <h1 className="text-xl font-bold dark:text-white">Services</h1>
           <p>
             Enable available services at your store and set prices for different
@@ -79,12 +79,14 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
               </span>
               <select
                 className="relative z-0 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
-                value={services}
+                value={''}
                 onChange={(e) => {
+                  console.log('Called');
                   setservices(e.target.value! as ServiceName);
                   setshowModal((p) => true);
                 }}
               >
+                <option value="">Select A Service</option>
                 <option value="Standard Wash">StandardWash</option>
                 <option value="Premium Wash">PremiumWash</option>
                 <option value="Washing">Washing</option>
@@ -116,7 +118,7 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
         </div>
       </div>
       <button
-        className="w-52 rounded bg-primary p-3 font-medium text-gray"
+        className="md:w-40 rounded bg-primary p-3 font-medium text-gray"
         onClick={() => settheStep()}
       >
         Save

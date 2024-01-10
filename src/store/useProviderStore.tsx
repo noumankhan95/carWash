@@ -1,9 +1,16 @@
 import { create } from 'zustand';
 //@ts-ignore
-import { db } from '../firebase.js';
+import { db, storage } from '../firebase.js';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
-const useProviderStore = create<ProviderInformation>((set) => ({
-  providerInfo: { arabicDetails: '', arabicname: '', details: '', name: '' },
+import { ref, uploadBytes } from 'firebase/storage';
+const useProviderStore = create<ProviderInformation>((set, get) => ({
+  providerInfo: {
+    arabicDetails: '',
+    arabicname: '',
+    details: '',
+    name: '',
+    file: [],
+  },
   providerAccountInfo: { callCenter: '', email: '', number: '' },
   providerAddressInfo: {
     address: '',
@@ -15,20 +22,31 @@ const useProviderStore = create<ProviderInformation>((set) => ({
   isEditing: { id: '', value: false },
   Subscriptions: [],
   addToDb: async () => {
-    set((state) => {
-      addDoc(collection(db, 'providers'), {
-        providerInfo: state.providerInfo,
+    try {
+      const images: { url: string }[] = [];
+      const state = get();
+      const uploadPromises = state.providerInfo.file.map(async (file) => {
+        if (typeof file.url == 'string') {
+          return;
+        } else if (file.url instanceof File) {
+          let name = `providers/${state.providerInfo.name}/${file.url.name}`;
+
+          await uploadBytes(ref(storage, name), file.url);
+          images.push({ url: name });
+          console.log('File Uploaded');
+        }
+      });
+      await Promise.all(uploadPromises);
+      await addDoc(collection(db, 'providers'), {
+        providerInfo: { ...state.providerInfo, file: images },
         providerAccountInfo: state.providerAccountInfo,
         providerAddressInfo: state.providerAddressInfo,
         Subscriptions: state.Subscriptions,
-      })
-        .then((v) => {
-          console.log(v);
-        })
-        .catch((e) => console.log(e));
-
-      return state;
-    });
+      });
+    } catch (e) {
+      alert(e);
+      throw e;
+    }
   },
   EmptyFields() {
     set((state) => ({
@@ -38,6 +56,7 @@ const useProviderStore = create<ProviderInformation>((set) => ({
         arabicname: '',
         details: '',
         name: '',
+        file: [],
       },
       providerAccountInfo: { callCenter: '', email: '', number: '' },
       providerAddressInfo: {
@@ -67,21 +86,17 @@ const useProviderStore = create<ProviderInformation>((set) => ({
     }));
   },
   updateinDb: async () => {
-    set((state) => {
-      console.log(state, 'State in Update');
-      updateDoc(doc(db, 'providers', state.isEditing.id), {
-        providerInfo: state.providerInfo,
-        providerAccountInfo: state.providerAccountInfo,
-        providerAddressInfo: state.providerAddressInfo,
-        Subscriptions: state.Subscriptions,
+    const state = get();
+    updateDoc(doc(db, 'providers', state.isEditing.id), {
+      providerInfo: state.providerInfo,
+      providerAccountInfo: state.providerAccountInfo,
+      providerAddressInfo: state.providerAddressInfo,
+      Subscriptions: state.Subscriptions,
+    })
+      .then((r) => {
+        console.log(r);
       })
-        .then((r) => {
-          console.log(r);
-        })
-        .catch((e) => console.log(e));
-
-      return state;
-    });
+      .catch((e) => console.log(e));
   },
   setsubscriptions(subs) {
     set((state) => {
