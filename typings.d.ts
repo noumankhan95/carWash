@@ -6,10 +6,10 @@ type StaffWorker = {
   };
   isEditing: { value: boolean; id: sting };
   Timings: Timings;
-  ServingArea: ServingArea[];
+  ServingArea: ServicesList[];
   setServiceValue: (QVal: Services) => void;
   removeServiceValue(Qval: Services);
-  addServingArea: (Qval: ServingArea) => void;
+  addServingArea: (Qval: ServicesList[]) => void;
   removeServingArea: (Qval: ServingArea) => void;
   updateStaffMember: (Qval: StaffMember) => void;
   updateTimings: (timings: Timings) => void;
@@ -60,12 +60,6 @@ type StaffMember = {
   permissions: PermissionsRoles[];
 };
 
-type ServingArea = {
-  Location: string;
-  arrivalTime: string;
-  MinimunOrderValue: string;
-};
-
 type AddStaffMemberChildrenProps = {
   settheStep: () => void;
 };
@@ -76,7 +70,7 @@ type StaffWorkerUser = {
     services: Services[];
   };
   Timings: Timings;
-  ServingArea: ServingArea[];
+  ServingArea: ServicesList[];
 };
 
 type Roles = 'Staff' | 'Admin' | 'User';
@@ -159,3 +153,19 @@ type Packages = {
 };
 
 type PackageDuration = 'Once' | 'Twice' | 'Thrice';
+type ServicesList = {
+  [areaName: string]: serviceLocation[];
+  duration: number;
+  minamount: number;
+};
+type serviceLocation = {
+  address: string;
+  area: string;
+  location: itemLocation;
+};
+
+// type ServingArea = {
+//   locations: ServicesList[];
+//   duration: number;
+//   minamount: number;
+// };

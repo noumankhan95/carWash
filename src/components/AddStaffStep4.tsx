@@ -25,8 +25,10 @@ function AddServingArea() {
     StaffMember,
     Timings,
     setIsNotEditing,
+    addServingArea,
   } = useWorkerStore();
   const navigate = useNavigate();
+  console.log(ServingArea, 'serving area');
   const weekDays = [
     { day: 'Sunday' },
     { day: 'Monday' },
@@ -43,7 +45,7 @@ function AddServingArea() {
   console.log('Serv', isEditing);
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col">
       {enabled && (
         // <div className="flex mx-auto">
         <Modal closeModal={() => setEnabled(false)}>
@@ -53,9 +55,9 @@ function AddServingArea() {
         // </div>
       )}
 
-      <h1 className="text-xl font-bold">Timings Serving Area</h1>
+      <h1 className="text-xl my-3 font-bold">Timings Serving Area</h1>
 
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="rounded-sm border space-y-5 border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -73,31 +75,34 @@ function AddServingArea() {
             </thead>
             <tbody>
               {ServingArea &&
-                ServingArea.map((i) => (
-                  <tr>
-                    <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                      <h5 className="font-medium text-black dark:text-white">
-                        {i.Location}
-                      </h5>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {i.arrivalTime}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
-                        AED {i.MinimunOrderValue}
-                      </p>
-                    </td>
-                  </tr>
-                ))}
+                ServingArea.map((i) => {
+                  const name = Object.keys(i)[0];
+                  return (
+                    <tr>
+                      <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                        <h5 className="font-medium text-black dark:text-white">
+                          {name}
+                        </h5>
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <p className="text-black dark:text-white">
+                          {i.duration}
+                        </p>
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <p className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
+                          AED {i.minamount}
+                        </p>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
       </div>
       <button
-        className="inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+        className="my-3 inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
         onClick={() => {
           setEnabled((p) => true);
         }}

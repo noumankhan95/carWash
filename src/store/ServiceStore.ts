@@ -9,7 +9,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { uploadBytes, ref } from 'firebase/storage';
-const useWorkerStore = create<StaffWorker>((set) => ({
+const useWorkerStore = create<StaffWorker>((set, get) => ({
   userAuth: { email: '', password: '' },
   Service: { services: [] },
   isEditing: { value: false, id: '' },
@@ -45,15 +45,15 @@ const useWorkerStore = create<StaffWorker>((set) => ({
   },
   addServingArea(Qval) {
     set((state) => {
-      state.ServingArea.push(Qval);
-      return { ...state };
+      // state.ServingArea.push(Qval);
+      return { ...state, ServingArea: Qval };
     });
   },
   removeServingArea(Qval) {
     set((state) => {
-      state.ServingArea = state.ServingArea.filter(
-        (s) => s.Location !== Qval.Location,
-      );
+      // state.ServingArea = state.ServingArea.filter(
+      //   (s) => s.Location !== Qval.Location,
+      // );
       return { ...state };
     });
   },
