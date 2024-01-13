@@ -28,7 +28,12 @@ const center = {
 
 const libraries: Libraries = ['places', 'marker'];
 interface componentProps {
-  updateRefs: (address: string, area: string, location: itemLocation) => void;
+  updateRefs: (
+    address: string,
+    area: string,
+    location: itemLocation,
+    id: string,
+  ) => void;
   Servicemode?: boolean;
   radius?: number;
 }
@@ -73,8 +78,9 @@ const MyComponent = forwardRef(
     };
     const onPlaceSelected = useCallback(() => {
       const place = autocompleteRef.current?.getPlace();
-
       if (place && place.geometry?.location) {
+        const id = place?.place_id;
+
         const location: itemLocation = {
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
@@ -100,7 +106,7 @@ const MyComponent = forwardRef(
         setSelectedCircle(circle);
         const address = place.formatted_address || '';
         const area = getAddressComponent(place, 'locality') || '';
-        updateRefs(address, area, location);
+        updateRefs(address, area, location, id as string);
         console.log('Location', location);
         //   AreaRef.current!.value = area;
       }
@@ -118,7 +124,12 @@ const MyComponent = forwardRef(
         if (status === 'OK' && results![0]) {
           const address = results![0].formatted_address;
           const area = getAddressComponent(results![0], 'locality') || '';
-          updateRefs(address, area, newSelectedPlace);
+          updateRefs(
+            address,
+            area,
+            newSelectedPlace,
+            location.lat.toString() + location.lng.toString(),
+          );
           console.log('New Selected Place', newSelectedPlace);
           console.log('Address:', address);
           console.log('Area:', area);

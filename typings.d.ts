@@ -162,6 +162,7 @@ type serviceLocation = {
   address: string;
   area: string;
   location: itemLocation;
+  id: string;
 };
 
 // type ServingArea = {

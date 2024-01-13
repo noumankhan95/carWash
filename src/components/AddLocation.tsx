@@ -3,7 +3,7 @@ import useWorkerStore from '../store/ServiceStore';
 import MapComponent from './MapComponent';
 import { Autocomplete } from '@react-google-maps/api';
 import { toast } from 'react-hot-toast';
-function AddLocation() {
+function AddLocation({ closeModal }: { closeModal: () => void }) {
   const areasServeRef = useRef<HTMLInputElement | null>(null);
   const arrivalTimeRef = useRef<HTMLInputElement | null>(null);
   const minOrderValueRef = useRef<HTMLInputElement | null>(null);
@@ -30,8 +30,10 @@ function AddLocation() {
     address: string,
     area: string,
     location: itemLocation,
+    id: string,
   ) => {
-    setlocationaddress({ address, area, location });
+    console.log('place_ud', id);
+    setlocationaddress({ address, area, location, id });
   };
   console.log(locationsList);
   return (
@@ -52,70 +54,26 @@ function AddLocation() {
           ref={mapref}
           radius={parseInt(radiusRef.current?.value!)}
         />
-        <button
-          className="flex justify-center rounded bg-success p-3 mx-4 font-medium text-gray"
-          type="submit"
-          onClick={() =>
-            setlocationsList((p) => {
-              const item = p?.find((el) => {
-                return Object.keys(el)[0] == locationaddress?.area;
-              });
-              console.log("dase",{
-                duration: arrivalTimeRef.current?.value || '',
-                minamount: minOrderValueRef.current?.value || 0,
-              });
-              if (item) {
-                const newItem = [
-                  ...item[locationaddress?.area!],
-                  locationaddress,
-                ];
-                const mynewItemsArray = p?.filter(
-                  (e) => Object.keys(e)[0] !== locationaddress?.area,
-                );
-                console.log('item:exists', newItem);
-                return [
-                  ...(mynewItemsArray || []),
-                  {
-                    [locationaddress?.area!]: newItem,
-                    duration: arrivalTimeRef.current?.value ?? '',
-                    minamount: minOrderValueRef.current?.value ?? 0,
-                  },
-                ] as ServicesList[];
-              } else {
-                const newItem = {
-                  [locationaddress?.area!]: [locationaddress!],
-                };
-                console.log('no item:exists', newItem);
 
-                return [
-                  ...(p || []),
-                  {
-                    [locationaddress?.area!]: [locationaddress!],
-                    duration: arrivalTimeRef.current?.value ?? '',
-                    minamount: minOrderValueRef.current?.value ?? 0,
-                  },
-                ] as ServicesList[];
-              }
-            })
-          }
-        >
-          Add Location
-        </button>
         <h1 className="mb-2.5 text-2xl block text-black dark:text-white">
           Locations
         </h1>
         {locationsList && (
           <section className="border-y-2 py-3 px-2">
-            {locationsList.map((l, index) => {
-              const name = Object.keys(l)[0];
+            {locationsList?.map((l, index) => {
+              if (!l) return null;
+              const keys = Object.keys(l);
+              const [name] = keys.filter((im, ind) =>
+                Array.isArray(l[keys[ind]]),
+              );
               console.log('l', l);
               return (
-                <>
+                <div key={Date.now().toLocaleString() + Math.random() * 100000}>
                   <h1 className="text-2xl">{name}</h1>
-                  {l[name].map((loc) => (
+                  {l[name]?.map((loc) => (
                     <div
                       className="flex justify-between w-full items-center px-3 dark:text-white"
-                      // key={l.location.lat + l.location.lng}
+                      key={Date.now().toLocaleString() + Math.random() * 100000}
                     >
                       <h1>{loc?.address}</h1>
                       <svg
@@ -125,6 +83,27 @@ function AddLocation() {
                         viewBox="0 0 18 18"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
+                        onClick={() => {
+                          setlocationsList((prevItems) => {
+                            const updatedItems = prevItems.map((service) => {
+                              if (!service) return null;
+                              const areaName = Object.keys(service)[0];
+                              const updatedLocations = service[areaName].filter(
+                                (location) => location.id !== loc.id,
+                              );
+                              console.log('iupdated ', updatedLocations);
+                              if (updatedLocations?.length === 0) return null;
+                              return {
+                                [areaName]: updatedLocations,
+                                duration: service.duration,
+                                minamount: service.minamount,
+                              };
+                            });
+
+                            console.log('Left after deletion', updatedItems);
+                            return updatedItems as ServicesList[];
+                          });
+                        }}
                       >
                         <path
                           d="M13.7535 2.47502H11.5879V1.9969C11.5879 1.15315 10.9129 0.478149 10.0691 0.478149H7.90352C7.05977 0.478149 6.38477 1.15315 6.38477 1.9969V2.47502H4.21914C3.40352 2.47502 2.72852 3.15002 2.72852 3.96565V4.8094C2.72852 5.42815 3.09414 5.9344 3.62852 6.1594L4.07852 15.4688C4.13477 16.6219 5.09102 17.5219 6.24414 17.5219H11.7004C12.8535 17.5219 13.8098 16.6219 13.866 15.4688L14.3441 6.13127C14.8785 5.90627 15.2441 5.3719 15.2441 4.78127V3.93752C15.2441 3.15002 14.5691 2.47502 13.7535 2.47502ZM7.67852 1.9969C7.67852 1.85627 7.79102 1.74377 7.93164 1.74377H10.0973C10.2379 1.74377 10.3504 1.85627 10.3504 1.9969V2.47502H7.70664V1.9969H7.67852ZM4.02227 3.96565C4.02227 3.85315 4.10664 3.74065 4.24727 3.74065H13.7535C13.866 3.74065 13.9785 3.82502 13.9785 3.96565V4.8094C13.9785 4.9219 13.8941 5.0344 13.7535 5.0344H4.24727C4.13477 5.0344 4.02227 4.95002 4.02227 4.8094V3.96565ZM11.7285 16.2563H6.27227C5.79414 16.2563 5.40039 15.8906 5.37227 15.3844L4.95039 6.2719H13.0785L12.6566 15.3844C12.6004 15.8625 12.2066 16.2563 11.7285 16.2563Z"
@@ -145,7 +124,7 @@ function AddLocation() {
                       </svg>
                     </div>
                   ))}
-                </>
+                </div>
               );
             })}
           </section>
@@ -173,20 +152,90 @@ function AddLocation() {
             placeholder="Enter Order Value"
             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             ref={minOrderValueRef}
+            // defaultValue={l}
           />
         </div>
-
-        <button
-          className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
-          type="submit"
-          onClick={() => {
-            if (!locationsList)
-              return toast.error('Enter A Serving Area First');
-            addServingArea(locationsList);
-          }}
-        >
-          Save
-        </button>
+        <div className="flex flex-col space-y-3">
+          <button
+            className="flex w-full justify-center rounded bg-meta-5 p-3 font-medium text-gray"
+            type="submit"
+            onClick={() => {
+              if (
+                !locationsList ||
+                !arrivalTimeRef.current?.value ||
+                !minOrderValueRef.current?.value
+              )
+                return toast.error('Enter A Serving Area First');
+              setlocationsList((p) => {
+                const item = p?.find((el) => {
+                  return el && Object.keys(el)[0] == locationaddress?.area;
+                });
+                console.log('dase', {
+                  duration: arrivalTimeRef.current?.value || '',
+                  minamount: minOrderValueRef.current?.value || 0,
+                });
+                if (item) {
+                  const newItem = [
+                    ...item[locationaddress?.area!],
+                    locationaddress,
+                  ];
+                  const mynewItemsArray = p?.filter(
+                    (e) => Object.keys(e)[0] !== locationaddress?.area,
+                  );
+                  console.log('item:exists', newItem);
+                  const filteredItems = mynewItemsArray?.filter((item) => {
+                    const key = Object.keys(item)[0];
+                    return key && item[key] !== null;
+                  });
+                  return [
+                    ...(filteredItems || []),
+                    {
+                      [locationaddress?.area!]: newItem,
+                      duration: arrivalTimeRef.current?.value ?? '',
+                      minamount: minOrderValueRef.current?.value ?? 0,
+                    },
+                  ] as ServicesList[];
+                } else {
+                  const newItem = {
+                    [locationaddress?.area!]: [locationaddress!],
+                  };
+                  console.log('no item:exists', newItem);
+                  const filteredItems = p?.filter((item) => {
+                    if (!item) return false;
+                    const key = Object.keys(item)[0];
+                    return key && item[key] !== null;
+                  });
+                  return [
+                    ...(filteredItems || []),
+                    {
+                      [locationaddress?.area!]: [locationaddress!],
+                      duration: arrivalTimeRef.current?.value ?? '',
+                      minamount: minOrderValueRef.current?.value ?? 0,
+                    },
+                  ] as ServicesList[];
+                }
+              });
+            }}
+          >
+            Add Location
+          </button>
+          <button
+            className="flex w-1/5 self-end justify-center rounded bg-primary p-3 font-medium text-gray"
+            type="submit"
+            onClick={() => {
+              // if (
+              //   !locationsList ||
+              //   !arrivalTimeRef.current?.value ||
+              //   !minOrderValueRef.current?.value
+              // )
+              //   return toast.error('Enter A Serving Area First');
+              addServingArea(locationsList);
+              closeModal();
+            }}
+          >
+            Save Changes
+          </button>
+        </div>
       </div>
     </form>
   );

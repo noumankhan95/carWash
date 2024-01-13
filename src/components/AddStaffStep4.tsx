@@ -39,10 +39,10 @@ function AddServingArea() {
     { day: 'Saturday' },
   ];
   console.log('Serv', ServingArea);
-  console.log('Serv', userAuth);
-  console.log('Serv', StaffMember);
-  console.log('Serv', Timings);
-  console.log('Serv', isEditing);
+  // console.log('Serv', userAuth);
+  // console.log('Serv', StaffMember);
+  // console.log('Serv', Timings);
+  // console.log('Serv', isEditing);
 
   return (
     <div className="flex flex-col">
@@ -50,7 +50,7 @@ function AddServingArea() {
         // <div className="flex mx-auto">
         <Modal closeModal={() => setEnabled(false)}>
           <h1 className="mx-8 text-2xl font-bold">Add Location</h1>
-          <AddLocation />
+          <AddLocation closeModal={() => setEnabled(false)} />
         </Modal>
         // </div>
       )}
@@ -74,19 +74,25 @@ function AddServingArea() {
               </tr>
             </thead>
             <tbody>
-              {ServingArea &&
-                ServingArea.map((i) => {
-                  const name = Object.keys(i)[0];
+              {ServingArea.length > 0 &&
+                ServingArea?.map((i) => {
+                  if (!i) return null;
+                  const keys = Object.keys(i);
+                  const name = keys.filter((im, ind) =>
+                    Array.isArray(i[keys[ind]]),
+                  );
+                  console.log('rizz', name);
+                  if (!i) return;
                   return (
                     <tr>
                       <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                         <h5 className="font-medium text-black dark:text-white">
-                          {name}
+                          {name[0]}
                         </h5>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <p className="text-black dark:text-white">
-                          {i.duration}
+                          {i.duration} min
                         </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -102,12 +108,12 @@ function AddServingArea() {
         </div>
       </div>
       <button
-        className="my-3 inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+        className="my-3 inline-flex w-52 items-center justify-center bg-primary py-4 px-3 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-3"
         onClick={() => {
           setEnabled((p) => true);
         }}
       >
-        Add Location
+        Manage Locations
       </button>
       <div className="flex flex-row justify-end">
         <button
