@@ -146,7 +146,7 @@ function Staff() {
         </button>
       </div>
 
-      <div className="flex flex-col my-4 overflow-x-auto  ">
+      <div className="flex flex-col my-4 overflow-x-auto">
         <div className="grid rounded-sm w-fit bg-gray-2 dark:bg-form-strokedark grid-cols-7 gap-40 md:gap-8">
           <div className="p-1.5 xl:p-5">
             <h5 className="text-sm  font-medium uppercase xsm:text-base">

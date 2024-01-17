@@ -123,10 +123,10 @@ function AddServingArea() {
               setisloading(true);
               if (isEditing.value) {
                 console.log('Reached in Editing');
-                addEditedItemtoDb();
+                await addEditedItemtoDb();
               } else {
                 console.log('Reached');
-                addToDb();
+                await addToDb();
                 const u = await createUserWithEmailAndPassword(
                   auth,
                   userAuth.email,

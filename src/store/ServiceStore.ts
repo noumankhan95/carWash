@@ -152,18 +152,21 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
       isEditing: { value: true, id },
     }));
   },
-  addEditedItemtoDb() {
+  addEditedItemtoDb: async () => {
     // const timeStamp = db.firestore.FieldValue.serverTimestamp();
-    set((state) => {
-      setDoc(doc(db, 'staff', state.isEditing.id), {
+    try {
+      const state = get();
+      await setDoc(doc(db, 'staff', state.isEditing.id), {
         Service: state.Service,
         ServingArea: state.ServingArea,
         StaffMember: state.StaffMember,
         Timings: state.Timings,
         updatedAt: serverTimestamp(),
       });
-      return { ...state };
-    });
+    } catch (e) {
+      console.log('e');
+      throw e;
+    }
   },
   setIsNotEditing() {
     set((state) => ({ ...state, isEditing: { value: false, id: '' } }));

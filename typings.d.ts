@@ -18,7 +18,7 @@ type StaffWorker = {
   EmptyFields: () => void;
   setIsEditing: (id: string) => void;
   setIsNotEditing: () => void;
-  addEditedItemtoDb: () => void;
+  addEditedItemtoDb: () => Promsise<void>;
   setUserAuth: (email: string, password: string) => void;
 };
 type Day =
