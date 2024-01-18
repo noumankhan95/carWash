@@ -176,9 +176,179 @@ function EditService({
             >
               <option value="">Select</option>
               <optgroup label="Cars">
-                <option value="sedan">Sedan</option>
-                <option value="van">Van</option>
+                <option value="Convertible">Convertible</option>
+                <option value="Convertible, Coupe">Convertible, Coupe</option>
+                <option value="Convertible, Coupe, Hatchback">
+                  Convertible, Coupe, Hatchback
+                </option>
+                <option value="Convertible, Coupe, Sedan">
+                  Convertible, Coupe, Sedan
+                </option>
+                <option value="Convertible, Hatchback">
+                  Convertible, Hatchback
+                </option>
+                <option value="Convertible, Sedan">Convertible, Sedan</option>
+                <option value="Convertible, Sedan, Coupe">
+                  Convertible, Sedan, Coupe
+                </option>
+                <option value="Convertible, Sedan, Coupe, Wagon">
+                  Convertible, Sedan, Coupe, Wagon
+                </option>
+                <option value="Convertible, Sedan, Wagon">
+                  Convertible, Sedan, Wagon
+                </option>
+                <option value="Convertible, Wagon, Coupe, Sedan">
+                  Convertible, Wagon, Coupe, Sedan
+                </option>
+                <option value="Convertible, Wagon, Sedan">
+                  Convertible, Wagon, Sedan
+                </option>
+                <option value="Convertible,Coupe">Convertible, Coupe</option>
+                <option value="Convertible,Sedan,Coupe">
+                  Convertible, Sedan, Coupe
+                </option>
+                <option value="Coupe">Coupe</option>
+                <option value="Coupe, Convertible">Coupe, Convertible</option>
+                <option value="Coupe, Convertible, Hatchback">
+                  Coupe, Convertible, Hatchback
+                </option>
+                <option value="Coupe, Convertible, Sedan">
+                  Coupe, Convertible, Sedan
+                </option>
+                <option value="Coupe, Convertible, Sedan, Wagon">
+                  Coupe, Convertible, Sedan, Wagon
+                </option>
+                <option value="Coupe, Convertible, Wagon, Sedan">
+                  Coupe, Convertible, Wagon, Sedan
+                </option>
+                <option value="Coupe, Hatchback">Coupe, Hatchback</option>
+                <option value="Coupe, Hatchback, Convertible">
+                  Coupe, Hatchback, Convertible
+                </option>
+                <option value="Coupe, Hatchback, Convertible, Sedan">
+                  Coupe, Hatchback, Convertible, Sedan
+                </option>
+                <option value="Coupe, Hatchback, Sedan">
+                  Coupe, Hatchback, Sedan
+                </option>
+                <option value="Coupe, Sedan">Coupe, Sedan</option>
+                <option value="Coupe, Sedan, Convertible">
+                  Coupe, Sedan, Convertible
+                </option>
+                <option value="Coupe, Sedan, Convertible, Wagon">
+                  Coupe, Sedan, Convertible, Wagon
+                </option>
+                <option value="Coupe, Sedan, Hatchback">
+                  Coupe, Sedan, Hatchback
+                </option>
+                <option value="Coupe, Sedan, Wagon">Coupe, Sedan, Wagon</option>
+                <option value="Coupe, Sedan, Wagon, Convertible">
+                  Coupe, Sedan, Wagon, Convertible
+                </option>
+                <option value="Coupe, Wagon, Sedan">Coupe, Wagon, Sedan</option>
+                <option value="Coupe, Wagon, Sedan, Convertible">
+                  Coupe, Wagon, Sedan, Convertible
+                </option>
+                <option value="Coupe,Convertible">Coupe,Convertible</option>
+                <option value="Hatchback">Hatchback</option>
+                <option value="Hatchback, Convertible">
+                  Hatchback, Convertible
+                </option>
+                <option value="Hatchback, Convertible, Coupe">
+                  Hatchback, Convertible, Coupe
+                </option>
+                <option value="Hatchback, Coupe">Hatchback, Coupe</option>
+                <option value="Hatchback, Coupe, Convertible">
+                  Hatchback, Coupe, Convertible
+                </option>
+                <option value="Hatchback, Coupe, Sedan, Convertible">
+                  Hatchback, Coupe, Sedan, Convertible
+                </option>
+                <option value="Hatchback, Sedan">Hatchback, Sedan</option>
+                <option value="Hatchback, Sedan, Convertible">
+                  Hatchback, Sedan, Convertible
+                </option>
+                <option value="Hatchback, Sedan, Coupe">
+                  Hatchback, Sedan, Coupe
+                </option>
+                <option value="Hatchback, Sedan, Coupe, Convertible">
+                  Hatchback, Sedan, Coupe, Convertible
+                </option>
+                <option value="Hatchback, Sedan, Wagon">
+                  Hatchback, Sedan, Wagon
+                </option>
+                <option value="Hatchback, Wagon">Hatchback, Wagon</option>
+                <option value="Hatchback,Sedan">Hatchback,Sedan</option>
+                <option value="Pickup">Pickup</option>
                 <option value="SUV">SUV</option>
+                <option value="SUV, Pickup">SUV, Pickup</option>
+                <option value="SUV, Wagon">SUV, Wagon</option>
+                <option value="SUV1992">SUV1992</option>
+                <option value="SUV2020">SUV2020</option>
+                <option value="Sedan">Sedan</option>
+                <option value="Sedan, Convertible">Sedan, Convertible</option>
+                <option value="Sedan, Convertible, Coupe">
+                  Sedan, Convertible, Coupe
+                </option>
+                <option value="Sedan, Convertible, Coupe, Wagon">
+                  Sedan, Convertible, Coupe, Wagon
+                </option>
+                <option value="Sedan, Convertible, Wagon">
+                  Sedan, Convertible, Wagon
+                </option>
+                <option value="Sedan, Coupe">Sedan, Coupe</option>
+                <option value="Sedan, Coupe, Convertible">
+                  Sedan, Coupe, Convertible
+                </option>
+                <option value="Sedan, Coupe, Convertible, Wagon">
+                  Sedan, Coupe, Convertible, Wagon
+                </option>
+                <option value="Sedan, Coupe, Hatchback">
+                  Sedan, Coupe, Hatchback
+                </option>
+                <option value="Sedan, Coupe, Wagon">Sedan, Coupe, Wagon</option>
+                <option value="Sedan, Coupe, Wagon, Convertible">
+                  Sedan, Coupe, Wagon, Convertible
+                </option>
+                <option value="Sedan, Hatchback">Sedan, Hatchback</option>
+                <option value="Sedan, Hatchback, Convertible">
+                  Sedan, Hatchback, Convertible
+                </option>
+                <option value="Sedan, Hatchback, Coupe">
+                  Sedan, Hatchback, Coupe
+                </option>
+                <option value="Sedan, Hatchback, Wagon">
+                  Sedan, Hatchback, Wagon
+                </option>
+                <option value="Sedan, Wagon">Sedan, Wagon</option>
+                <option value="Sedan, Wagon, Convertible">
+                  Sedan, Wagon, Convertible
+                </option>
+                <option value="Sedan, Wagon, Convertible, Coupe">
+                  Sedan, Wagon, Convertible, Coupe
+                </option>
+                <option value="Sedan, Wagon, Coupe">Sedan, Wagon, Coupe</option>
+                <option value="Sedan, Wagon, Coupe, Convertible">
+                  Sedan, Wagon, Coupe, Convertible
+                </option>
+                <option value="Sedan, Wagon, Hatchback">
+                  Sedan, Wagon, Hatchback
+                </option>
+                <option value="Van/Minivan">Van/Minivan</option>
+                <option value="Wagon">Wagon</option>
+                <option value="Wagon, Convertible">Wagon, Convertible</option>
+                <option value="Wagon, Convertible, Sedan">
+                  Wagon, Convertible, Sedan
+                </option>
+                <option value="Wagon, SUV">Wagon, SUV</option>
+                <option value="Wagon, Sedan">Wagon, Sedan</option>
+                <option value="Wagon, Sedan, Convertible">
+                  Wagon, Sedan, Convertible
+                </option>
+                <option value="Wagon, Sedan, Coupe">Wagon, Sedan, Coupe</option>
+                <option value="Wagon, Sedan, Hatchback">
+                  Wagon, Sedan, Hatchback
+                </option>
               </optgroup>
               <optgroup label="Scooter">
                 <option value="2Wheeler">2 Wheeler</option>
