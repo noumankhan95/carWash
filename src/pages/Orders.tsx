@@ -4,11 +4,20 @@ import 'react-datepicker/dist/react-datepicker.css';
 function Orders() {
   const endDateref = useRef<HTMLInputElement | null>(null);
   const [startDate, setStartDate] = useState(new Date());
+  const OrderNoRef = useRef<HTMLInputElement | null>(null);
+  const PhoneRef = useRef<HTMLInputElement | null>(null);
+  const [orderStatus, setOrderStatus] = useState([]);
+  const [orderMode, setorderMode] = useState([]);
+  const [filterbyservice, setfilterbyservice] = useState([]);
+  const [filterbyStaffMember, setfilterbyStaffMember] = useState([]);
+
   const [endDate, setEndDate] = useState(new Date());
-  const handleDatesChange = (dates: any) => {
+  const handleDatesChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
+    if (start && end) {
+      setStartDate(start as Date);
+      setEndDate(end as Date);
+    }
   };
   const [Orders, setOrders] = useState<Array<any>>();
   const [page, setpage] = useState<number>(1);
@@ -18,6 +27,7 @@ function Orders() {
     page * ItemsperPage + ItemsperPage,
   );
   const totalPages = Math.ceil(Orders?.length! / ItemsperPage);
+  console.log(startDate, endDate);
   return (
     <div>
       <div className="flex flex-col gap-5.5 p-6.5">
@@ -34,7 +44,7 @@ function Orders() {
               selected={startDate}
               startDate={startDate}
               endDate={endDate}
-              onChange={handleDatesChange}
+              onChange={(e) => handleDatesChange(e)}
               selectsRange
               className="w-full h-12.5 items-center justify-center  rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               wrapperClassName="w-full z-20"
@@ -181,7 +191,7 @@ function Orders() {
             <label className="mb-3 block text-black dark:text-white">
               Filter By Service
             </label>
-            <div className="relative z-20 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+            <div className="relative  w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
               <div className="flex flex-wrap items-center">
                 <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
                   Premium
@@ -206,7 +216,7 @@ function Orders() {
               <select
                 name=""
                 id=""
-                className="absolute top-0 left-0 z-20 h-full w-full bg-transparent opacity-0"
+                className="absolute top-0 left-0  h-full w-full bg-transparent opacity-0"
               >
                 <option value="">Select A Service</option>
                 <option value="Standard Wash">StandardWash</option>
@@ -735,7 +745,7 @@ function Orders() {
             className="inline-flex items-center justify-center gap-2.5 rounded-full bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             disabled={totalPages > page}
             onClick={() => {
-              if (page < totalPages) {
+              if (page <= totalPages) {
                 setpage((p) => p + 1);
               }
             }}
