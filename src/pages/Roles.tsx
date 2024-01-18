@@ -35,6 +35,8 @@ function Roles() {
             : [...(p || []), { ...(u.data() as WebsiteUsers), id: u.id }],
         );
       });
+      console.log('setting users agian');
+      console.log(users);
     } catch (e) {
       console.log(e);
     } finally {
@@ -79,20 +81,23 @@ function Roles() {
                     console.log(todelete);
                     let myquery = query(
                       collection(db, 'staff'),
-                      where('email', '==', todelete?.email),
+                      where('StaffMember.email', '==', todelete?.email),
                     );
                     const userDoc = doc(db, 'users', todelete?.id!);
-                    runTransaction(db, async (transaction) => {
+                    await runTransaction(db, async (transaction) => {
                       // await deleteDoc(userDoc);
                       transaction.delete(userDoc);
                       // Execute the query
                       const querySnapshot = await getDocs(myquery);
-                      if (!querySnapshot.empty)
+                      if (!querySnapshot.empty) {
                         querySnapshot.forEach(async (d) => {
                           const staffDoc = doc(db, 'staff', d.id);
 
                           transaction.delete(staffDoc);
                         });
+                      } else {
+                        console.log('Empty', querySnapshot);
+                      }
                       settodelete({ email: '', id: '' });
                       setshowAlert(false);
                       setreload(true);
