@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { db, auth } from '../firebase.js';
 import { setDoc, doc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { LoaderIcon } from 'react-hot-toast';
+import toast, { LoaderIcon } from 'react-hot-toast';
 function AddServingArea() {
   const [enabled, setEnabled] = React.useState<boolean>(false);
   const [isloading, setisloading] = useState<boolean>();
@@ -120,6 +120,8 @@ function AddServingArea() {
           className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
           onClick={async () => {
             try {
+              if (ServingArea.length <= 0)
+                return toast.error('Please Enter A Serving Area');
               setisloading(true);
               if (isEditing.value) {
                 console.log('Reached in Editing');

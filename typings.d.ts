@@ -36,6 +36,7 @@ type Modifier = {
 };
 
 type Services = {
+  serviceName:string,
   description: string;
   arabicDescription: string;
   Modifiers: { [key in ServiceName]: Modifier[] };

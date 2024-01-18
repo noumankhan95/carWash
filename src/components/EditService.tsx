@@ -1,4 +1,10 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+} from 'react';
 import useWorkerStore from '../store/ServiceStore';
 import * as Yup from 'yup';
 import { useFormik, FormikProvider, Field, ErrorMessage } from 'formik';
@@ -43,24 +49,41 @@ function EditService({
   // const [modifier, setmodifier] = useState<modifier[]>();
 
   // const ModifierRef = useRef<HTMLSelectElement | null>(null);
-  const formikObj = useFormik<Services>({
-    validationSchema,
-    initialValues: {
-      description: '',
-      arabicDescription: '',
-      Modifiers: {
-        'Car Detailing': [],
-        'Gold Wash': [],
-        'Platinum Wash': [],
-        'Premium Wash': [],
-        'Standard Wash': [],
-        Ceramic: [],
-        Washing: [],
-      },
+  const {
+    setServiceValue,
+    Service: { services },
+  } = useWorkerStore();
+  const [selectedService, setselectedService] = useState<Services>({
+    serviceName: '',
+    description: '',
+    arabicDescription: '',
+    Modifiers: {
+      'Car Detailing': [],
+      'Gold Wash': [],
+      'Platinum Wash': [],
+      'Premium Wash': [],
+      'Standard Wash': [],
+      Ceramic: [],
+      Washing: [],
     },
+  });
+
+  useEffect(() => {
+    const i = services.find((e) => e.serviceName === serviceName);
+    if (i) {
+      console.log('called');
+      setselectedService(i);
+    }
+  }, []);
+  console.log(selectedService, 'sele');
+  const formikObj = useFormik<Services>({
+    enableReinitialize: true,
+    validationSchema,
+    initialValues: selectedService,
     onSubmit(values, formikHelpers) {
       const { Modifiers, arabicDescription, description } = values;
       SaveServiceSettings({
+        serviceName,
         Modifiers,
         arabicDescription,
         description,
@@ -68,11 +91,11 @@ function EditService({
     },
   });
 
-  const { setServiceValue } = useWorkerStore();
   // console.log(PriceRefs);
   const SaveServiceSettings = useCallback((val: Services) => {
     setServiceValue(val);
   }, []);
+  console.log('selected Value', selectedService);
   return (
     <FormikProvider value={formikObj}>
       <form onSubmit={formikObj.handleSubmit}>
@@ -132,6 +155,12 @@ function EditService({
                   modifiername: e.target.value,
                   price: '',
                 };
+                if (
+                  formikObj.values.Modifiers[serviceName].some(
+                    (m) => m.modifiername === e.target.value,
+                  )
+                )
+                  return;
                 if (!existingObj) {
                   formikObj.setFieldValue('Modifiers', {
                     ...formikObj.values.Modifiers,

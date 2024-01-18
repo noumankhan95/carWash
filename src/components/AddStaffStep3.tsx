@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import SwitcherOne from './SwitcherOne';
 import useWorkerStore from '../store/ServiceStore';
+import toast from 'react-hot-toast';
 
 function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
   const { updateTimings, Timings, StaffMember } = useWorkerStore();
@@ -14,6 +15,35 @@ function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
     { day: 'Saturday', enabled: false, from: '', to: '' },
   ]);
   console.log(StaffMember);
+  const AddTimings = useCallback(() => {
+    const daysMap = weekDays.reduce((acc, curr) => {
+      acc[curr.day as Day] = {
+        from: curr.from,
+        to: curr.to,
+        enabled: curr.enabled,
+      };
+
+      return acc;
+    }, {} as Timings);
+    console.log('daysmap', daysMap);
+    console.log('Timings', Timings);
+
+    if (
+      Object.keys(daysMap).every(
+        (k) =>
+          !daysMap[k as keyof Timings].from && !daysMap[k as keyof Timings].to,
+      ) &&
+      Object.keys(Timings).every(
+        (k) =>
+          !Timings[k as keyof Timings].from && !Timings[k as keyof Timings].to,
+      )
+    ) {
+      return toast.error('Set Timings First');
+    }
+
+    updateTimings(daysMap);
+    settheStep();
+  }, [weekDays, Timings]);
   return (
     <div className="flex flex-col  space-y-2">
       <h1 className="text-xl font-bold">Timings Schedule</h1>
@@ -21,7 +51,10 @@ function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
       <div className="flex justify-between space-x-2 w-full">
         <div className="bg-white w-full dark:bg-graydark text-white p-5  space-y-4">
           {weekDays.map((w) => (
-            <div className="flex w-full items-center justify-between ">
+            <div
+              className="flex w-full items-center justify-between "
+              key={w.day}
+            >
               <div className="w-1/2">
                 <h1>{w.day}</h1>
                 <div>
@@ -93,7 +126,6 @@ function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
                       className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                       defaultValue={Timings[w.day as Day].from}
                       onChange={(e) => {
-                        console.log(e.currentTarget);
                         setweekdays((p) =>
                           p.map((d) =>
                             d.day === w.day
@@ -248,19 +280,7 @@ function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
       </div>
       <button
         className="w-52 rounded bg-primary p-3 font-medium text-gray"
-        onClick={() => {
-          const daysMap = weekDays.reduce((acc, curr) => {
-            acc[curr.day as Day] = {
-              from: curr.from,
-              to: curr.to,
-              enabled: curr.enabled,
-            };
-
-            return acc;
-          }, {} as Timings);
-          updateTimings(daysMap);
-          settheStep();
-        }}
+        onClick={AddTimings}
       >
         Save
       </button>
