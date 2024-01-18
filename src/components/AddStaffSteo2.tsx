@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import EditService from './EditService';
 import useWorkerStore from '../store/ServiceStore';
-
+import { toast } from 'react-hot-toast';
 function AddService({ settheStep }: AddStaffMemberChildrenProps) {
   const {
     Service: { services: globalServices },
@@ -27,14 +27,27 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
             Service Categories
           </h1>
           {globalServices &&
-            globalServices.map((s) => (
-              <h1
-                className="text-xl bg-bodydark2 font-serif px-2 py-1 rounded-sm bg-opacity-10 text-black dark:text-white"
-                key={Object.keys(s)[0]}
-              >
-                {Object.keys(s)[0]}
-              </h1>
-            ))}
+            globalServices.map((s) => {
+              const keys = Object.keys(s.Modifiers);
+              const NonEmpty: { mname: string; mod: Modifier[] }[] = [];
+              keys.forEach((k) => {
+                s.Modifiers[k as ServiceName].length > 0
+                  ? NonEmpty.push({
+                      mname: k,
+                      mod: s.Modifiers[k as ServiceName],
+                    })
+                  : null;
+              });
+              console.log(NonEmpty, 'non');
+              return NonEmpty?.map((i) => (
+                <h1
+                  className="text-xl bg-bodydark2 font-serif px-2 py-1 rounded-sm bg-opacity-10 text-black dark:text-white"
+                  key={Object.keys(s)[0]}
+                >
+                  {i.mname}
+                </h1>
+              ));
+            })}
         </div>
         <div className="w-3/6 md:w-4/6  dark:bg-bodydark bg-white p-5">
           <h1 className="text-xl font-bold dark:text-white">Services</h1>
@@ -119,7 +132,11 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
       </div>
       <button
         className="md:w-40 rounded bg-primary p-3 font-medium text-gray"
-        onClick={() => settheStep()}
+        onClick={() => {
+          if (globalServices.length <= 0)
+            return toast.error('Please Select A Service To Continue');
+          settheStep();
+        }}
       >
         Save
       </button>

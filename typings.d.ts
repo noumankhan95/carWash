@@ -29,20 +29,20 @@ type Day =
   | 'Friday'
   | 'Saturday'
   | 'Sunday';
-type modifier = {
-  description: string;
-  arabicDescription: string;
+type Modifier = {
   modifiername: string;
   price: string;
   duration: string;
 };
+
+type Services = {
+  description: string;
+  arabicDescription: string;
+  Modifiers: { [key in ServiceName]: Modifier[] };
+};
 type Timings = {
   [key in Day]: { from: string; to: string; enabled: boolean };
 };
-type Services = {
-  [key in ServiceName]: modifier[];
-};
-
 type ServiceName =
   | 'Standard Wash'
   | 'Premium Wash'
