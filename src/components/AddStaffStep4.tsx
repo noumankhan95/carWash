@@ -8,7 +8,7 @@ import useWorkerStore from '../store/ServiceStore';
 import { useNavigate } from 'react-router-dom';
 // @ts-ignore
 import { db, auth } from '../firebase.js';
-import { setDoc, doc } from 'firebase/firestore';
+import { setDoc, doc, runTransaction } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import toast, { LoaderIcon } from 'react-hot-toast';
 function AddServingArea() {
@@ -128,17 +128,20 @@ function AddServingArea() {
                 await addEditedItemtoDb();
               } else {
                 console.log('Reached');
-                await addToDb();
-                const u = await createUserWithEmailAndPassword(
-                  auth,
-                  userAuth.email,
-                  userAuth.password,
-                );
-                await setDoc(doc(db, 'users', u.user.uid), {
-                  email: userAuth.email,
-                  name: StaffMember.Name,
-                  phone: StaffMember.phone,
-                  permissions: StaffMember.permissions,
+                await runTransaction(db, async (transaction) => {
+                  await addToDb();
+
+                  const u = await createUserWithEmailAndPassword(
+                    auth,
+                    userAuth.email,
+                    userAuth.password,
+                  );
+                  transaction.set(doc(db, 'users', u.user.uid), {
+                    email: userAuth.email,
+                    name: StaffMember.Name,
+                    phone: StaffMember.phone,
+                    permissions: StaffMember.permissions,
+                  });
                 });
               }
               EmptyFields();
@@ -146,6 +149,7 @@ function AddServingArea() {
               navigate('/staff');
             } catch (e) {
               console.log(e);
+              toast.error('An Error Occured ');
               alert(e);
             } finally {
               setisloading(false);

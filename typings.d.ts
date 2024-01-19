@@ -21,7 +21,7 @@ type StaffWorker = {
   addEditedItemtoDb: () => Promsise<void>;
   setUserAuth: (email: string, password: string) => void;
 };
-type Day =
+type WeekDay =
   | 'Monday'
   | 'Tuesday'
   | 'Wednesday'
@@ -36,13 +36,13 @@ type Modifier = {
 };
 
 type Services = {
-  serviceName:string,
+  serviceName: string;
   description: string;
   arabicDescription: string;
   Modifiers: { [key in ServiceName]: Modifier[] };
 };
 type Timings = {
-  [key in Day]: { from: string; to: string; enabled: boolean };
+  [key in WeekDay]: { from: string; to: string; enabled: boolean };
 };
 type ServiceName =
   | 'Standard Wash'

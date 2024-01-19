@@ -6,6 +6,7 @@ import { signOut } from 'firebase/auth';
 // @ts-ignore
 import { auth } from '../firebase.js';
 import useUserAuth from '../store/UserAuthStore.js';
+import { useNavigate } from 'react-router-dom';
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
@@ -48,7 +49,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     document.addEventListener('keydown', keyHandler);
     return () => document.removeEventListener('keydown', keyHandler);
   });
-
+  const nav = useNavigate();
   useEffect(() => {
     localStorage.setItem('sidebar-expanded', sidebarExpanded.toString());
     if (sidebarExpanded) {
@@ -57,7 +58,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       document.querySelector('body')?.classList.remove('sidebar-expanded');
     }
   }, [sidebarExpanded]);
-
+  if (!permissions) {
+    return nav('/auth/signin');
+  }
   return (
     <aside
       ref={sidebar}
@@ -225,7 +228,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li> */}
               {/* <!-- Menu Item Calendar --> */}
               {/* <!-- Menu Item Profile --> */}
-              {permissions.includes('Staff') && (
+              {permissions && permissions.includes('Staff') && (
                 <li>
                   <NavLink
                     to="/staff"
@@ -254,7 +257,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   </NavLink>
                 </li>
               )}
-              {permissions.includes('Roles') && (
+              {permissions && permissions.includes('Roles') && (
                 <li>
                   <NavLink
                     to="/roles"
@@ -310,7 +313,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Profile
                 </NavLink>
               </li> */}
-              {permissions.includes('Providers') && (
+              {/* {permissions && permissions.includes('Providers') && (
                 <li>
                   <NavLink
                     to="/providers"
@@ -339,8 +342,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     Providers
                   </NavLink>
                 </li>
-              )}
-              {permissions.includes('Orders') && (
+              )} */}
+              {permissions && permissions.includes('Orders') && (
                 <li>
                   <NavLink
                     to="/orders"

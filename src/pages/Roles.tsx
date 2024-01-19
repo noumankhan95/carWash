@@ -28,13 +28,18 @@ function Roles() {
     try {
       setisloading((p) => true);
       const userData = await getDocs(collection(db, 'users'));
-      userData.forEach((u) => {
-        setusers((p) =>
-          p?.some((i) => i.email == u.data().email)
-            ? p
-            : [...(p || []), { ...(u.data() as WebsiteUsers), id: u.id }],
-        );
-      });
+      const updatedUsers = userData.docs.map((u) => ({
+        ...(u.data() as WebsiteUsers),
+        id: u.id,
+      }));
+      // userData.forEach((u) => {
+      //   setusers((p) =>
+      //     p?.some((i) => i.email == u.data().email)
+      //       ? p
+      //       : [...(p || []), { ...(u.data() as WebsiteUsers), id: u.id }],
+      //   );
+      // });
+      setusers(updatedUsers);
       console.log('setting users agian');
       console.log(users);
     } catch (e) {
