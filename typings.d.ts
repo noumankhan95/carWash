@@ -171,3 +171,18 @@ type serviceLocation = {
 //   duration: number;
 //   minamount: number;
 // };
+
+type Orders = {
+  id: string;
+  orderNumber: string;
+  customer: string;
+  service: string;
+  worker: string;
+  total: number;
+  status: string;
+  type: string;
+  appointmentDate: Date;
+  paymentMethod: string;
+  selectedDate: Date;
+  uid: string;
+};
