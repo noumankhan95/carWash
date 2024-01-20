@@ -118,8 +118,8 @@ type ProviderInformation = {
   setallsubscriptions: (sub: ProviderSubscription[]) => void;
 };
 interface itemLocation {
-  lat: number;
-  lng: number;
+  lat: float;
+  lng: float;
 }
 type ProviderInfo = {
   name: string;
@@ -171,18 +171,3 @@ type serviceLocation = {
 //   duration: number;
 //   minamount: number;
 // };
-
-type Orders = {
-  id: string;
-  orderNumber: string;
-  customer: string;
-  service: string;
-  worker: string;
-  total: number;
-  status: string;
-  type: string;
-  appointmentDate: Date;
-  paymentMethod: string;
-  selectedDate: Date;
-  uid: string;
-};

@@ -324,9 +324,18 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
                 }}
               >
                 <option value=""></option>
-                <option value="Staff">Staff</option>
-                <option value="Roles">Roles</option>
-                <option value="Providers">Provider</option>
+                <option value="Staff All">Staff All</option>
+                <option value="Staff Create">Staff Create</option>
+                <option value="Staff Delete">Staff Delete</option>
+                <option value="Staff Update">Staff Update</option>
+                <option value="Roles All">Roles All</option>
+                <option value="Roles Create">Roles Create</option>
+                <option value="Roles Delete">Roles Delete</option>
+                <option value="Roles Update">Roles Update</option>
+                <option value="Orders All">Orders All</option>
+                <option value="Orders Create">Orders Create</option>
+                <option value="Orders Delete">Orders Delete</option>
+                <option value="Orders Update">Orders Update</option>
                 <option value="Orders">Orders</option>
               </Field>
               <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">

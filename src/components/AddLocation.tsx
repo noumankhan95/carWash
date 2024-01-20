@@ -39,7 +39,7 @@ function AddLocation({ closeModal }: { closeModal: () => void }) {
   return (
     <form onSubmit={handleSubmit}>
       <div className="p-6.5 space-y-6">
-        <label className="mb-2.5 block text-black dark:text-white">
+        {/* <label className="mb-2.5 block text-black dark:text-white">
           Change Radius
         </label>
         <input
@@ -47,11 +47,10 @@ function AddLocation({ closeModal }: { closeModal: () => void }) {
           type="number"
           placeholder="Set Radius"
           className="w-full  top-0 z-99999 rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-        />
+        /> */}
         <MapComponent
           updateRefs={updateRefs}
           Servicemode
-          ref={mapref}
           radius={parseInt(radiusRef.current?.value!)}
         />
 
@@ -149,7 +148,7 @@ function AddLocation({ closeModal }: { closeModal: () => void }) {
           </label>
           <input
             type="number"
-            placeholder="Enter Order Value"
+            placeholder="Enter Order Value (Optional)"
             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             ref={minOrderValueRef}
             // defaultValue={l}
@@ -162,8 +161,8 @@ function AddLocation({ closeModal }: { closeModal: () => void }) {
             onClick={() => {
               if (
                 !locationsList ||
-                !arrivalTimeRef.current?.value ||
-                !minOrderValueRef.current?.value
+                !arrivalTimeRef.current?.value
+                // !minOrderValueRef.current?.value
               )
                 return toast.error('Enter A Serving Area First');
               setlocationsList((p) => {

@@ -103,12 +103,13 @@ function EditService({
           <h1 className="mb-2.5 block text-black font-bold text-2xl text-center dark:text-white">
             {serviceName}
           </h1>
-          <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-            <div className="w-full xl:w-1/2">
+          <div className="mb-4.5 flex flex-col gap-6 xl:flex-col">
+            <div className="w-full xl:w-5/6">
               <label className="mb-2.5 block text-black dark:text-white">
                 Description
               </label>
               <Field
+                as="textarea"
                 name="description"
                 placeholder="Description"
                 type="text"
@@ -121,11 +122,12 @@ function EditService({
               />
             </div>
 
-            <div className="w-full xl:w-1/2">
+            <div className="w-full xl:w-5/6">
               <label className="mb-2.5 block text-black dark:text-white">
                 Arabic Description
               </label>
               <Field
+                as="textarea"
                 name="arabicDescription"
                 placeholder="ArabicDescription"
                 type="text"
@@ -175,7 +177,7 @@ function EditService({
               }}
             >
               <option value="">Select</option>
-              <optgroup label="Cars">
+              {/* <optgroup label="Cars">
                 <option value="Convertible">Convertible</option>
                 <option value="Convertible, Coupe">Convertible, Coupe</option>
                 <option value="Convertible, Coupe, Hatchback">
@@ -349,15 +351,24 @@ function EditService({
                 <option value="Wagon, Sedan, Hatchback">
                   Wagon, Sedan, Hatchback
                 </option>
-              </optgroup>
-              <optgroup label="Scooter">
-                <option value="2Wheeler">2 Wheeler</option>
-                <option value="oneWheel">One Wheel</option>
-                <option value="Atv">atv</option>
-
-                <option value="oneWheel">One Wheel</option>
-                <option value="offRoad">Off-Road</option>
-              </optgroup>
+              </optgroup> */}
+              {/* <optgroup label="SUV"> */}
+              <option value="SUV">SUV</option>
+              <option value="Sedan">Sedan</option>
+              <option value="Luxury">Luxury</option>
+              {/* </optgroup> */}
+              {/* <optgroup label="Sedan">
+                <option value="Hatchback">Hatchback</option>
+                <option value="Convertible">Convertible</option>
+                <option value="Coupe">Coupe</option>
+              </optgroup> */}
+              {/* <optgroup label="Luxury">
+                <option value="Ferrari">Ferrari</option>
+                <option value="Lamborghini">Lamborghini</option>
+                <option value="BMW">BMW</option> */}
+              {/* <option value="oneWheel">One Wheel</option>
+                <option value="offRoad">Off-Road</option> */}
+              {/* </optgroup> */}
             </Field>
             <ErrorMessage
               name={`Modifiers.${serviceName}`}
