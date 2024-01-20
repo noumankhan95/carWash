@@ -317,26 +317,30 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
                 name="permissions"
                 className="absolute text-black top-0 p-6 left-0 z-20 h-full w-full bg-transparent opacity-0"
                 onChange={(e: any) => {
-                  formikObj.setFieldValue('permissions', [
-                    ...(formikObj.values.permissions || []),
-                    e.target.value,
-                  ]);
+                  if (!formikObj.values.permissions.includes(e.target.value))
+                    formikObj.setFieldValue('permissions', [
+                      ...(formikObj.values.permissions || []),
+
+                      e.target.value,
+                    ]);
                 }}
               >
-                <option value=""></option>
+                <option value="">Select</option>
                 <option value="Staff All">Staff All</option>
+                <option value="Staff Read">Staff Read</option>
                 <option value="Staff Create">Staff Create</option>
                 <option value="Staff Delete">Staff Delete</option>
                 <option value="Staff Update">Staff Update</option>
                 <option value="Roles All">Roles All</option>
+                <option value="Roles Read">Roles Read</option>
                 <option value="Roles Create">Roles Create</option>
                 <option value="Roles Delete">Roles Delete</option>
                 <option value="Roles Update">Roles Update</option>
                 <option value="Orders All">Orders All</option>
+                <option value="Orders Read">Orders Read</option>
                 <option value="Orders Create">Orders Create</option>
                 <option value="Orders Delete">Orders Delete</option>
                 <option value="Orders Update">Orders Update</option>
-                <option value="Orders">Orders</option>
               </Field>
               <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                 <svg
