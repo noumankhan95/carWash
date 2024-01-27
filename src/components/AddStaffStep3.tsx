@@ -5,80 +5,58 @@ import toast from 'react-hot-toast';
 
 function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
   const { updateTimings, Timings, StaffMember } = useWorkerStore();
-  const [weekDays, setweekdays] = useState([
-    { day: 'Sunday', enabled: false, from: '', to: '' },
-    { day: 'Monday', enabled: false, from: '', to: '' },
-    { day: 'Tuesday', enabled: false, from: '', to: '' },
-    { day: 'Wednesday', enabled: false, from: '', to: '' },
-    { day: 'Thursday', enabled: false, from: '', to: '' },
-    { day: 'Friday', enabled: false, from: '', to: '' },
-    { day: 'Saturday', enabled: false, from: '', to: '' },
-  ]);
+  const [weekDays, setweekdays] = useState(Timings);
   console.log(StaffMember);
   const AddTimings = useCallback(() => {
-    const daysMap = weekDays.reduce((acc, curr) => {
-      acc[curr.day as Day] = {
-        from: curr.from,
-        to: curr.to,
-        enabled: curr.enabled,
-      };
-
-      return acc;
-    }, {} as Timings);
-    console.log('daysmap', daysMap);
-    console.log('Timings', Timings);
-
     if (
-      Object.keys(daysMap).every(
-        (k) =>
-          !daysMap[k as keyof Timings].from && !daysMap[k as keyof Timings].to,
-      ) &&
-      Object.keys(Timings).every(
-        (k) =>
-          !Timings[k as keyof Timings].from && !Timings[k as keyof Timings].to,
+      Object.entries(weekDays).every((i) => i[1].enabled !== true) ||
+      Object.entries(weekDays).every(
+        (i) =>
+          (i[1].to == '00:00' && i[1].from == '00:00') ||
+          (!i[1].to && !i[1].from),
       )
     ) {
-      return toast.error('Set Timings First');
+      return toast.error('Add Timings First');
     }
 
-    updateTimings(daysMap);
+    updateTimings(weekDays);
     settheStep();
   }, [weekDays, Timings]);
+  console.log(weekDays);
   return (
     <div className="flex flex-col  space-y-2">
       <h1 className="text-xl font-bold">Timings Schedule</h1>
 
       <div className="flex justify-between space-x-2 w-full">
         <div className="bg-white w-full dark:bg-graydark text-white p-5  space-y-4">
-          {weekDays.map((w) => (
+          {Object.entries(weekDays).map((w) => (
             <div
               className="flex w-full items-center justify-between "
-              key={w.day}
+              key={w[0]}
             >
               <div className="w-1/2">
-                <h1>{w.day}</h1>
+                <h1>{w[0]}</h1>
                 <div>
                   <label className="flex cursor-pointer select-none items-center">
                     <div className="relative">
                       <input
                         type="checkbox"
-                        name={w.day}
+                        name={w[0]}
                         className="sr-only"
                         onChange={(e) => {
-                          console.log(e.currentTarget);
-                          setweekdays((p) =>
-                            p.map((d) =>
-                              d.day === w.day
-                                ? { ...d, enabled: !d.enabled }
-                                : d,
-                            ),
-                          );
+                          console.log(w[0], w[1].enabled);
+
+                          setweekdays((p) => ({
+                            ...p,
+                            [w[0]]: { ...w[1], enabled: !w[1].enabled },
+                          }));
                         }}
                       />
                       <div className="block h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]"></div>
                       <div
                         className={`absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition ${
-                          (Timings[w.day as Day].enabled || w.enabled) &&
+                          // Timings[w.day as WeekDay].enabled &&
+                          w[1].enabled &&
                           '!right-1 !translate-x-full !bg-primary dark:!bg-white'
                         }`}
                       ></div>
@@ -86,7 +64,7 @@ function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
                   </label>
                 </div>
               </div>
-              {(Timings[w.day as Day].enabled || w.enabled) && (
+              {w[1].enabled && (
                 <div className="flex justify-around items-center w-full">
                   <label className="mb-3 block text-black dark:text-white">
                     Choose Timings
@@ -124,15 +102,12 @@ function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
                     </span>
                     <select
                       className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
-                      defaultValue={Timings[w.day as Day].from}
+                      defaultValue={w[1].from}
                       onChange={(e) => {
-                        setweekdays((p) =>
-                          p.map((d) =>
-                            d.day === w.day
-                              ? { ...d, from: e.target.value }
-                              : d,
-                          ),
-                        );
+                        setweekdays((p) => ({
+                          ...p,
+                          [w[0]]: { ...w[1], from: e.target.value },
+                        }));
                       }}
                     >
                       <option value="00:00">00:00</option>
@@ -215,14 +190,13 @@ function AddTimings({ settheStep }: AddStaffMemberChildrenProps) {
                     </span>
                     <select
                       className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
-                      defaultValue={Timings[w.day as Day].to}
+                      defaultValue={w[1].to}
                       onChange={(e) => {
                         console.log(e.currentTarget);
-                        setweekdays((p) =>
-                          p.map((d) =>
-                            d.day === w.day ? { ...d, to: e.target.value } : d,
-                          ),
-                        );
+                        setweekdays((p) => ({
+                          ...p,
+                          [w[0]]: { ...w[1], to: e.target.value },
+                        }));
                       }}
                     >
                       <option value="00:00">00:00</option>

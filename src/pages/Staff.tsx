@@ -15,6 +15,7 @@ import { type Timestamp } from 'firebase/firestore';
 // @ts-ignore
 import { db } from '../firebase.js';
 import useWorkerStore from '../store/ServiceStore.js';
+import useUserAuth from '../store/UserAuthStore.js';
 type workTime = StaffWorkerUser & {
   createdAt: Timestamp;
   updatedAt: Timestamp;
@@ -32,6 +33,7 @@ function Staff() {
   const [isdeleting, setisdeleting] = useState<boolean>(false);
   const { EditItem, setIsEditing, setIsNotEditing, EmptyFields } =
     useWorkerStore();
+  const { permissions } = useUserAuth();
   const [users, setusers] = useState<userItem[]>();
   const getUsers = useCallback(async () => {
     try {
@@ -134,16 +136,19 @@ function Staff() {
         </div>
       )}
       <div className="flex flex-row justify-end">
-        <button
-          className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-          onClick={() => {
-            setIsNotEditing();
-            EmptyFields();
-            navigate('/addstaff');
-          }}
-        >
-          Create
-        </button>
+        {(permissions.includes('Staff All') ||
+          permissions.includes('Staff Add')) && (
+          <button
+            className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+            onClick={() => {
+              setIsNotEditing();
+              EmptyFields();
+              navigate('/addstaff');
+            }}
+          >
+            Create
+          </button>
+        )}
       </div>
 
       <div className="flex flex-col my-4 overflow-x-auto">
@@ -232,33 +237,20 @@ function Staff() {
                 )}
               </div>
               <div className="flex flex-row justify-start text-center sm:block my-4">
-                <button
-                  className="p-3.5  bg-primary rounded-md border  text-center font-medium text-white hover:bg-opacity-90 "
-                  onClick={() => {
-                    console.log(u);
-                    navigate('/addstaff');
-                    EditItem(u.worker);
-                    setIsEditing(u.id);
-                  }}
-                >
-                  Edit
-                </button>
-                {/* <button
-                  className="my-8 p-4 rounded-md bg-danger text-center font-medium text-white hover:bg-opacity-90 "
-                  onClick={() => {
-                    console.log(u.id);
-                    console.log(u.worker.StaffMember.email);
-
-                    setshowAlert((p) => true);
-                    settodelete({
-                      id: u.id,
-                      email: u.worker.StaffMember.email,
-                    });
-                    // deleteDoc(doc(db, 'staff', u.id))
-                  }}
-                >
-                  Delete
-                </button> */}
+                {(permissions.includes('Staff All') ||
+                  permissions.includes('Staff Edit')) && (
+                  <button
+                    className="p-3.5  bg-primary rounded-md border  text-center font-medium text-white hover:bg-opacity-90 "
+                    onClick={() => {
+                      console.log(u);
+                      navigate('/addstaff');
+                      EditItem(u.worker);
+                      setIsEditing(u.id);
+                    }}
+                  >
+                    Edit
+                  </button>
+                )}
               </div>
             </div>
           ))}

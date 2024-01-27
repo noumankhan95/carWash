@@ -126,10 +126,22 @@ function EditUserModal({ user }: pageprops) {
                     );
                   }}
                 >
-                  <option value=""></option>
-                  <option value="Staff">Staff</option>
-                  <option value="Roles">Roles</option>
-                  <option value="Providers">Provider</option>
+                  <option className='text-black' value="">Select</option>
+                  <option className='text-black' value="Staff All">Staff All</option>
+                  <option className='text-black' value="Staff Read">Staff Read</option>
+                  <option className='text-black' value="Staff Create">Staff Create</option>
+                  <option className='text-black' value="Staff Delete">Staff Delete</option>
+                  <option className='text-black' value="Staff Update">Staff Update</option>
+                  <option className='text-black' value="Roles All">Roles All</option>
+                  <option className='text-black' value="Roles Read">Roles Read</option>
+                  <option className='text-black' value="Roles Create">Roles Create</option>
+                  <option className='text-black' value="Roles Delete">Roles Delete</option>
+                  <option className='text-black' value="Roles Update">Roles Update</option>
+                  <option className='text-black' value="Orders All">Orders All</option>
+                  <option className='text-black' value="Orders Read">Orders Read</option>
+                  <option className='text-black' value="Orders Create">Orders Create</option>
+                  <option className='text-black' value="Orders Delete">Orders Delete</option>
+                  <option className='text-black' value="Orders Update">Orders Update</option>
                 </select>
                 <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                   <svg

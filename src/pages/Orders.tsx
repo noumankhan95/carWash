@@ -38,14 +38,13 @@ function Orders() {
       setEndDate(end as Date);
     }
   };
-  const [Orders, setOrders] = useState<Array<Orders>>();
+  const [Orders, setOrders] = useState<Array<Orders>>([]);
   const [page, setpage] = useState<number>(1);
   const ItemsperPage = 10;
-  const CurrentItems = Orders?.slice(
-    page * ItemsperPage,
-    page * ItemsperPage + ItemsperPage,
-  );
-  const totalPages = Math.ceil(Orders?.length! || 1 / ItemsperPage);
+  const totalPages = Math.ceil((Orders.length || 1) / ItemsperPage);
+  const startIndex = (page - 1) * ItemsperPage;
+  const endIndex = startIndex + ItemsperPage;
+  const currentItems = Orders.slice(startIndex, endIndex);
   useEffect(() => {
     getOrders();
   }, []);
@@ -367,7 +366,7 @@ function Orders() {
               </tr>
             </thead>
             <tbody>
-              {Orders?.map((o) => (
+              {currentItems?.map((o) => (
                 <tr key={o.id}>
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-5">
                     <h5 className="font-medium text-black dark:text-white">
@@ -379,32 +378,22 @@ function Orders() {
                     <p className="text-black dark:text-white">{o.customer}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="inline-flex rounded-full  bg-opacity-10 py-1 px-3 text-sm font-medium text-white">
-                      {o.service}
-                    </p>
+                    <p className="text-black dark:text-white">{o.service}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="inline-flex rounded-full  bg-opacity-10 py-1 px-3 text-sm font-medium text-white">
-                      {o.worker}
-                    </p>
+                    <p className="text-black dark:text-white">{o.worker}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="inline-flex rounded-full  bg-opacity-10 py-1 px-3 text-sm font-medium text-white">
-                      {o.total}
-                    </p>
+                    <p className="text-black dark:text-white">{o.total}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="inline-flex rounded-full  bg-opacity-10 py-1 px-3 text-sm font-medium text-white">
-                      {o.status}
-                    </p>
+                    <p className="text-black dark:text-white">{o.status}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="inline-flex rounded-full  bg-opacity-10 py-1 px-3 text-sm font-medium text-white">
-                      {o.type}
-                    </p>
+                    <p className="text-black dark:text-white">{o.type}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="inline-flex rounded-full  bg-opacity-10 py-1 px-3 text-sm font-medium text-white">
+                    <p className="text-black dark:text-white">
                       {o.appointmentDate.toDate().toString()}
                     </p>
                   </td>
