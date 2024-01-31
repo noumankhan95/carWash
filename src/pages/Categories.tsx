@@ -2,21 +2,30 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { LoaderIcon } from 'react-hot-toast';
 import useUserAuth from '../store/UserAuthStore';
 import { useNavigate } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 //@ts-ignore
 import { db } from '../firebase';
 import { toast } from 'react-hot-toast';
 import Modal from '../components/Modal';
 import EditUserModal from '../components/EditUserModal';
+import EditCategory from '../components/EditCategory';
+import useCategoryStore from '../store/useCategoryStore';
+import { ref } from 'firebase/database';
 const Categories = () => {
   const [isloading, setisloading] = useState<boolean>(false);
-  const [showEditUser, setshowEditUser] = useState<boolean>(false);
-
+  const [isdeleting, setisdeleting] = useState<boolean>(false);
+  const [reload, setreload] = useState<boolean>(false);
+  const [todelete, settodelete] = useState<string>();
+  const [showEditCategory, setshowEditCategory] = useState<boolean>(false);
+  const [showAlert, setshowAlert] = useState(false);
   const [categories, setcategories] = useState<CategoryAdditionItem[]>([]);
   const { permissions } = useUserAuth();
+  const { setCategoryItems, setIsEditing, setIsNotEditing } =
+    useCategoryStore();
   const navigate = useNavigate();
   const getCategories = useCallback(async () => {
     try {
+      setisloading(true);
       const cats = await getDocs(collection(db, 'categories'));
       const catarray: CategoryAdditionItem[] = [];
       if (!cats.empty) {
@@ -30,19 +39,78 @@ const Categories = () => {
       setcategories(catarray);
     } catch (e) {
       toast.error('Couldnt Fetch Categories');
+    } finally {
+      setisloading(false);
+      setreload(false);
     }
   }, []);
   useEffect(() => {
     getCategories();
-  }, []);
+  }, [reload]);
   return (
     <div>
+      {showAlert && (
+        <div className="w-1/5 md:w-4/5 right-0 absolute flex bg-boxdark-2  border-l-6 border-[#F87171] z-50   px-7 py-8 shadow-md  md:p-9">
+          <div className="mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg ">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 13 13"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              onClick={() => setshowAlert(false)}
+              className="cursor-pointer"
+            >
+              <path
+                d="M6.4917 7.65579L11.106 12.2645C11.2545 12.4128 11.4715 12.5 11.6738 12.5C11.8762 12.5 12.0931 12.4128 12.2416 12.2645C12.5621 11.9445 12.5623 11.4317 12.2423 11.1114C12.2422 11.1113 12.2422 11.1113 12.2422 11.1113C12.242 11.1111 12.2418 11.1109 12.2416 11.1107L7.64539 6.50351L12.2589 1.91221L12.2595 1.91158C12.5802 1.59132 12.5802 1.07805 12.2595 0.757793C11.9393 0.437994 11.4268 0.437869 11.1064 0.757418C11.1063 0.757543 11.1062 0.757668 11.106 0.757793L6.49234 5.34931L1.89459 0.740581L1.89396 0.739942C1.57364 0.420019 1.0608 0.420019 0.740487 0.739944C0.42005 1.05999 0.419837 1.57279 0.73985 1.89309L6.4917 7.65579ZM6.4917 7.65579L1.89459 12.2639L1.89395 12.2645C1.74546 12.4128 1.52854 12.5 1.32616 12.5C1.12377 12.5 0.906853 12.4128 0.758361 12.2645L1.1117 11.9108L0.758358 12.2645C0.437984 11.9445 0.437708 11.4319 0.757539 11.1116C0.757812 11.1113 0.758086 11.111 0.75836 11.1107L5.33864 6.50287L0.740487 1.89373L6.4917 7.65579Z"
+                fill="#ffffff"
+                stroke="#ffffff"
+              ></path>
+            </svg>
+          </div>
+          <div className="w-full">
+            <h5 className="mb-3 font-semibold text-[#B45454]">
+              Are You Sure You Want To Delete This Item
+            </h5>
+            <ul>
+              <li
+                className="leading-relaxed text-[#CD5D5D]"
+                onClick={async () => {
+                  try {
+                    setisdeleting(true);
+                    console.log(todelete);
+                    await deleteDoc(doc(db, 'categories', todelete!));
+                    settodelete('');
+                    setshowAlert(false);
+                    setreload(true);
+                    toast.success('Deleted');
+                  } catch (e) {
+                    console.log(e);
+                    toast.error('Failed To Delete');
+                  } finally {
+                    setisdeleting(false);
+                  }
+                }}
+              >
+                <button
+                  className="inline-flex items-center justify-center gap-2.5 rounded-full border border-danger py-4 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10"
+                  disabled={isdeleting}
+                >
+                  {isdeleting ? <LoaderIcon className="h-5 w-5" /> : 'Yes'}
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
       <div className="flex flex-row justify-end my-5">
-        {(permissions.includes('Staff All') ||
-          permissions.includes('Staff Add')) && (
+        {(permissions.includes('Categories All') ||
+          permissions.includes('Categories Add')) && (
           <button
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {
+              setCategoryItems({ image: [], name: '' });
+              setIsNotEditing();
               navigate('/addCategory');
             }}
           >
@@ -74,14 +142,7 @@ const Categories = () => {
                         {u.name}
                       </h5>
                     </td>
-                    {/* <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">{u.email}</p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success">
-                        {u.phone || '03452445688'}
-                      </p>
-                    </td> */}
+
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         {permissions?.includes('Categories Delete') ||
@@ -89,8 +150,8 @@ const Categories = () => {
                             <button
                               className="hover:text-danger"
                               onClick={() => {
-                                // setshowAlert((p) => true);
-                                // settodelete({ id: u.id, email: u.email });
+                                setshowAlert((p) => true);
+                                settodelete(u.id);
                               }}
                             >
                               <svg
@@ -125,8 +186,11 @@ const Categories = () => {
                           <button
                             className="hover:text-primary"
                             onClick={() => {
-                              // setshowEditUser((p) => true);
+                              // setshowEditCategory((p) => true);
                               // setSelectedUser(u);
+                              setIsEditing(u.id!);
+                              setCategoryItems(u);
+                              navigate('/addcategory');
                             }}
                           >
                             <svg
@@ -168,14 +232,14 @@ const Categories = () => {
                   </tr>
                 </>
               ))}
-            {showEditUser && (
+            {showEditCategory && (
               <div className="flex">
                 <Modal
                   closeModal={() => {
-                    setshowEditUser(false);
+                    setshowEditCategory(false);
                   }}
                 >
-                  <EditUserModal user={{} as WebsiteUsers} />
+                  <EditCategory />
                 </Modal>
               </div>
             )}

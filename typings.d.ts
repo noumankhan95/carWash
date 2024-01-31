@@ -176,21 +176,31 @@ type CategoryAddition = {
   cat: CategoryAdditionItem;
   setCategoryItems: (c: CategoryAdditionItem) => void;
   addCategoryTodb: (c: CategoryAdditionItem) => Promise<void>;
+  isEditing: { value: boolean; id: string };
+  setIsNotEditing: () => void;
+  setIsEditing: (c: string) => void;
+  updateinDb: (c: CategoryAdditionItem) => Promise<void>;
 };
 
 type CategoryAdditionItem = {
   name: string;
   image: Array<{ url: File | string }>;
+  id?: string;
 };
 
 type ServiceAddition = {
   serviceItem: ServiceAdditionItem;
   setServiceAdditionItem: (c: ServiceAdditionItem) => void;
   addServiceTodb: (c: ServiceAdditionItem) => Promise<void>;
+  isEditing: { value: boolean; id: string };
+  setIsNotEditing: () => void;
+  setIsEditing: (c: string) => void;
+  updateinDb: (c: ServiceAdditionItem) => Promise<void>;
 };
 type ServiceAdditionItem = {
   name: string;
   description: string;
-  image: Array<{ url: File | string }>;
-  video: Array<{ url: File | string }>;
+  file: Array<{ url: File | string }>;
+  id?: string;
+  category: string;
 };

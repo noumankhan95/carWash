@@ -5,6 +5,7 @@ import userSix from '../images/user/user-06.png';
 import DynamicFirebaseImageComponent from '../components/DynamicFirebaseImageComponent';
 import useCategoryStore from '../store/useCategoryStore';
 import { LoaderIcon, toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 type images = {
   url: File | string;
 };
@@ -14,14 +15,18 @@ const validationSchema = yup.object().shape({
 
 function AddCategory() {
   const {
-    cat: { image },
+    cat: { image, name },
+    setCategoryItems,
     addCategoryTodb,
+    isEditing,
+    updateinDb,
   } = useCategoryStore();
   const [images, setimages] = useState<images[]>(image);
   const [isloading, setisloading] = useState<boolean>(false);
+  const navigate = useNavigate();
   const formikObj = useFormik({
     initialValues: {
-      Name: '',
+      Name: name || '',
       file: '',
     },
     validationSchema,
@@ -46,8 +51,14 @@ function AddCategory() {
         }
         console.log(values);
         console.log(images);
-
-        await addCategoryTodb({ name: values.Name, image: images });
+        if (isEditing.value) {
+          await updateinDb({ name: values.Name, image: images });
+        } else {
+          await addCategoryTodb({ name: values.Name, image: images });
+        }
+        toast.success('Successfully Added');
+        setCategoryItems({ image: [], name: '' });
+        navigate('/categories');
       } catch (e) {
         console.log(e);
         return toast.error('An Error Occured ');
@@ -109,10 +120,21 @@ function AddCategory() {
                           <path d="M10.771 8.518c-1.144 0.215-2.83 2.171-2.086 2.915l4.573 4.571-4.573 4.571c-0.915 0.915 1.829 3.656 2.744 2.742l4.573-4.571 4.573 4.571c0.915 0.915 3.658-1.829 2.744-2.742l-4.573-4.571 4.573-4.571c0.915-0.915-1.829-3.656-2.744-2.742l-4.573 4.571-4.573-4.571c-0.173-0.171-0.394-0.223-0.657-0.173v0zM16 1c-8.285 0-15 6.716-15 15s6.715 15 15 15 15-6.716 15-15-6.715-15-15-15zM16 4.75c6.213 0 11.25 5.037 11.25 11.25s-5.037 11.25-11.25 11.25-11.25-5.037-11.25-11.25c0.001-6.213 5.037-11.25 11.25-11.25z"></path>{' '}
                         </g>
                       </svg>
-                      <img
-                        src={`${URL.createObjectURL(i.url)}`}
-                        className="max-w-full object-contain"
-                      />
+                      {i.url.name.includes('mp4') ||
+                      i.url.name.includes('mp3') ? (
+                        <video width="320" height="240" controls>
+                          <source
+                            src={`${URL.createObjectURL(i.url)}`}
+                            type="video/mp4"
+                          />
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : (
+                        <img
+                          src={`${URL.createObjectURL(i.url)}`}
+                          className="max-w-full object-contain"
+                        />
+                      )}
                     </>
                   ) : (
                     <DynamicFirebaseImageComponent
@@ -205,6 +227,8 @@ function AddCategory() {
           >
             {isloading ? (
               <LoaderIcon style={{ height: 30, width: 30, margin: 'auto' }} />
+            ) : isEditing.value ? (
+              'Update'
             ) : (
               'Save'
             )}

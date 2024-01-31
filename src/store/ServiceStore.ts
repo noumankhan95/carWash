@@ -174,13 +174,7 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
         Timings: state.Timings,
         updatedAt: serverTimestamp(),
       });
-      // await setDoc(doc(db, 'staff', state.isEditing.id), {
-      //   Service: state.Service,
-      //   ServingArea: state.ServingArea,
-      //   StaffMember: state.StaffMember,
-      //   Timings: state.Timings,
-      //   updatedAt: serverTimestamp(),
-      // });
+
       return { ...state };
     } catch (e) {
       console.log('e');
