@@ -290,6 +290,131 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     </NavLink>
                   </li>
                 )}
+              {permissions &&
+                permissions.some((e) => e.startsWith('Services')) && (
+                  <li>
+                    <NavLink
+                      to="/services"
+                      className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                        pathname.includes('services') &&
+                        'bg-graydark dark:bg-meta-4'
+                      }`}
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 48 48"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                      >
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g
+                          id="SVGRepo_tracerCarrier"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        ></g>
+                        <g id="SVGRepo_iconCarrier">
+                          <defs>
+                            <style>{`.a{fill:none;stroke:white;stroke-linecap:round;stroke-linejoin:round;}`}</style>
+                          </defs>
+                          <polygon
+                            className="a"
+                            points="24.136 7.89 43.5 18.739 35.472 40.11 14.914 40.11 24.136 7.89"
+                          ></polygon>
+                          <polyline
+                            className="a"
+                            points="14.914 40.11 4.5 18.955 11.106 20.791"
+                          ></polyline>
+                          <polyline
+                            className="a"
+                            points="14.914 40.11 9.707 13.694 15.945 16.02"
+                          ></polyline>
+                          <polyline
+                            className="a"
+                            points="22.703 12.897 16.216 9.68 14.914 40.11"
+                          ></polyline>
+                          <line
+                            className="a"
+                            x1="25.7629"
+                            y1="14.7246"
+                            x2="40.0828"
+                            y2="21.3964"
+                          ></line>
+                          <line
+                            className="a"
+                            x1="24.5695"
+                            y1="18.7837"
+                            x2="38.9075"
+                            y2="24.5243"
+                          ></line>
+                          <line
+                            className="a"
+                            x1="23.3762"
+                            y1="22.8428"
+                            x2="37.7323"
+                            y2="27.6523"
+                          ></line>
+                          <line
+                            className="a"
+                            x1="22.1829"
+                            y1="26.9019"
+                            x2="36.557"
+                            y2="30.7803"
+                          ></line>
+                        </g>
+                      </svg>
+                      Services
+                    </NavLink>
+                  </li>
+                )}
+              {permissions &&
+                permissions.some((e) => e.startsWith('Categories')) && (
+                  <li>
+                    <NavLink
+                      to="/categories"
+                      className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                        pathname.includes('categories') &&
+                        'bg-graydark dark:bg-meta-4'
+                      }`}
+                    >
+                      <svg
+                        fill="white"
+                        height={20}
+                        width={20}
+                        viewBox="0 0 32 32"
+                        id="icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g
+                          id="SVGRepo_tracerCarrier"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        ></g>
+                        <g id="SVGRepo_iconCarrier">
+                          <defs>
+                            <style>{`.cls-1{fill:none;stroke:white}`}</style>
+                          </defs>
+                          <title>collapse-categories</title>
+                          <rect x="14" y="25" width="14" height="2"></rect>
+                          <polygon points="7.17 26 4.59 28.58 6 30 10 26 6 22 4.58 23.41 7.17 26"></polygon>
+                          <rect x="14" y="15" width="14" height="2"></rect>
+                          <polygon points="7.17 16 4.59 18.58 6 20 10 16 6 12 4.58 13.41 7.17 16"></polygon>
+                          <rect x="14" y="5" width="14" height="2"></rect>
+                          <polygon points="7.17 6 4.59 8.58 6 10 10 6 6 2 4.58 3.41 7.17 6"></polygon>
+                          <rect
+                            id="_Transparent_Rectangle_"
+                            data-name="<Transparent Rectangle>"
+                            className="cls-1"
+                            width="32"
+                            height="32"
+                          ></rect>
+                        </g>
+                      </svg>
+                      Categories
+                    </NavLink>
+                  </li>
+                )}
               {/* <li>
                 <NavLink
                   to="/profile"

@@ -1,4 +1,8 @@
 import { lazy } from 'react';
+import AddCategory from '../pages/AddCategory';
+import AddService from '../pages/AddService';
+const Categories = lazy(() => import('../pages/Categories'));
+const Services = lazy(() => import('../pages/Services'));
 
 const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
@@ -22,6 +26,26 @@ const coreRoutes = [
     path: '/orders',
     title: 'Order',
     component: Orders,
+  },
+  {
+    path: '/categories',
+    title: 'Categories',
+    component: Categories,
+  },
+  {
+    path: '/addcategory',
+    title: 'Add Category',
+    component: AddCategory,
+  },
+  {
+    path: '/services',
+    title: 'Services',
+    component: Services,
+  },
+  {
+    path: '/addService',
+    title: 'Add Service',
+    component: AddService,
   },
   {
     path: '/editproviders',

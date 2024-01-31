@@ -171,3 +171,26 @@ type serviceLocation = {
 //   duration: number;
 //   minamount: number;
 // };
+
+type CategoryAddition = {
+  cat: CategoryAdditionItem;
+  setCategoryItems: (c: CategoryAdditionItem) => void;
+  addCategoryTodb: (c: CategoryAdditionItem) => Promise<void>;
+};
+
+type CategoryAdditionItem = {
+  name: string;
+  image: Array<{ url: File | string }>;
+};
+
+type ServiceAddition = {
+  serviceItem: ServiceAdditionItem;
+  setServiceAdditionItem: (c: ServiceAdditionItem) => void;
+  addServiceTodb: (c: ServiceAdditionItem) => Promise<void>;
+};
+type ServiceAdditionItem = {
+  name: string;
+  description: string;
+  image: Array<{ url: File | string }>;
+  video: Array<{ url: File | string }>;
+};
