@@ -1,9 +1,10 @@
 import { lazy } from 'react';
-import AddCategory from '../pages/AddCategory';
-import AddService from '../pages/AddService';
+const AddUpselling = lazy(() => import('../pages/AddUpselling'));
+const AddCategory = lazy(() => import('../pages/AddCategory'));
+const AddService = lazy(() => import('../pages/AddService'));
 const Categories = lazy(() => import('../pages/Categories'));
 const Services = lazy(() => import('../pages/Services'));
-
+const Upselling = lazy(() => import('../pages/Upselling'));
 const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
 const FormElements = lazy(() => import('../pages/Form/FormElements'));
@@ -16,16 +17,40 @@ const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
 const Staff = lazy(() => import('../pages/Staff'));
 const AddStaff = lazy(() => import('../pages/AddStaffMember'));
 const Roles = lazy(() => import('../pages/Roles'));
-const Subscription = lazy(() => import('../components/Subscription'));
+const Subscription = lazy(() => import('../pages/Subscription'));
 const Orders = lazy(() => import('../pages/Orders'));
+const AddSubscription = lazy(() => import('../pages/AddSubscription'));
+
 const Providers = lazy(() => import('../pages/Providers'));
 const EditProviders = lazy(() => import('../pages/EditProviders'));
+
+// const EditProviders = lazy(() => import('../pages/EditProviders'));
 
 const coreRoutes = [
   {
     path: '/orders',
     title: 'Order',
     component: Orders,
+  },
+  {
+    path: '/addSubscription',
+    title: 'Add Subscription',
+    component: AddSubscription,
+  },
+  {
+    path: '/subscriptions',
+    title: 'Subscription',
+    component: Subscription,
+  },
+  {
+    path: '/upsellings',
+    title: 'Upselling',
+    component: Upselling,
+  },
+  {
+    path: '/addUpselling',
+    title: 'Add Upselling',
+    component: AddUpselling,
   },
   {
     path: '/categories',

@@ -351,6 +351,22 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
                 <option value="Services Create">Services Create</option>
                 <option value="Services Delete">Services Delete</option>
                 <option value="Services Update">Services Update</option>
+                <option value="Upsellings All">Upsellings All</option>
+                <option value="Upsellings Read">Upsellings Read</option>
+                <option value="Upsellings Create">Upsellings Create</option>
+                <option value="Upsellings Delete">Upsellings Delete</option>
+                <option value="Upsellings Update">Upsellings Update</option>
+                <option value="Subscriptions All">Subscriptions All</option>
+                <option value="Subscriptions Read">Subscriptions Read</option>
+                <option value="Subscriptions Create">
+                  Subscriptions Create
+                </option>
+                <option value="Subscriptions Delete">
+                  Subscriptions Delete
+                </option>
+                <option value="Subscriptions Update">
+                  Subscriptions Update
+                </option>
               </Field>
               <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                 <svg

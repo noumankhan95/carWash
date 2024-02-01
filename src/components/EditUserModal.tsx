@@ -204,6 +204,36 @@ function EditUserModal({ user }: pageprops) {
                   <option className="text-black" value="Services Update">
                     Services Update
                   </option>
+                  <option className="text-black" value="Upsellings All">
+                    Upsellings All
+                  </option>
+                  <option className="text-black" value="Upsellings Read">
+                    Upsellings Read
+                  </option>
+                  <option className="text-black" value="Upsellings Create">
+                    Upsellings Create
+                  </option>
+                  <option className="text-black" value="Upsellings Delete">
+                    Upsellings Delete
+                  </option>
+                  <option className="text-black" value="Upsellings Update">
+                    Upsellings Update
+                  </option>
+                  <option className="text-black" value="Subscriptions All">
+                    Subscriptions All
+                  </option>
+                  <option className="text-black" value="Subscriptions Read">
+                    Subscriptions Read
+                  </option>
+                  <option className="text-black" value="Subscriptions Create">
+                    Subscriptions Create
+                  </option>
+                  <option className="text-black" value="Subscriptions Delete">
+                    Subscriptions Delete
+                  </option>
+                  <option className="text-black" value="Subscriptions Update">
+                    Subscriptions Update
+                  </option>
                 </select>
                 <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                   <svg

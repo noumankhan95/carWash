@@ -1,7 +1,13 @@
 import React, { useCallback, useRef } from 'react';
 import { useState } from 'react';
 import useProviderStore from '../store/useProviderStore';
-function EditSubscriptionModal({ name }: { name: string }) {
+function EditSubscriptionModal({
+  name,
+  closeModal,
+}: {
+  name: string;
+  closeModal: () => void;
+}) {
   const { Subscriptions, setsubscriptions } = useProviderStore();
   const thisSub = Subscriptions.find((o) => o.name === name);
   const [firstenabled, setfirstenabled] = useState<boolean>(
@@ -342,15 +348,11 @@ function EditSubscriptionModal({ name }: { name: string }) {
             <button
               type="button"
               className="inline-flex bg-primary items-center justify-center rounded-md border border-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-              onClick={() => addSubscription()}
+              onClick={() => {
+                addSubscription();
+              }}
             >
               Save
-            </button>{' '}
-            <button
-              type="button"
-              className="inline-flex bg-danger items-center justify-center rounded-md border border-danger py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-            >
-              Cancel
             </button>
           </div>
         </div>

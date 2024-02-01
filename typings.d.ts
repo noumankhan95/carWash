@@ -204,3 +204,52 @@ type ServiceAdditionItem = {
   id?: string;
   category: string;
 };
+
+//upselling
+
+type upselling = {
+  name: string;
+  arabicName: string;
+  type: string;
+  price: string;
+  id?: string;
+  file: Array<{ url: File | string }>;
+  modifiers?: Array<{ name: string; price: string }>;
+};
+
+type UpsellingFormik = {
+  Name: string;
+  'Arabic Name': string;
+  type: string;
+  modifiers: Array<{ name: string; price: string }>;
+  price: number;
+};
+
+type upsellingStore = {
+  item: upselling;
+  isEditing: { value: boolean; id: string };
+  setIsNotEditing: () => void;
+  setIsEditing: (c: string) => void;
+  updateinDb: (c: upselling) => Promise<void>;
+  setUpsellingItem: (c: upselling) => void;
+  addUpsellingTodb: (c: upselling) => Promise<void>;
+};
+
+type SubscriptionStore = {
+  subscription: Subscription;
+  isEditing: { value: boolean; id: string };
+  setIsNotEditing: () => void;
+  setIsEditing: (c: string) => void;
+  updateinDb: (c: Subscription) => Promise<void>;
+  setSubscriptionItem: (c: Subscription) => void;
+  addSubscriptionTodb: (c: Subscription) => Promise<void>;
+};
+type Subscription = {
+  first: { discount: number; enabled: boolean };
+  second: { discount: number; enabled: boolean };
+  third: { discount: number; enabled: boolean };
+  service: string;
+  id?: string;
+  status: boolean;
+};
+type SubscriptionName = 'first' | 'second' | 'third';
