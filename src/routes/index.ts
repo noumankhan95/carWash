@@ -23,14 +23,25 @@ const AddSubscription = lazy(() => import('../pages/AddSubscription'));
 
 const Providers = lazy(() => import('../pages/Providers'));
 const EditProviders = lazy(() => import('../pages/EditProviders'));
-
+const OrderDetails = lazy(() => import('../pages/OrderDetails'));
+const AddOrder = lazy(() => import('../pages/AddOrder'));
 // const EditProviders = lazy(() => import('../pages/EditProviders'));
 
 const coreRoutes = [
   {
+    path: '/addOrder',
+    title: 'Add Order',
+    component: AddOrder,
+  },
+  {
     path: '/orders',
     title: 'Order',
     component: Orders,
+  },
+  {
+    path: '/orderDetails',
+    title: 'Order Details',
+    component: OrderDetails,
   },
   {
     path: '/addSubscription',

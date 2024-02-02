@@ -51,7 +51,8 @@ type ServiceName =
   | 'Car Detailing'
   | 'Gold Wash'
   | 'Ceramic'
-  | 'Platinum Wash';
+  | 'Platinum Wash'
+  | string;
 type StaffMember = {
   Name: string;
   ArabicName: string;
@@ -253,3 +254,36 @@ type Subscription = {
   status: boolean;
 };
 type SubscriptionName = 'first' | 'second' | 'third';
+type Orders = {
+  id: string;
+  orderNumber: string;
+  customer: string;
+  service: string;
+  worker: string;
+  total: number;
+  status: string;
+  type: string;
+  appointmentDate: Timestamp;
+  paymentMethod: string;
+  selectedDate: Timestamp;
+  uid: string;
+};
+
+type OrderStore = {
+  order: Orders;
+  isEditing: { value: boolean; id: string };
+  setIsNotEditing: () => void;
+  setIsEditing: (c: string) => void;
+  // updateinDb: (c: Subscription) => Promise<void>;
+  setOrdersItem: (c: Orders) => void;
+  addOrdersTodb: (c: Orders) => Promise<void>;
+};
+
+type GlobalStore = {
+  services: Array<string>;
+  categories: Array<string>;
+  workers: Array<string>;
+  setcategories: (c: string[]) => void;
+  setservices: (c: string[]) => void;
+  setworkers: (c: string[]) => void;
+};

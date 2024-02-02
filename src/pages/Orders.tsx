@@ -5,20 +5,11 @@ import { type Timestamp } from 'firebase/firestore';
 // @ts-ignore
 import { db } from '../firebase.js';
 import 'react-datepicker/dist/react-datepicker.css';
-type Orders = {
-  id: string;
-  orderNumber: string;
-  customer: string;
-  service: string;
-  worker: string;
-  total: number;
-  status: string;
-  type: string;
-  appointmentDate: Timestamp;
-  paymentMethod: string;
-  selectedDate: Date;
-  uid: string;
-};
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { LoaderIcon } from 'react-hot-toast';
+import useUserAuth from '../store/UserAuthStore.js';
+import useOrderStore from '../store/useOrderStore.js';
 
 function Orders() {
   const endDateref = useRef<HTMLInputElement | null>(null);
@@ -39,28 +30,75 @@ function Orders() {
     }
   };
   const [Orders, setOrders] = useState<Array<Orders>>([]);
+  const [isloading, setisloading] = useState<boolean>(false);
+
   const [page, setpage] = useState<number>(1);
   const ItemsperPage = 10;
   const totalPages = Math.ceil((Orders.length || 1) / ItemsperPage);
   const startIndex = (page - 1) * ItemsperPage;
   const endIndex = startIndex + ItemsperPage;
   const currentItems = Orders.slice(startIndex, endIndex);
+  const { permissions } = useUserAuth();
+  // const {
+  //   setIsEditing,
+  //   setIsNotEditing,
+  //   addOrdersTodb,
+  //   isEditing,
+  //   order,
+  //   setOrdersItem,
+  // } = useOrderStore();
   useEffect(() => {
     getOrders();
   }, []);
   const getOrders = useCallback(async () => {
-    const docs = await getDocs(collection(db, 'orders'));
-    const orders: Orders[] = [];
-    if (docs.empty) return setOrders([]);
-    docs.forEach((doc) => {
-      orders.push({ ...(doc.data() as Orders), id: doc.id });
-    });
-    setOrders(orders);
+    try {
+      setisloading((p) => true);
+      const docs = await getDocs(collection(db, 'orders'));
+      const orders: Orders[] = [];
+      if (docs.empty) return setOrders([]);
+      docs.forEach((doc) => {
+        orders.push({ ...(doc.data() as Orders), id: doc.id });
+      });
+      setOrders(orders);
+    } catch (e) {
+      toast.error('Couldnt Fetch Orders');
+    } finally {
+      setisloading((p) => false);
+    }
   }, []);
-
+  const navigate = useNavigate();
   console.log(totalPages, 'And', page);
   return (
     <div>
+      {/* <div className="flex flex-row justify-end my-5">
+        {(permissions.includes('Services All') ||
+          permissions.includes('Services Add')) && (
+          <button
+            className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+            onClick={() => {
+              // setCategoryItems({ image: [], name: '' });
+              setIsNotEditing();
+              setOrdersItem({
+                appointmentDate: '',
+                customer: '',
+                id: '',
+                orderNumber: '',
+                paymentMethod: '',
+                selectedDate: '',
+                service: '',
+                status: '',
+                total: 0,
+                type: '',
+                uid: '',
+                worker: '',
+              });
+              navigate('/addOrder');
+            }}
+          >
+            Create
+          </button>
+        )}
+      </div> */}
       {/* <div className="flex flex-col gap-5.5 p-6.5">
         <h1 className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white ">
           Filter Orders By
@@ -342,66 +380,85 @@ function Orders() {
                 <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                   Order Number
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black  dark:text-white">
                   Customer
                 </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black  dark:text-white">
                   Service
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black  dark:text-white">
                   Worker
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black  dark:text-white">
                   Total
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black  dark:text-white">
                   Status
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black  dark:text-white">
                   Type
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black  dark:text-white">
                   Appointment Date
+                </th>
+                <th className="py-4 px-4 font-medium text-black  dark:text-white">
+                  Actions
                 </th>
               </tr>
             </thead>
-            <tbody>
-              {currentItems?.map((o) => (
-                <tr key={o.id}>
-                  <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-5">
-                    <h5 className="font-medium text-black dark:text-white">
-                      {o.orderNumber}
-                    </h5>
-                    {/* <p className="text-sm">$0.00</p> */}
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{o.customer}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{o.service}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{o.worker}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{o.total}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{o.status}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{o.type}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">
-                      {o.appointmentDate.toDate().toString()}
-                    </p>
-                  </td>
-                </tr>
-              ))}
+            <tbody className="w-full">
+              {!isloading &&
+                currentItems?.map((o) => (
+                  <tr key={o.id}>
+                    <td className="border-b border-[#eee] py-4 px-4  dark:border-strokedark min-w-[220px]">
+                      <h5 className="font-medium text-black dark:text-white">
+                        {o.orderNumber}
+                      </h5>
+                      {/* <p className="text-sm">$0.00</p> */}
+                    </td>
+                    <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark min-w-[150px]">
+                      <p className="text-black dark:text-white">{o.customer}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark min-w-[120px]">
+                      <p className="text-black dark:text-white">{o.service}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark min-w-[120px]">
+                      <p className="text-black dark:text-white">{o.worker}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark min-w-[120px]">
+                      <p className="text-black dark:text-white">{o.total}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark min-w-[120px]">
+                      <p className="text-black dark:text-white">{o.status}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark min-w-[120px]">
+                      <p className="text-black dark:text-white">{o.type}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark min-w-[120px]">
+                      <p className="text-black dark:text-white">
+                        {o.appointmentDate.toDate().toString()}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark min-w-[120px]">
+                      <p
+                        className="text-black dark:text-white cursor-pointer dark:hover:text-meta-6 hover:text-meta-6"
+                        onClick={() => {
+                          navigate('/orderDetails', {
+                            state: {
+                              order: o,
+                            },
+                          });
+                        }}
+                      >
+                        Show Details
+                      </p>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
+        {isloading && <LoaderIcon className="h-12 w-12 mx-auto my-10" />}
       </div>
       <div className="my-10 mx-15">
         <div className="flex flex-wrap gap-5 xl:gap-7.5 items-center">

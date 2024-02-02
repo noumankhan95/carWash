@@ -1,13 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import AddAStaffMember from '../components/AddStaffStep1';
-import AddService from '../components/AddStaffSteo2';
-import AddTimings from '../components/AddStaffStep3';
-import AddServingArea from '../components/AddStaffStep4';
-import useWorkerStore from '../store/ServiceStore';
+
 import ProviderInformation from '../components/ProviderInformation';
-import Subscription from '../components/Subscription';
+import Subscription from '../pages/Subscription';
 type StepComponent = {
   [key: number]: {
     component: (props: AddStaffMemberChildrenProps) => React.ReactNode;
@@ -24,7 +19,7 @@ function EditProviders() {
       stepNumber: 1,
     },
     2: {
-      component: (props) => <Subscription {...props} />,
+      component: (props) => <Subscription />,
       name: 'Subscription',
       stepNumber: 2,
     },

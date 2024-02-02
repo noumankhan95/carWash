@@ -10,6 +10,7 @@ import toast, { LoaderIcon } from 'react-hot-toast';
 import { collection, getDocs } from 'firebase/firestore';
 //@ts-ignore
 import { db } from '../firebase';
+import useGlobalStore from '../store/globalStore';
 type filesArray = {
   url: File | string;
 };
@@ -28,8 +29,9 @@ function AddService() {
   } = useServiceAdditionStore();
   const [images, setimages] = useState<filesArray[]>(filesarr);
   const [isloading, setisloading] = useState<boolean>(false);
-  const [categoriesList, setcategoriesList] = useState<string[]>([]);
   const navigate = useNavigate();
+  const { categories } = useGlobalStore();
+  console.log('Cawrrq', category);
   const formikObj = useFormik({
     initialValues: {
       Name: name || '',
@@ -161,25 +163,7 @@ function AddService() {
       </div>
     );
   }, [images]);
-  const getCategoriesList = useCallback(async () => {
-    try {
-      setisloading(true);
-      const items = await getDocs(collection(db, 'categories'));
-      const categories: Array<string> = [];
-      if (!items.empty) {
-        items.forEach((item) => categories.push(item.data()?.name));
-      }
-      setcategoriesList(categories);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setisloading(false);
-    }
-  }, []);
-  useEffect(() => {
-    getCategoriesList();
-  }, []);
-  console.log(categoriesList);
+
   return (
     <FormikProvider value={formikObj}>
       <form onSubmit={formikObj.handleSubmit}>
@@ -220,7 +204,7 @@ function AddService() {
               />
             </div>
           </div>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 flex-col lg:flex-row lg:items-center">
             <div className="w-full md:w-2/5">
               <label className="mb-3 block text-black dark:text-white">
                 Category
@@ -233,7 +217,7 @@ function AddService() {
                 className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               >
                 <option>select</option>
-                {categoriesList.map((c) => (
+                {categories.map((c) => (
                   <option key={c} value={c.toString()}>
                     {c}
                   </option>
@@ -245,6 +229,14 @@ function AddService() {
                 className="text-danger"
               />
             </div>
+            {category && (
+              <div>
+                <h1 className="mb-3 block text-black dark:text-white">
+                  Previously Selected Category
+                </h1>
+                <h2 className="text-meta-8">{category}</h2>
+              </div>
+            )}
           </div>
           <div className="overflow-hidden rounded-sm border border-strokeshadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="px-4 py-5 pb-6 text-center lg:pb-8 xl:pb-11.5">

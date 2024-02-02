@@ -11,7 +11,6 @@ import EditUserModal from '../components/EditUserModal';
 import EditCategory from '../components/EditCategory';
 import useCategoryStore from '../store/useCategoryStore';
 import { ref } from 'firebase/database';
-import useUpselling from '../store/useUpsellingStore';
 import useSubscription from '../store/useSubscriptionStore';
 const Upselling = () => {
   const [isloading, setisloading] = useState<boolean>(false);
@@ -108,8 +107,8 @@ const Upselling = () => {
         </div>
       )}
       <div className="flex flex-row justify-end my-5">
-        {(permissions.includes('Upsellings All') ||
-          permissions.includes('Upsellings Add')) && (
+        {(permissions.includes('Subscriptions All') ||
+          permissions.includes('Subscriptions Add')) && (
           <button
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {

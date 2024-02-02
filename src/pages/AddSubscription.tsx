@@ -6,7 +6,7 @@ import useProviderStore from '../store/useProviderStore';
 import { useNavigate } from 'react-router-dom';
 import { LoaderIcon } from 'react-hot-toast';
 import useSubscription from '../store/useSubscriptionStore';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { useFormik, FormikProvider, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 const validationSchema = yup.object().shape({
@@ -76,7 +76,11 @@ function Subscription({ settheStep }: AddStaffMemberChildrenProps) {
       setisloading(true);
       try {
         console.log(values);
-
+        if (services === '') {
+          console.log('return');
+          toast.error('Add Service First');
+          return;
+        }
         if (isEditing.value) {
           await updateinDb({
             ...values,
@@ -94,7 +98,6 @@ function Subscription({ settheStep }: AddStaffMemberChildrenProps) {
       }
     },
   });
-  console.log(formikObj.errors);
   return (
     <FormikProvider value={formikObj}>
       <div className="flex flex-col my-6  space-y-5">
@@ -107,6 +110,7 @@ function Subscription({ settheStep }: AddStaffMemberChildrenProps) {
             // setshowModal((p) => true);
           }}
         >
+          <option value="">Select</option>
           <option value="Standard Wash">StandardWash</option>
           <option value="Premium Wash">PremiumWash</option>
           <option value="Washing">Washing</option>

@@ -12,12 +12,21 @@ import Staff from './pages/Staff';
 import { db, auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import useUserAuth from './store/UserAuthStore';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import useGlobalStore from './store/globalStore';
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { isloggedIn, setisloggedIn, ...u } = useUserAuth();
+  const {
+    setcategories,
+    setservices,
+    setworkers,
+    categories,
+    services,
+    workers,
+  } = useGlobalStore();
   useEffect(() => {
     setLoading((p) => true);
     const sub = onAuthStateChanged(auth, (user) => {
@@ -53,11 +62,55 @@ function App() {
     });
     return () => sub();
   }, []);
+  const getCategories = async () => {
+    try {
+      const docs = await getDocs(collection(db, 'categories'));
+      if (docs.empty) {
+        setcategories([]);
+        return;
+      }
+      const cats: string[] = [];
+      docs.forEach((doc) => cats.push(doc.data()?.name));
+      setcategories(cats);
+    } catch (e) {}
+  };
+  const getServices = async () => {
+    try {
+      const docs = await getDocs(collection(db, 'services'));
+      if (docs.empty) {
+        setcategories([]);
+        return;
+      }
+      const cats: string[] = [];
+      docs.forEach((doc) => cats.push(doc.data()?.name));
+      setservices(cats);
+    } catch (e) {}
+  };
+  const getWorkers = async () => {
+    try {
+      const docs = await getDocs(collection(db, 'staff'));
+      if (docs.empty) {
+        setcategories([]);
+        return;
+      }
+      const cats: string[] = [];
+      docs.forEach((doc) => cats.push(doc.data()?.StaffMember.Name));
+      setworkers(cats);
+    } catch (e) {}
+  };
+  useEffect(() => {
+    getCategories();
+    getWorkers();
+    getServices();
+  }, []);
   // useEffect(() => {
   //   setTimeout(() => setLoading(false), 1000);
   //   //For timeout
   // }, []);
   // console.log('loading', loading);
+  console.log('cats', categories);
+  console.log('serv', services);
+  console.log('workers', workers);
 
   console.log('islogged Auth', isloggedIn, 'and ', u);
   return loading ? (

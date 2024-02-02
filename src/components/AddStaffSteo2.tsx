@@ -3,12 +3,14 @@ import Modal from './Modal';
 import EditService from './EditService';
 import useWorkerStore from '../store/ServiceStore';
 import { toast } from 'react-hot-toast';
+import useGlobalStore from '../store/globalStore';
 function AddService({ settheStep }: AddStaffMemberChildrenProps) {
   const {
     Service: { services: globalServices },
   } = useWorkerStore();
   const [services, setservices] = useState<ServiceName | string>('');
   const [showModal, setshowModal] = useState<boolean>(false);
+  const { services: fromGlobalStore } = useGlobalStore();
   console.log(globalServices);
   return (
     <div>
@@ -100,13 +102,17 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
                 }}
               >
                 <option value="">Select A Service</option>
-                <option value="Standard Wash">StandardWash</option>
-                <option value="Premium Wash">PremiumWash</option>
+                {fromGlobalStore.map((o) => (
+                  <option key={o} value={o}>
+                    {o}
+                  </option>
+                ))}
+                {/* <option value="Premium Wash">PremiumWash</option>
                 <option value="Washing">Washing</option>
                 <option value="Car Detailing">Car Detailing</option>
                 <option value="Gold Wash">Gold Wash</option>
                 <option value="Ceramic">Ceramic</option>
-                <option value="Platinum Wash">Platinum Wash</option>
+                <option value="Platinum Wash">Platinum Wash</option> */}
               </select>
               <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                 <svg

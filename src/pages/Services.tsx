@@ -197,7 +197,7 @@ const Services = () => {
                               // setshowEditService((p) => true);
                               // setSelectedUser(u);
                               // setCategoryItems(u);
-                              console.log('service id', u.id);
+                              console.log('service id', u);
                               setIsEditing(u.id!);
                               setServiceAdditionItem({
                                 description: u.description,
