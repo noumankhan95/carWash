@@ -2,7 +2,7 @@ import { create } from 'zustand';
 //@ts-ignore
 import { db, storage } from '../firebase.js';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
-import { ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 const useProviderStore = create<ProviderInformation>((set, get) => ({
   providerInfo: {
     arabicDetails: '',
@@ -32,7 +32,8 @@ const useProviderStore = create<ProviderInformation>((set, get) => ({
           let name = `providers/${state.providerInfo.name}/${file.url.name}`;
 
           await uploadBytes(ref(storage, name), file.url);
-          images.push({ url: name });
+          const constructedURL = await getDownloadURL(ref(storage, name));
+          images.push({ url: constructedURL });
           console.log('File Uploaded');
         }
       });

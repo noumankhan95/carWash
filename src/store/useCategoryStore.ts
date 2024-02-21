@@ -3,17 +3,22 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDocs,
+  query,
   serverTimestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 import { create } from 'zustand';
 // @ts-ignore
 import { db, storage } from '../firebase.js';
-import { uploadBytes, ref } from 'firebase/storage';
+import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 const useCategoryStore = create<CategoryAddition>((set, get) => ({
-  cat: { image: [], name: '' },
+  cat: { image: [], name: '', arabicName: '' },
   setCategoryItems(c) {
-    set((state) => ({ cat: { image: c.image, name: c.name } }));
+    set((state) => ({
+      cat: { image: c.image, name: c.name, arabicName: c.arabicName },
+    }));
   },
   async addCategoryTodb(c) {
     try {
@@ -28,7 +33,8 @@ const useCategoryStore = create<CategoryAddition>((set, get) => ({
 
           try {
             await uploadBytes(ref(storage, name), file.url);
-            images.push({ url: name });
+            const constructedURL = await getDownloadURL(ref(storage, name));
+            images.push({ url: constructedURL });
             console.log('File Uploaded');
           } catch (e) {
             // alert(e);
@@ -39,10 +45,15 @@ const useCategoryStore = create<CategoryAddition>((set, get) => ({
 
       // Wait for all file uploads to complete
       await Promise.all(uploadPromises);
+      const pdocs = await getDocs(
+        query(collection(db, 'categories'), where('name', '==', c.name)),
+      );
+      if (!pdocs.empty) throw 'Category Already Exists';
       await addDoc(collection(db, 'categories'), {
         name: c.name,
         image: images,
         createdAt: serverTimestamp(),
+        arabicName: c.arabicName,
       });
     } catch (e) {
       console.log(e);
@@ -68,7 +79,8 @@ const useCategoryStore = create<CategoryAddition>((set, get) => ({
 
             try {
               await uploadBytes(ref(storage, name), file.url);
-              images.push({ url: name });
+              const constructedURL = await getDownloadURL(ref(storage, name));
+              images.push({ url: constructedURL });
               console.log('File Uploaded');
             } catch (e) {
               // alert(e);
@@ -82,6 +94,7 @@ const useCategoryStore = create<CategoryAddition>((set, get) => ({
         await updateDoc(doc(db, 'categories', st.isEditing.id), {
           name: c.name,
           image: arrayUnion(...images),
+          arabicName: c.arabicName,
           updatedAt: serverTimestamp(),
         });
       } catch (e) {

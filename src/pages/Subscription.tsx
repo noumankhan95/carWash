@@ -12,6 +12,7 @@ import EditCategory from '../components/EditCategory';
 import useCategoryStore from '../store/useCategoryStore';
 import { ref } from 'firebase/database';
 import useSubscription from '../store/useSubscriptionStore';
+import useGlobalStore from '../store/globalStore';
 const Upselling = () => {
   const [isloading, setisloading] = useState<boolean>(false);
   const [isdeleting, setisdeleting] = useState<boolean>(false);
@@ -25,6 +26,7 @@ const Upselling = () => {
   //   useCategoryStore();
   const { isEditing, setIsEditing, setSubscriptionItem, setIsNotEditing } =
     useSubscription();
+  const { services } = useGlobalStore();
   const navigate = useNavigate();
   const getupselling = useCallback(async () => {
     try {

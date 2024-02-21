@@ -9,6 +9,7 @@ import useSubscription from '../store/useSubscriptionStore';
 import { toast } from 'react-hot-toast';
 import { useFormik, FormikProvider, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
+import useGlobalStore from '../store/globalStore';
 const validationSchema = yup.object().shape({
   status: yup.boolean().default(false),
   first: yup.object().shape({
@@ -55,6 +56,7 @@ function Subscription({ settheStep }: AddStaffMemberChildrenProps) {
   const [showEditUser, setshowEditUser] = useState(false);
   const [isloading, setisloading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { services: gservices } = useGlobalStore();
   const formikObj = useFormik({
     initialValues: {
       status: subscription.status || false,
@@ -111,13 +113,9 @@ function Subscription({ settheStep }: AddStaffMemberChildrenProps) {
           }}
         >
           <option value="">Select</option>
-          <option value="Standard Wash">StandardWash</option>
-          <option value="Premium Wash">PremiumWash</option>
-          <option value="Washing">Washing</option>
-          <option value="Car Detailing">Car Detailing</option>
-          <option value="Gold Wash">Gold Wash</option>
-          <option value="Ceramic">Ceramic</option>
-          <option value="Platinum Wash">Platinum Wash</option>
+          {gservices.map((s) => (
+            <option value={s}>{s}</option>
+          ))}
         </select>
       </div>
       <form onSubmit={formikObj.handleSubmit}>

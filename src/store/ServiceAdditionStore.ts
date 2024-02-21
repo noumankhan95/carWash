@@ -10,13 +10,14 @@ import {
 } from 'firebase/firestore';
 //@ts-ignore
 import { db, storage } from '../firebase';
-import { uploadBytes, ref } from 'firebase/storage';
+import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
   serviceItem: {
     description: '',
     file: [],
     name: '',
     category: '',
+    arabicDescription: '',
   },
   isEditing: { value: false, id: '' },
   setIsNotEditing() {
@@ -40,8 +41,9 @@ const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
           let name = `services/${c.name}/${f.url.name}`;
 
           try {
-            await uploadBytes(ref(storage, name), f.url);
-            fs.push({ url: name });
+            const r = await uploadBytes(ref(storage, name), f.url);
+            const constructedURL = await getDownloadURL(ref(storage, name));
+            fs.push({ url: constructedURL });
             console.log('f Uploaded');
           } catch (e) {
             // alert(e);
@@ -55,6 +57,7 @@ const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
       await addDoc(collection(db, 'services'), {
         name: c.name,
         description: c.description,
+        arabicDescription: c.arabicDescription,
         file: fs,
         category: c.category,
         createdAt: serverTimestamp(),
@@ -77,7 +80,8 @@ const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
 
           try {
             await uploadBytes(ref(storage, name), f.url);
-            fs.push({ url: name });
+            const constructedURL = await getDownloadURL(ref(storage, name));
+            fs.push({ url: constructedURL });
             console.log('f Uploaded');
           } catch (e) {
             // alert(e);
@@ -91,6 +95,8 @@ const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
       await updateDoc(doc(db, 'services', st.isEditing.id), {
         name: c.name,
         description: c.description,
+        arabicDescription: c.arabicDescription,
+
         file: arrayUnion(...fs),
         category: c.category,
         updatedAt: serverTimestamp(),

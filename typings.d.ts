@@ -185,6 +185,7 @@ type CategoryAddition = {
 
 type CategoryAdditionItem = {
   name: string;
+  arabicName: string;
   image: Array<{ url: File | string }>;
   id?: string;
 };
@@ -201,6 +202,7 @@ type ServiceAddition = {
 type ServiceAdditionItem = {
   name: string;
   description: string;
+  arabicDescription: string;
   file: Array<{ url: File | string }>;
   id?: string;
   category: string;

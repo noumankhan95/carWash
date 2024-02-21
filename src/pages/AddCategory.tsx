@@ -11,11 +11,12 @@ type images = {
 };
 const validationSchema = yup.object().shape({
   Name: yup.string().required('Category Name is Required').min(3),
+  arabicName: yup.string().required('Arabic Name is Required').min(3),
 });
 
 function AddCategory() {
   const {
-    cat: { image, name },
+    cat: { image, name, arabicName },
     setCategoryItems,
     addCategoryTodb,
     isEditing,
@@ -27,6 +28,7 @@ function AddCategory() {
   const formikObj = useFormik({
     initialValues: {
       Name: name || '',
+      arabicName: arabicName || '',
       file: '',
     },
     validationSchema,
@@ -52,12 +54,20 @@ function AddCategory() {
         console.log(values);
         console.log(images);
         if (isEditing.value) {
-          await updateinDb({ name: values.Name, image: images });
+          await updateinDb({
+            name: values.Name,
+            image: images,
+            arabicName: values.arabicName,
+          });
         } else {
-          await addCategoryTodb({ name: values.Name, image: images });
+          await addCategoryTodb({
+            name: values.Name,
+            image: images,
+            arabicName: values.arabicName,
+          });
         }
         toast.success('Successfully Added');
-        setCategoryItems({ image: [], name: '' });
+        setCategoryItems({ image: [], name: '', arabicName: '' });
         navigate('/categories');
       } catch (e) {
         console.log(e);
@@ -169,6 +179,22 @@ function AddCategory() {
               />
               <ErrorMessage
                 name="Name"
+                component="div"
+                className="text-danger"
+              />
+            </div>
+            <div className="w-full md:w-2/5">
+              <label className="mb-3 block text-black dark:text-white">
+                Arabic Name
+              </label>
+              <Field
+                type="text"
+                name="arabicName"
+                placeholder="Name"
+                className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              />
+              <ErrorMessage
+                name="arabicName"
                 component="div"
                 className="text-danger"
               />

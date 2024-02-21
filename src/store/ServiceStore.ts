@@ -8,7 +8,7 @@ import {
   addDoc,
   serverTimestamp,
 } from 'firebase/firestore';
-import { uploadBytes, ref } from 'firebase/storage';
+import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 const useWorkerStore = create<StaffWorker>((set, get) => ({
   userAuth: { email: '', password: '' },
   Service: { services: [] },
@@ -81,7 +81,8 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
 
         try {
           await uploadBytes(ref(storage, name), file.url);
-          images.push({ url: name });
+          const constructedURL = await getDownloadURL(ref(storage, name));
+          images.push({ url: constructedURL });
           console.log('File Uploaded');
         } catch (e) {
           alert(e);
@@ -156,7 +157,8 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
 
           try {
             await uploadBytes(ref(storage, name), file.url);
-            images.push({ url: name });
+            const constructedURL = await getDownloadURL(ref(storage, name));
+            images.push({ url: constructedURL });
             console.log('File Uploaded');
           } catch (e) {
             alert(e);

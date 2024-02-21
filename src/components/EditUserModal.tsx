@@ -82,7 +82,8 @@ function EditUserModal({ user }: pageprops) {
                 User Roles
               </label>
               {/* Dropdown Select */}
-              <div className="relative z-20 p-4 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+              <div 
+              className="relative z-20 p-4 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
                 <div className="flex flex-wrap items-center">
                   {permissions?.map((I: String) => (
                     <span

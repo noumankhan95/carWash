@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { uploadBytes, ref } from 'firebase/storage';
+import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 //@ts-ignore
 import { db, storage } from '../firebase';
 import {
@@ -33,7 +33,8 @@ const useUpselling = create<upsellingStore>((set, get) => ({
 
           try {
             await uploadBytes(ref(storage, name), f.url);
-            images.push({ url: name });
+            const constructedURL = await getDownloadURL(ref(storage, name));
+            images.push({ url: constructedURL });
             console.log('File Uploaded');
           } catch (e) {
             // alert(e);
@@ -92,7 +93,8 @@ const useUpselling = create<upsellingStore>((set, get) => ({
 
           try {
             await uploadBytes(ref(storage, name), f.url);
-            images.push({ url: name });
+            const constructedURL = await getDownloadURL(ref(storage, name));
+            images.push({ url: constructedURL });
             console.log('File Uploaded');
           } catch (e) {
             // alert(e);

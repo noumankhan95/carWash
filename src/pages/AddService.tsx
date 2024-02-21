@@ -18,11 +18,18 @@ const validationSchema = yup.object().shape({
   Name: yup.string().required('Category Name is Required').min(3),
   Description: yup.string().required('Description is Required'),
   category: yup.string().required('Service is required'),
+  arabicDescription: yup.string().required('Arabic Description is Required'),
 });
 
 function AddService() {
   const {
-    serviceItem: { file: filesarr, name, description, category },
+    serviceItem: {
+      file: filesarr,
+      name,
+      description,
+      category,
+      arabicDescription,
+    },
     addServiceTodb,
     isEditing,
     updateinDb,
@@ -37,6 +44,7 @@ function AddService() {
       Name: name || '',
       Description: description || '',
       category: category || '',
+      arabicDescription: arabicDescription || '',
     },
     validationSchema,
     async onSubmit(values, formikHelpers) {
@@ -65,6 +73,7 @@ function AddService() {
             name: values.Name,
             file: images,
             category: values.category,
+            arabicDescription: values.arabicDescription,
           });
         } else {
           await addServiceTodb({
@@ -72,6 +81,7 @@ function AddService() {
             name: values.Name,
             file: images,
             category: values.category,
+            arabicDescription: values.arabicDescription,
           });
         }
         navigate('/services');
@@ -199,6 +209,23 @@ function AddService() {
               />
               <ErrorMessage
                 name="Description"
+                component="div"
+                className="text-danger"
+              />
+            </div>
+            <div className="w-full md:w-2/5">
+              <label className="mb-3 block text-black dark:text-white">
+                Arabic Description
+              </label>
+              <Field
+                as="textarea"
+                type="text"
+                name="arabicDescription"
+                placeholder="Description"
+                className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              />
+              <ErrorMessage
+                name="arabicDescription"
                 component="div"
                 className="text-danger"
               />
