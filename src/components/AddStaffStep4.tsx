@@ -129,8 +129,6 @@ function AddServingArea() {
               } else {
                 console.log('Reached');
                 await runTransaction(db, async (transaction) => {
-                  await addToDb();
-
                   const u = await createUserWithEmailAndPassword(
                     auth,
                     userAuth.email,
@@ -142,6 +140,7 @@ function AddServingArea() {
                     phone: StaffMember.phone,
                     permissions: StaffMember.permissions,
                   });
+                  await addToDb(u.user.uid);
                 });
               }
               EmptyFields();

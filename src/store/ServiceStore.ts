@@ -84,7 +84,7 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
       return { ...state, Timings: timings };
     });
   },
-  addToDb: async () => {
+  addToDb: async (uid: string) => {
     const state = get();
     console.log(state, 'staff');
     const images: { url: string }[] = [];
@@ -109,7 +109,7 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
 
     // Wait for all file uploads to complete
     await Promise.all(uploadPromises);
-    await addDoc(collection(db, 'staff'), {
+    await setDoc(doc(db, 'staff', uid), {
       Service: state.Service,
       ServingArea: state.ServingArea,
       StaffMember: { ...state.StaffMember, file: images },

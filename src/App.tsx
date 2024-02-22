@@ -97,8 +97,13 @@ function App() {
         setcategories([]);
         return;
       }
-      const cats: string[] = [];
-      docs.forEach((doc) => cats.push(doc.data()?.StaffMember.Name));
+      const cats: globalWorkers[] = [];
+      docs.forEach((doc) =>
+        cats.push({
+          name: doc.data().StaffMember.Name as string,
+          id: doc.id,
+        }),
+      );
       setworkers(cats);
     } catch (e) {}
   };

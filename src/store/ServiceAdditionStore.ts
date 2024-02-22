@@ -21,6 +21,7 @@ const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
     name: '',
     category: '',
     arabicDescription: '',
+    arabicName: '',
   },
   isEditing: { value: false, id: '' },
   setIsNotEditing() {
@@ -65,6 +66,8 @@ const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
         description: c.description,
         arabicDescription: c.arabicDescription,
         file: fs,
+        arabicName: c.arabicName,
+
         category: c.category,
         createdAt: serverTimestamp(),
       });
@@ -102,7 +105,7 @@ const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
         name: c.name,
         description: c.description,
         arabicDescription: c.arabicDescription,
-
+        arabicName: c.arabicName,
         file: arrayUnion(...fs),
         category: c.category,
         updatedAt: serverTimestamp(),

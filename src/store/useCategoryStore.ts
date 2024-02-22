@@ -14,10 +14,15 @@ import { create } from 'zustand';
 import { db, storage } from '../firebase.js';
 import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 const useCategoryStore = create<CategoryAddition>((set, get) => ({
-  cat: { image: [], name: '', arabicName: '' },
+  cat: { image: [], name: '', arabicName: '', arabicDescription: '' },
   setCategoryItems(c) {
     set((state) => ({
-      cat: { image: c.image, name: c.name, arabicName: c.arabicName },
+      cat: {
+        image: c.image,
+        name: c.name,
+        arabicName: c.arabicName,
+        arabicDescription: c.arabicDescription,
+      },
     }));
   },
   async addCategoryTodb(c) {
@@ -54,6 +59,7 @@ const useCategoryStore = create<CategoryAddition>((set, get) => ({
         image: images,
         createdAt: serverTimestamp(),
         arabicName: c.arabicName,
+        arabicDescription: c.arabicDescription,
       });
     } catch (e) {
       console.log(e);
@@ -96,6 +102,7 @@ const useCategoryStore = create<CategoryAddition>((set, get) => ({
           image: arrayUnion(...images),
           arabicName: c.arabicName,
           updatedAt: serverTimestamp(),
+          arabicDescription: c.arabicDescription,
         });
       } catch (e) {
         console.log(e);

@@ -26,7 +26,8 @@ const EditProviders = lazy(() => import('../pages/EditProviders'));
 const OrderDetails = lazy(() => import('../pages/OrderDetails'));
 const AddOrder = lazy(() => import('../pages/AddOrder'));
 // const EditProviders = lazy(() => import('../pages/EditProviders'));
-
+const Appointments = lazy(() => import('../pages/Appointments'));
+const AddAppointment = lazy(() => import('../pages/CreateAppointment'));
 const coreRoutes = [
   {
     path: '/addOrder',
@@ -157,6 +158,16 @@ const coreRoutes = [
     path: '/ui/buttons',
     title: 'Buttons',
     component: Buttons,
+  },
+  {
+    path: '/appointments',
+    title: 'Appointments',
+    component: Appointments,
+  },
+  {
+    path: '/addAppointment',
+    title: 'Add Appointment',
+    component: AddAppointment,
   },
 ];
 

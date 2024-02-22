@@ -13,7 +13,7 @@ type StaffWorker = {
   removeServingArea: (Qval: ServingArea) => void;
   updateStaffMember: (Qval: StaffMember) => void;
   updateTimings: (timings: Timings) => void;
-  addToDb: () => Promise<void>;
+  addToDb: (uid: string) => Promise<void>;
   EditItem: (Qval: StaffWorkerUser) => void;
   EmptyFields: () => void;
   setIsEditing: (id: string) => void;
@@ -187,6 +187,7 @@ type CategoryAddition = {
 type CategoryAdditionItem = {
   name: string;
   arabicName: string;
+  arabicDescription: string;
   image: Array<{ url: File | string }>;
   id?: string;
 };
@@ -207,6 +208,7 @@ type ServiceAdditionItem = {
   file: Array<{ url: File | string }>;
   id?: string;
   category: string;
+  arabicName: string;
 };
 
 //upselling
@@ -285,10 +287,10 @@ type OrderStore = {
 type GlobalStore = {
   services: Array<globalServices>;
   categories: Array<globalCategory>;
-  workers: Array<string>;
+  workers: Array<globalWorkers>;
   setcategories: (c: globalCategory[]) => void;
   setservices: (c: globalServices[]) => void;
-  setworkers: (c: string[]) => void;
+  setworkers: (c: globalWorkers[]) => void;
 };
 
 type globalServices = {
@@ -303,4 +305,36 @@ type globalCategory = {
   name: string;
   arabicName: string;
   id?: string;
+};
+
+type globalWorkers = {
+  name: string;
+  id?: string;
+};
+type AppointmentStore = {
+  customer: appointmentCustomer;
+  vehicle: appointmentVehicle;
+  appointmentDetails: appointmentDetails;
+  setCustomer: (a: appointmentCustomer) => void;
+  setAppointment: (a: appointmentDetails) => void;
+  setvehicle: (a: appointmentVehicle) => void;
+  addtoDb: () => Promise<void>;
+};
+
+type appointmentCustomer = {
+  number: string;
+  name: string;
+  address: string;
+  instructions: string;
+};
+type appointmentDetails = {
+  bookingDate: string;
+  travelTime: string;
+  washer: { name: string; id: string };
+  service: { name: string; id: string };
+};
+
+type appointmentVehicle = {
+  vtype: string;
+  vinstructions: string;
 };
