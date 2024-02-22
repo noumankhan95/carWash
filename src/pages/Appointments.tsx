@@ -1,4 +1,4 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { type Timestamp } from 'firebase/firestore';
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { LoaderIcon } from 'react-hot-toast';
 import useUserAuth from '../store/UserAuthStore.js';
+import useAppointment from '../store/useAppointment.js';
 
 function Appointments() {
   const endDateref = useRef<HTMLInputElement | null>(null);
@@ -19,7 +20,9 @@ function Appointments() {
   const [orderMode, setorderMode] = useState([]);
   const [filterbyservice, setfilterbyservice] = useState([]);
   const [filterbyStaffMember, setfilterbyStaffMember] = useState([]);
-
+  const [isdeleting, setisdeleting] = useState<{ status: boolean; id: string }>(
+    { status: false, id: '' },
+  );
   const [endDate, setEndDate] = useState(new Date());
   const handleDatesChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates;
@@ -37,7 +40,7 @@ function Appointments() {
     }[]
   >([]);
   const [isloading, setisloading] = useState<boolean>(false);
-
+  const [reload, setreload] = useState<boolean>(false);
   const [page, setpage] = useState<number>(1);
   const ItemsperPage = 10;
   const totalPages = Math.ceil((appointment.length || 1) / ItemsperPage);
@@ -45,6 +48,7 @@ function Appointments() {
   const endIndex = startIndex + ItemsperPage;
   const currentItems = appointment.slice(startIndex, endIndex);
   const { permissions } = useUserAuth();
+  const { setAppointment, setvehicle, setCustomer } = useAppointment();
   // const {
   //   setIsEditing,
   //   setIsNotEditing,
@@ -55,7 +59,7 @@ function Appointments() {
   // } = useappointmenttore();
   useEffect(() => {
     getAppointments();
-  }, []);
+  }, [reload]);
   const getAppointments = useCallback(async () => {
     try {
       setisloading((p) => true);
@@ -81,6 +85,7 @@ function Appointments() {
       toast.error('Couldnt Fetch appointment');
     } finally {
       setisloading((p) => false);
+      setreload(false);
     }
   }, []);
   const navigate = useNavigate();
@@ -399,7 +404,6 @@ function Appointments() {
                   Service
                 </th>
 
-               
                 <th className="py-4 px-4 font-medium text-black  dark:text-white">
                   Actions
                 </th>
@@ -415,7 +419,7 @@ function Appointments() {
                       </h5>
                       {/* <p className="text-sm">$0.00</p> */}
                     </td>
-                    
+
                     <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark min-w-[120px]">
                       <p className="text-black dark:text-white">
                         {o.customer.name}
@@ -446,14 +450,37 @@ function Appointments() {
                       <p
                         className="text-black dark:text-white cursor-pointer dark:hover:text-meta-6 hover:text-meta-6"
                         onClick={() => {
-                          navigate('/orderDetails', {
+                          setAppointment(o.appointmentDetails);
+                          setCustomer(o.customer);
+                          setvehicle(o.vehicle);
+                          navigate('/appointmentDetails', {
                             state: {
-                              order: o,
+                              appid: o.id,
                             },
                           });
                         }}
                       >
                         Show Details
+                      </p>
+                      <p
+                        className="text-black dark:text-white cursor-pointer dark:hover:text-danger hover:text-danger"
+                        onClick={async () => {
+                          try {
+                            setisdeleting({ id: o.id!, status: true });
+                            await deleteDoc(doc(db, 'appointments', o.id!));
+                            setreload(true);
+                          } catch (e) {
+                            toast.error('Couldnt Delete ');
+                          } finally {
+                            setisdeleting({ id: '', status: false });
+                          }
+                        }}
+                      >
+                        {isdeleting.status && isdeleting.id === o.id ? (
+                          <LoaderIcon className="!h-6 !w-6 mx-auto my-10" />
+                        ) : (
+                          'Delete'
+                        )}
                       </p>
                     </td>
                   </tr>

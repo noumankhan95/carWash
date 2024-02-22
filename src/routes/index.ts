@@ -28,6 +28,7 @@ const AddOrder = lazy(() => import('../pages/AddOrder'));
 // const EditProviders = lazy(() => import('../pages/EditProviders'));
 const Appointments = lazy(() => import('../pages/Appointments'));
 const AddAppointment = lazy(() => import('../pages/CreateAppointment'));
+const AppointmentDetails = lazy(() => import('../pages/AppointmentDetails'));
 const coreRoutes = [
   {
     path: '/addOrder',
@@ -168,6 +169,11 @@ const coreRoutes = [
     path: '/addAppointment',
     title: 'Add Appointment',
     component: AddAppointment,
+  },
+  {
+    path: '/appointmentDetails',
+    title: 'Appointment Details',
+    component: AppointmentDetails,
   },
 ];
 
