@@ -20,6 +20,7 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
         <Modal closeModal={() => setshowModal((p) => false)}>
           <EditService
             serviceName={services! as ServiceName}
+            catName={cat}
             closeModal={() => setshowModal((p) => false)}
           />
         </Modal>

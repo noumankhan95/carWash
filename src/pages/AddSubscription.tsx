@@ -114,7 +114,9 @@ function Subscription({ settheStep }: AddStaffMemberChildrenProps) {
         >
           <option value="">Select</option>
           {gservices.map((s) => (
-            <option value={s}>{s}</option>
+            <option key={s.id} value={s.name}>
+              {s.name}
+            </option>
           ))}
         </select>
       </div>

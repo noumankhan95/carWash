@@ -42,9 +42,11 @@ const validationSchema = Yup.object().shape({
 function EditService({
   serviceName,
   closeModal,
+  catName,
 }: {
   serviceName: ServiceName;
   closeModal: () => void;
+  catName: string;
 }) {
   // const [modifier, setmodifier] = useState<modifier[]>();
 
@@ -60,6 +62,7 @@ function EditService({
     Modifiers: {
       [serviceName]: [],
     },
+    categoryName: catName,
   });
 
   useEffect(() => {
@@ -81,6 +84,7 @@ function EditService({
         Modifiers,
         arabicDescription,
         description,
+        categoryName: catName,
       });
     },
   });

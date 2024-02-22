@@ -34,17 +34,24 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
     Sunday: { from: '', to: '', enabled: false },
   },
   setServiceValue(QVal) {
-    set((state) => {
-      const v = state.Service.services.findIndex(
-        (e) => e.serviceName === QVal.serviceName,
-      );
-      if (v == -1) {
-        state.Service.services.push(QVal);
-      } else {
-        state.Service.services[v].Modifiers = QVal.Modifiers;
-      }
-      return { ...state };
-    });
+    try {
+      set((state) => {
+        const v = state.Service.services.findIndex(
+          (e) => e.serviceName === QVal.serviceName,
+        );
+        if (v == -1) {
+          state.Service.services.push(QVal);
+        } else {
+          state.Service.services[v].Modifiers = QVal.Modifiers;
+        }
+        console.log('State,service ind ', state.Service.services[v]);
+
+        console.log('State,service ', state.Service.services);
+        return { ...state };
+      });
+    } catch (e) {
+      console.log(e);
+    }
   },
   removeServiceValue(Qval) {
     set((state) => {

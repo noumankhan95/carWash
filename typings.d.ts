@@ -40,6 +40,7 @@ type Services = {
   description: string;
   arabicDescription: string;
   Modifiers: { [key in ServiceName]: Modifier[] };
+  categoryName: string;
 };
 type Timings = {
   [key in WeekDay]: { from: string; to: string; enabled: boolean };
