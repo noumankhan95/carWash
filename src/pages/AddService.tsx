@@ -37,7 +37,7 @@ function AddService() {
   const [images, setimages] = useState<filesArray[]>(filesarr);
   const [isloading, setisloading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { categories } = useGlobalStore();
+  const { categories, services } = useGlobalStore();
   console.log('Cawrrq', category);
   const formikObj = useFormik({
     initialValues: {
@@ -245,8 +245,8 @@ function AddService() {
               >
                 <option>select</option>
                 {categories.map((c) => (
-                  <option key={c} value={c.toString()}>
-                    {c}
+                  <option key={c.id} value={c.toString()}>
+                    {c.name}
                   </option>
                 ))}
               </Field>

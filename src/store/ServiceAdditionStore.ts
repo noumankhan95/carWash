@@ -4,9 +4,12 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDocs,
+  query,
   serverTimestamp,
   setDoc,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 //@ts-ignore
 import { db, storage } from '../firebase';
@@ -32,7 +35,10 @@ const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
   async addServiceTodb(c) {
     try {
       const fs: { url: string }[] = [];
-
+      const pdocs = await getDocs(
+        query(collection(db, 'categories'), where('name', '==', c.name)),
+      );
+      if (!pdocs.empty) throw 'Category Already Exists';
       const uploadPromises = c.file.map(async (f) => {
         console.log(f);
         if (typeof f.url === 'string') {

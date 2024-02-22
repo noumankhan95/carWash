@@ -71,7 +71,7 @@ function AddCategory() {
         navigate('/categories');
       } catch (e) {
         console.log(e);
-        return toast.error('An Error Occured ');
+        return toast.error('An Error Occured ,' + e);
       } finally {
         setisloading(false);
       }

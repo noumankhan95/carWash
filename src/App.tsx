@@ -69,8 +69,10 @@ function App() {
         setcategories([]);
         return;
       }
-      const cats: string[] = [];
-      docs.forEach((doc) => cats.push(doc.data()?.name));
+      const cats: globalCategory[] = [];
+      docs.forEach((doc) =>
+        cats.push({ ...(doc.data() as globalCategory), id: doc.id }),
+      );
       setcategories(cats);
     } catch (e) {}
   };
@@ -81,8 +83,10 @@ function App() {
         setcategories([]);
         return;
       }
-      const cats: string[] = [];
-      docs.forEach((doc) => cats.push(doc.data()?.name));
+      const cats: globalServices[] = [];
+      docs.forEach((doc) =>
+        cats.push({ ...(doc.data() as globalServices), id: doc.id }),
+      );
       setservices(cats);
     } catch (e) {}
   };
@@ -136,7 +140,11 @@ function App() {
               {routes.map((routes, index) => {
                 const { path, component: Component } = routes;
                 return (
-                  <Route key={index} path={path} element={<Component />} />
+                  <Route
+                    key={index}
+                    path={path}
+                    element={<Component settheStep={() => {}} />}
+                  />
                 );
               })}
               <Route path="*" element={<Staff />} />

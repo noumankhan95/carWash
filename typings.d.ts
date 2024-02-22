@@ -282,10 +282,24 @@ type OrderStore = {
 };
 
 type GlobalStore = {
-  services: Array<string>;
-  categories: Array<string>;
+  services: Array<globalServices>;
+  categories: Array<globalCategory>;
   workers: Array<string>;
-  setcategories: (c: string[]) => void;
-  setservices: (c: string[]) => void;
+  setcategories: (c: globalCategory[]) => void;
+  setservices: (c: globalServices[]) => void;
   setworkers: (c: string[]) => void;
+};
+
+type globalServices = {
+  name: string;
+  description: string;
+  arabicDescription: string;
+  id?: string;
+  category: string;
+};
+
+type globalCategory = {
+  name: string;
+  arabicName: string;
+  id?: string;
 };

@@ -7,6 +7,8 @@ import {
   collection,
   addDoc,
   serverTimestamp,
+  getDocs,
+  query,
 } from 'firebase/firestore';
 import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 const useWorkerStore = create<StaffWorker>((set, get) => ({
@@ -33,7 +35,14 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
   },
   setServiceValue(QVal) {
     set((state) => {
-      state.Service.services.push(QVal);
+      const v = state.Service.services.findIndex(
+        (e) => e.serviceName === QVal.serviceName,
+      );
+      if (v == -1) {
+        state.Service.services.push(QVal);
+      } else {
+        state.Service.services[v].Modifiers = QVal.Modifiers;
+      }
       return { ...state };
     });
   },

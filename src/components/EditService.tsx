@@ -58,13 +58,7 @@ function EditService({
     description: '',
     arabicDescription: '',
     Modifiers: {
-      'Car Detailing': [],
-      'Gold Wash': [],
-      'Platinum Wash': [],
-      'Premium Wash': [],
-      'Standard Wash': [],
-      Ceramic: [],
-      Washing: [],
+      [serviceName]: [],
     },
   });
 
