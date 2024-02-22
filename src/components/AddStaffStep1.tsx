@@ -388,6 +388,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
                 <option value="Subscriptions Update">
                   Subscriptions Update
                 </option>
+                <option value="Appointments">Appointments</option>
               </Field>
               <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                 <svg
