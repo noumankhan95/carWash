@@ -220,14 +220,14 @@ type upselling = {
   price: string;
   id?: string;
   file: Array<{ url: File | string }>;
-  modifiers?: Array<{ name: string; price: string }>;
+  modifiers?: Array<{ name: string; price: string; time: string }>;
 };
 
 type UpsellingFormik = {
   Name: string;
   'Arabic Name': string;
   type: string;
-  modifiers: Array<{ name: string; price: string }>;
+  modifiers: Array<{ name: string; price: string; time: string }>;
   price: number;
 };
 

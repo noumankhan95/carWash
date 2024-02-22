@@ -436,14 +436,53 @@ function AddUpselling() {
                       placeholder="Price"
                       className="w-4/5  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
+                    <Field
+                      as="select"
+                      name={`modifiers[${idx}].time`}
+                      className="relative z-0 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+                    >
+                      <option value="00:00">00:00</option>
+                      <option value="00:15">00:15</option>
+                      <option value="00:30">00:30</option>
+                      <option value="00:45">00:45</option>
+                      <option value="01:00">01:00</option>
+                      <option value="01:15">01:15</option>
+                      <option value="01:30">01:30</option>
+                      <option value="01:45">01:45</option>
+                      <option value="02:00">02:00</option>
+                      <option value="02:15">02:15</option>
+                      <option value="02:30">02:30</option>
+                      <option value="02:45">02:45</option>
+                      <option value="03:00">03:00</option>
+                      <option value="03:15">03:15</option>
+                      <option value="03:30">03:30</option>
+                      <option value="03:45">03:45</option>
+                      <option value="04:00">04:00</option>
+                      <option value="04:15">04:15</option>
+                      <option value="04:30">04:30</option>
+                      <option value="04:45">04:45</option>
+                      <option value="05:00">05:00</option>
+                      <option value="05:15">05:15</option>
+                      <option value="05:30">05:30</option>
+                      <option value="05:45">05:45</option>
+                      <option value="06:00">06:00</option>
+                      <option value="06:15">06:15</option>
+                      <option value="06:30">06:30</option>
+                      <option value="06:45">06:45</option>
+                      <option value="07:00">07:00</option>
+                      <option value="07:15">07:15</option>
+                      <option value="07:30">07:30</option>
+                      <option value="07:45">07:45</option>
+                      <option value="08:00">08:00</option>
+                    </Field>
                     <svg
                       viewBox="0 0 512 512"
                       version="1.1"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="#ff0000"
                       stroke="#ff0000"
-                      height={18}
-                      width={18}
+                      height={30}
+                      width={30}
                       className="cursor-pointer"
                       onClick={async () => {
                         const filterd = formikObj.values.modifiers?.filter(
