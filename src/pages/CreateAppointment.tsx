@@ -2,12 +2,13 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { FormikProvider, Field, ErrorMessage, useFormik } from 'formik';
 import * as yup from 'yup';
 
-import toast, { LoaderIcon } from 'react-hot-toast';
+import { LoaderIcon, toast } from 'react-hot-toast';
 
 //@ts-ignore
 import { db } from '../firebase';
 import useGlobalStore from '../store/globalStore';
 import useAppointment from '../store/useAppointment';
+import useUserAuth from '../store/UserAuthStore';
 
 const validationSchema = yup.object().shape({
   number: yup.string().required('Customer Number is Required').min(3),
@@ -33,6 +34,7 @@ function CreateAppointment() {
     setvehicle,
   } = useAppointment();
   const { categories, services, workers } = useGlobalStore();
+  const { id } = useUserAuth();
   const [isloading, setisloading] = useState<boolean>(false);
   const formikObj = useFormik({
     initialValues: {
@@ -81,7 +83,7 @@ function CreateAppointment() {
         });
         setCustomer({ address, instructions, name, number });
         setvehicle({ vinstructions, vtype });
-        await addtoDb();
+        await addtoDb(id);
         toast.success('Appointment Added Succesfully');
         // navigate('/services');
       } catch (e) {

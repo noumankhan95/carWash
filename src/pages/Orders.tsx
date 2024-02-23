@@ -1,7 +1,7 @@
 import { collection, getDocs } from 'firebase/firestore';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { type Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
 // @ts-ignore
 import { db } from '../firebase.js';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -436,7 +436,9 @@ function Orders() {
                     </td>
                     <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark min-w-[120px]">
                       <p className="text-black dark:text-white">
-                        {o.appointmentDate.toDate().toString()}
+                        {o.appointmentDate instanceof Timestamp
+                          ? o.appointmentDate?.toDate().toString()
+                          : o.appointmentDate || ''}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-4 px-4 dark:border-strokedark min-w-[120px]">

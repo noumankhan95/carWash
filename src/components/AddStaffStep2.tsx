@@ -8,8 +8,8 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
   const {
     Service: { services: globalServices },
   } = useWorkerStore();
-  const [services, setservices] = useState<ServiceName | string>('');
-  const [cat, setcat] = useState<string>('');
+  const [services, setservices] = useState<globalServices>();
+  const [cat, setcat] = useState<globalCategory>();
 
   const [showModal, setshowModal] = useState<boolean>(false);
   const { services: fromGlobalStore, categories } = useGlobalStore();
@@ -19,9 +19,13 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
       {showModal && (
         <Modal closeModal={() => setshowModal((p) => false)}>
           <EditService
-            serviceName={services! as ServiceName}
-            catName={cat}
+            serviceName={services?.name || ''}
+            catName={cat?.id!}
             closeModal={() => setshowModal((p) => false)}
+            serviceDescription={services?.description!}
+            arabicDescription={services?.arabicDescription!}
+            serviceFiles={services?.file!}
+            serviceId={services?.id!}
           />
         </Modal>
       )}
@@ -97,10 +101,11 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
               </span>
               <select
                 className="relative z-0 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
-                value={cat}
+                value={cat?.name}
                 onChange={(e) => {
                   console.log('Called', e.target.value);
-                  setcat(e.target.value);
+                  const c = categories.find((c) => c.name === e.target.value);
+                  setcat(c);
                 }}
               >
                 <option>Select A Category</option>
@@ -130,7 +135,7 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
               </span>
             </div>
           </div>
-          {cat.length > 0 && (
+          {cat?.id && (
             <div>
               <label className="mb-3 block text-black dark:text-white">
                 Choose A Service
@@ -168,16 +173,19 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
                 </span>
                 <select
                   className="relative z-0 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
-                  value={services}
+                  value={services?.name}
                   onChange={(e) => {
                     console.log('Called');
-                    setservices(e.target.value! as ServiceName);
+                    const s = fromGlobalStore.find(
+                      (i) => i.name === e.target.value,
+                    );
+                    setservices(s!);
                     setshowModal((p) => true);
                   }}
                 >
                   <option value="">Select A Service</option>
                   {fromGlobalStore.map((o) =>
-                    cat === o.category ? (
+                    cat.id === o.category ? (
                       <option key={o.id} value={o.name}>
                         {o.name}
                       </option>

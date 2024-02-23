@@ -9,6 +9,7 @@ import {
   serverTimestamp,
   getDocs,
   query,
+  arrayUnion,
 } from 'firebase/firestore';
 import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 const useWorkerStore = create<StaffWorker>((set, get) => ({
@@ -85,38 +86,42 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
     });
   },
   addToDb: async (uid: string) => {
-    const state = get();
-    console.log(state, 'staff');
-    const images: { url: string }[] = [];
+    try {
+      const state = get();
+      console.log(state, 'staff');
+      const images: { url: string }[] = [];
 
-    const uploadPromises = state.StaffMember.file.map(async (file) => {
-      if (file.url == typeof String) {
-        return;
-      } else if (file.url instanceof File) {
-        let name = `staff/${state.StaffMember.Name}/${file.url.name}`;
+      const uploadPromises = state.StaffMember.file.map(async (file) => {
+        if (file.url == typeof String) {
+          return;
+        } else if (file.url instanceof File) {
+          let name = `staff/${state.StaffMember.Name}/${file.url.name}`;
 
-        try {
-          await uploadBytes(ref(storage, name), file.url);
-          const constructedURL = await getDownloadURL(ref(storage, name));
-          images.push({ url: constructedURL });
-          console.log('File Uploaded');
-        } catch (e) {
-          alert(e);
-          throw e;
+          try {
+            await uploadBytes(ref(storage, name), file.url);
+            const constructedURL = await getDownloadURL(ref(storage, name));
+            images.push({ url: constructedURL });
+            console.log('File Uploaded');
+          } catch (e) {
+            alert(e);
+            throw e;
+          }
         }
-      }
-    });
+      });
 
-    // Wait for all file uploads to complete
-    await Promise.all(uploadPromises);
-    await setDoc(doc(db, 'staff', uid), {
-      Service: state.Service,
-      ServingArea: state.ServingArea,
-      StaffMember: { ...state.StaffMember, file: images },
-      Timings: state.Timings,
-
-      updatedAt: serverTimestamp(),
-    });
+      // Wait for all file uploads to complete
+      await Promise.all(uploadPromises);
+      await setDoc(doc(db, 'staff', uid), {
+        Service: state.Service,
+        ServingArea: state.ServingArea,
+        StaffMember: { ...state.StaffMember, file: arrayUnion(...images) },
+        Timings: state.Timings,
+        updatedAt: serverTimestamp(),
+      });
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
   },
   EditItem(Qval) {
     set((state) => {
@@ -188,7 +193,7 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
       await setDoc(doc(db, 'staff', state.isEditing.id), {
         Service: state.Service,
         ServingArea: state.ServingArea,
-        StaffMember: { ...state.StaffMember, file: images },
+        StaffMember: { ...state.StaffMember, file: arrayUnion(...images) },
         Timings: state.Timings,
         updatedAt: serverTimestamp(),
       });

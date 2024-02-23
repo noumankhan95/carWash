@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import AddAStaffMember from '../components/AddStaffStep1';
-import AddService from '../components/AddStaffSteo2';
+import AddService from '../components/AddStaffStep2';
 import AddTimings from '../components/AddStaffStep3';
 import AddServingArea from '../components/AddStaffStep4';
 import useWorkerStore from '../store/ServiceStore';

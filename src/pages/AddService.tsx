@@ -267,7 +267,7 @@ function AddService() {
               >
                 <option value={''}>select</option>
                 {categories.map((c) => (
-                  <option key={c.id || Math.random() * 1000} value={c.name}>
+                  <option key={c.id || Math.random() * 1000} value={c.id}>
                     {c.name}
                   </option>
                 ))}
@@ -278,14 +278,14 @@ function AddService() {
                 className="text-danger"
               />
             </div>
-            {scat && (
+            {/* {scat && (
               <div>
                 <h1 className="mb-3 block text-black dark:text-white">
                   Previously Selected Category
                 </h1>
                 <h2 className="text-meta-8">{scat}</h2>
               </div>
-            )}
+            )} */}
           </div>
           <div className="overflow-hidden rounded-sm border border-strokeshadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="px-4 py-5 pb-6 text-center lg:pb-8 xl:pb-11.5">

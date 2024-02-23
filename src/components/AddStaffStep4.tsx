@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { db, auth } from '../firebase.js';
 import { setDoc, doc, runTransaction } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import toast, { LoaderIcon } from 'react-hot-toast';
+import { LoaderIcon, toast } from 'react-hot-toast';
 function AddServingArea() {
   const [enabled, setEnabled] = React.useState<boolean>(false);
   const [isloading, setisloading] = useState<boolean>();
@@ -127,29 +127,27 @@ function AddServingArea() {
                 console.log('Reached in Editing');
                 await addEditedItemtoDb();
               } else {
-                console.log('Reached');
-                await runTransaction(db, async (transaction) => {
-                  const u = await createUserWithEmailAndPassword(
-                    auth,
-                    userAuth.email,
-                    userAuth.password,
-                  );
-                  transaction.set(doc(db, 'users', u.user.uid), {
-                    email: userAuth.email,
-                    name: StaffMember.Name,
-                    phone: StaffMember.phone,
-                    permissions: StaffMember.permissions,
-                  });
-                  await addToDb(u.user.uid);
+                const u = await createUserWithEmailAndPassword(
+                  auth,
+                  userAuth.email,
+                  userAuth.password,
+                );
+                setDoc(doc(db, 'users', u.user.uid), {
+                  email: userAuth.email,
+                  name: StaffMember.Name,
+                  phone: StaffMember.phone,
+                  permissions: StaffMember.permissions,
                 });
+                await addToDb(u.user.uid);
+
+                EmptyFields();
+                setIsNotEditing();
+                // navigate('/staff');
               }
-              EmptyFields();
-              setIsNotEditing();
-              navigate('/staff');
+              toast.success('Success');
             } catch (e) {
               console.log(e);
               toast.error('An Error Occured ');
-              alert(e);
             } finally {
               setisloading(false);
             }
@@ -157,6 +155,8 @@ function AddServingArea() {
         >
           {isloading ? (
             <LoaderIcon style={{ margin: 'auto' }} className="w-4 h-4" />
+          ) : isEditing.value ? (
+            'Update'
           ) : (
             'Add To Database'
           )}

@@ -1,4 +1,10 @@
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
 import { create } from 'zustand';
 //@ts-ignore
 import { db } from '../firebase.js';
@@ -16,13 +22,28 @@ const useAppointment = create<AppointmentStore>((set, get) => ({
     number: '',
   },
   vehicle: { vinstructions: '', vtype: '' },
-  async addtoDb() {
+  async addtoDb(uid: string) {
     try {
       const { customer, vehicle, appointmentDetails } = get();
-      await addDoc(collection(db, 'appointments'), {
+      const d = await addDoc(collection(db, 'appointments'), {
         appointmentDetails,
         customer,
         vehicle,
+      });
+      await setDoc(doc(db, 'orders', d.id), {
+        appointmentDate: appointmentDetails.bookingDate,
+        customer: customer.number,
+        worker: appointmentDetails.washer.name,
+        workerid: appointmentDetails.washer.id,
+        service: appointmentDetails.service.name,
+        serviceid: appointmentDetails.service.id,
+        status: 'Active',
+        type: '',
+        paymentMethod: '',
+        selectedDate: '',
+        selectedTime: '',
+        orderNumber: d.id,
+        uid,
       });
     } catch (e) {
       console.log(e);

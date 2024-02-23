@@ -23,18 +23,18 @@ type RefArray<T> = Array<T | null>;
 type PriceRefsType = RefArray<HTMLInputElement>;
 type DurationRefsType = RefArray<HTMLSelectElement>;
 const validationSchema = Yup.object().shape({
-  description: Yup.string().required('Description Is Required').min(10),
+  description: Yup.string().required('Description Is Required').min(1),
   arabicDescription: Yup.string()
     .required('Arabic Description Is Required')
-    .min(8),
+    .min(1),
   Modifiers: Yup.object().shape({
     [Yup.string() as unknown as ServiceName]: Yup.array()
       .min(1, 'Enter Atleast One')
       .of(
         Yup.object().shape({
           modifiername: Yup.number().required().min(3),
-          price: Yup.string().required('price is Required').min(3),
-          duration: Yup.string().required('Duration is Required').min(3),
+          price: Yup.string().required('price is Required').min(1),
+          duration: Yup.string().required('Duration is Required').min(1),
         }),
       ),
   }),
@@ -43,10 +43,18 @@ function EditService({
   serviceName,
   closeModal,
   catName,
+  serviceDescription,
+  arabicDescription,
+  serviceFiles,
+  serviceId,
 }: {
   serviceName: ServiceName;
   closeModal: () => void;
   catName: string;
+  serviceDescription: string;
+  arabicDescription: string;
+  serviceFiles: { url: string }[];
+  serviceId: string;
 }) {
   // const [modifier, setmodifier] = useState<modifier[]>();
 
@@ -56,13 +64,13 @@ function EditService({
     Service: { services },
   } = useWorkerStore();
   const [selectedService, setselectedService] = useState<Services>({
-    serviceName: '',
-    description: '',
-    arabicDescription: '',
+    serviceName: serviceName || '',
+    description: serviceDescription || '',
+    arabicDescription: arabicDescription || '',
     Modifiers: {
       [serviceName]: [],
     },
-    categoryName: catName,
+    category: catName,
   });
 
   useEffect(() => {
@@ -84,7 +92,9 @@ function EditService({
         Modifiers,
         arabicDescription,
         description,
-        categoryName: catName,
+        category: catName,
+        files: serviceFiles,
+        serviceid: serviceId,
       });
     },
   });

@@ -16,6 +16,7 @@ const useOrderStore = create<OrderStore>((set) => ({
     type: '',
     uid: '',
     worker: '',
+    booking: '',
   },
   isEditing: { id: '', value: false },
   setIsEditing(c) {

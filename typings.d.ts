@@ -37,10 +37,12 @@ type Modifier = {
 
 type Services = {
   serviceName: string;
+  serviceid?: string;
   description: string;
   arabicDescription: string;
   Modifiers: { [key in ServiceName]: Modifier[] };
-  categoryName: string;
+  category: string;
+  files?: { url: string }[];
 };
 type Timings = {
   [key in WeekDay]: { from: string; to: string; enabled: boolean };
@@ -299,6 +301,7 @@ type globalServices = {
   arabicDescription: string;
   id?: string;
   category: string;
+  file: { url: string }[];
 };
 
 type globalCategory = {
@@ -318,7 +321,7 @@ type AppointmentStore = {
   setCustomer: (a: appointmentCustomer) => void;
   setAppointment: (a: appointmentDetails) => void;
   setvehicle: (a: appointmentVehicle) => void;
-  addtoDb: () => Promise<void>;
+  addtoDb: (uid: string) => Promise<void>;
 };
 
 type appointmentCustomer = {
