@@ -26,6 +26,7 @@ function App() {
     categories,
     services,
     workers,
+    reloadCategories,
   } = useGlobalStore();
   useEffect(() => {
     setLoading((p) => true);
@@ -111,7 +112,7 @@ function App() {
     getCategories();
     getWorkers();
     getServices();
-  }, []);
+  }, [reloadCategories]);
   // useEffect(() => {
   //   setTimeout(() => setLoading(false), 1000);
   //   //For timeout

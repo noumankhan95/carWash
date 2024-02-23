@@ -274,6 +274,7 @@ type Orders = {
   paymentMethod: string;
   selectedDate: Timestamp;
   uid: string;
+  booking;
 };
 
 type OrderStore = {
@@ -293,6 +294,8 @@ type GlobalStore = {
   setcategories: (c: globalCategory[]) => void;
   setservices: (c: globalServices[]) => void;
   setworkers: (c: globalWorkers[]) => void;
+  reloadCategories: boolean;
+  setreloadCategories: () => void;
 };
 
 type globalServices = {

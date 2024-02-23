@@ -6,6 +6,7 @@ import DynamicFirebaseImageComponent from '../components/DynamicFirebaseImageCom
 import useCategoryStore from '../store/useCategoryStore';
 import { LoaderIcon, toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import useGlobalStore from '../store/globalStore';
 type images = {
   url: File | string;
 };
@@ -26,6 +27,7 @@ function AddCategory() {
   const [images, setimages] = useState<images[]>(image);
   const [isloading, setisloading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { setreloadCategories } = useGlobalStore();
   const formikObj = useFormik({
     initialValues: {
       Name: name || '',
@@ -77,6 +79,7 @@ function AddCategory() {
           arabicName: '',
           arabicDescription: '',
         });
+        setreloadCategories();
         navigate('/categories');
       } catch (e) {
         console.log(e);

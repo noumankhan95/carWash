@@ -4,6 +4,10 @@ const useGlobalStore = create<GlobalStore>((set) => ({
   categories: [],
   services: [],
   workers: [],
+  reloadCategories: false,
+  setreloadCategories() {
+    set((state) => ({ ...state, reloadCategories: !state.reloadCategories }));
+  },
   setcategories(c) {
     set((state) => ({ ...state, categories: c }));
   },

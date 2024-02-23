@@ -39,7 +39,7 @@ function AddService() {
   const [images, setimages] = useState<filesArray[]>(filesarr);
   const [isloading, setisloading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { categories, services } = useGlobalStore();
+  const { categories, services, setreloadCategories } = useGlobalStore();
   console.log('Cawrrq', scat);
   const formikObj = useFormik({
     initialValues: {
@@ -89,6 +89,7 @@ function AddService() {
             arabicName: values.arabicName,
           });
         }
+        setreloadCategories();
         navigate('/services');
       } catch (e) {
         toast.error('Couldnt Upload Your Files');

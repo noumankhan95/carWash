@@ -180,10 +180,10 @@ function AddService({ settheStep }: AddStaffMemberChildrenProps) {
                       (i) => i.name === e.target.value,
                     );
                     setservices(s!);
-                    setshowModal((p) => true);
+                    if (e.target.value) setshowModal((p) => true);
                   }}
                 >
-                  <option value="">Select A Service</option>
+                  <option>Select A Service</option>
                   {fromGlobalStore.map((o) =>
                     cat.id === o.category ? (
                       <option key={o.id} value={o.name}>

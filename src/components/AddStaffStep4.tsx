@@ -11,9 +11,11 @@ import { db, auth } from '../firebase.js';
 import { setDoc, doc, runTransaction } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { LoaderIcon, toast } from 'react-hot-toast';
+import useGlobalStore from '../store/globalStore.js';
 function AddServingArea() {
   const [enabled, setEnabled] = React.useState<boolean>(false);
   const [isloading, setisloading] = useState<boolean>();
+  const { setreloadCategories } = useGlobalStore();
   const {
     ServingArea,
     addToDb,
@@ -43,7 +45,41 @@ function AddServingArea() {
   // console.log('Serv', StaffMember);
   // console.log('Serv', Timings);
   // console.log('Serv', isEditing);
+  const saveDate = async () => {
+    try {
+      if (ServingArea.length <= 0)
+        return toast.error('Please Enter A Serving Area');
+      setisloading(true);
+      if (isEditing.value) {
+        console.log('Reached in Editing');
+        await addEditedItemtoDb();
+      } else {
+        const u = await createUserWithEmailAndPassword(
+          auth,
+          userAuth.email,
+          userAuth.password,
+        );
+        setDoc(doc(db, 'users', u.user.uid), {
+          email: userAuth.email,
+          name: StaffMember.Name,
+          phone: StaffMember.phone,
+          permissions: StaffMember.permissions,
+        });
+        await addToDb(u.user.uid);
 
+        EmptyFields();
+        setIsNotEditing();
+        // navigate('/staff');
+      }
+      setreloadCategories();
+      toast.success('Success');
+    } catch (e) {
+      console.log(e);
+      toast.error('An Error Occured ');
+    } finally {
+      setisloading(false);
+    }
+  };
   return (
     <div className="flex flex-col">
       {enabled && (
@@ -118,40 +154,7 @@ function AddServingArea() {
       <div className="flex flex-row justify-end">
         <button
           className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-          onClick={async () => {
-            try {
-              if (ServingArea.length <= 0)
-                return toast.error('Please Enter A Serving Area');
-              setisloading(true);
-              if (isEditing.value) {
-                console.log('Reached in Editing');
-                await addEditedItemtoDb();
-              } else {
-                const u = await createUserWithEmailAndPassword(
-                  auth,
-                  userAuth.email,
-                  userAuth.password,
-                );
-                setDoc(doc(db, 'users', u.user.uid), {
-                  email: userAuth.email,
-                  name: StaffMember.Name,
-                  phone: StaffMember.phone,
-                  permissions: StaffMember.permissions,
-                });
-                await addToDb(u.user.uid);
-
-                EmptyFields();
-                setIsNotEditing();
-                // navigate('/staff');
-              }
-              toast.success('Success');
-            } catch (e) {
-              console.log(e);
-              toast.error('An Error Occured ');
-            } finally {
-              setisloading(false);
-            }
-          }}
+          onClick={saveDate}
         >
           {isloading ? (
             <LoaderIcon style={{ margin: 'auto' }} className="w-4 h-4" />
