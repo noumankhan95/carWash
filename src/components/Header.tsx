@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import Logo from '../images/logo/logo.png';
-import DarkModeSwitcher from './DarkModeSwitcher';
+// import DarkModeSwitcher from './DarkModeSwitcher';
 import DropdownMessage from './DropdownMessage';
 import DropdownNotification from './DropdownNotification';
 import DropdownUser from './DropdownUser';
@@ -97,17 +97,17 @@ const Header = (props: {
           </form>
         </div> */}
 
-        <div className="flex items-center w-full justify-end gap-3 2xsm:gap-7">
+        <div className="flex items-center h-10 w-full justify-end gap-3 2xsm:gap-7">
           <ul className="flex items-center gap-2 2xsm:gap-4">
             {/* <!-- Dark Mode Toggler --> */}
-            <DarkModeSwitcher />
-            <h1>Lamsat Alfakhama Car Care</h1>
+            {/* <DarkModeSwitcher /> */}
+            {/* // <h1>Lamsat Alfakhama Car Care</h1>
             <Link
               className="hidden md:block  max-h-10 max-w-15 flex-shrink-0"
               to="/"
             >
               <img src={Logo} alt="Logo" className="w-28 object-fit " />
-            </Link>
+            </Link>  */}
             {/* <!-- Dark Mode Toggler --> */}
 
             {/* <!-- Notification Menu Area --> */}

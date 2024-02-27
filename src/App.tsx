@@ -91,6 +91,12 @@ function App() {
       setservices(cats);
     } catch (e) {}
   };
+  useEffect(() => {
+    const className = 'dark';
+    const bodyClass = window.document.body.classList;
+
+    bodyClass.add(className);
+  }, []);
   const getWorkers = async () => {
     try {
       const docs = await getDocs(collection(db, 'staff'));

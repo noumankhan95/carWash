@@ -8,10 +8,8 @@ const useColorMode = () => {
     const className = 'dark';
     const bodyClass = window.document.body.classList;
 
-    colorMode === 'dark'
-      ? bodyClass.add(className)
-      : bodyClass.remove(className);
-  }, [colorMode]);
+    bodyClass.add(className);
+  }, []);
 
   return [colorMode, setColorMode];
 };
