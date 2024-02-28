@@ -5,6 +5,10 @@ type StaffWorker = {
     services: Services[];
   };
   isEditing: { value: boolean; id: sting };
+  isDuplicating: boolean;
+  setisDuplicating: () => void;
+  setisNotDuplicating: () => void;
+
   Timings: Timings;
   ServingArea: ServicesList[];
   setServiceValue: (QVal: Services) => void;
@@ -189,7 +193,7 @@ type CategoryAddition = {
 type CategoryAdditionItem = {
   name: string;
   arabicName: string;
-  arabicDescription: string;
+  arabicDescription?: string;
   image: Array<{ url: File | string }>;
   id?: string;
 };
@@ -211,6 +215,7 @@ type ServiceAdditionItem = {
   id?: string;
   category: string;
   arabicName: string;
+  bookingType: string;
 };
 
 //upselling
@@ -305,6 +310,7 @@ type globalServices = {
   id?: string;
   category: string;
   file: { url: string }[];
+  bookingType: string;
 };
 
 type globalCategory = {

@@ -22,6 +22,7 @@ const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
     category: '',
     arabicDescription: '',
     arabicName: '',
+    bookingType: '',
   },
   isEditing: { value: false, id: '' },
   setIsNotEditing() {
@@ -67,7 +68,7 @@ const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
         arabicDescription: c.arabicDescription,
         file: fs,
         arabicName: c.arabicName,
-
+        bookingType: c.bookingType,
         category: c.category,
         createdAt: serverTimestamp(),
       });
@@ -109,6 +110,7 @@ const useServiceAdditionStore = create<ServiceAddition>((set, get) => ({
         file: arrayUnion(...fs),
         category: c.category,
         updatedAt: serverTimestamp(),
+        bookingType: c.bookingType,
       });
     } catch (e) {
       console.log(e);

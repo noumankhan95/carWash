@@ -16,25 +16,47 @@ const validationSchema = Yup.object().shape({
   permissions: Yup.array()
     .min(1, 'At least one permission must be selected')
     .required('Permissions are required'),
-  email: Yup.string().when('isEditing', {
-    is: (isEditing: boolean) => isEditing == false,
-    then: (schema) => schema.min(6).required(),
-  }),
+  email: Yup.string()
+    .when('isEditing', {
+      is: (isEditing: boolean) => isEditing == false,
+      then: (schema) => schema.min(6).required(),
+    })
+    .when('isDuplicating', {
+      is: (isDuplicating: boolean) => isDuplicating == true,
+      then: (schema) => schema.min(6).required(),
+    }),
 
-  password: Yup.string().when('isEditing', {
-    is: (isEditing: boolean) => isEditing == false,
-    then: (schema) => schema.min(6).required(),
-  }),
+  password: Yup.string()
+    .when('isEditing', {
+      is: (isEditing: boolean) => isEditing == false,
+      then: (schema) => schema.min(6).required(),
+    })
+    .when('isDuplicating', {
+      is: (isDuplicating: boolean) => isDuplicating == true,
+      then: (schema) => schema.min(6).required(),
+    }),
 });
 
 function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
-  const { StaffMember, updateStaffMember, isEditing, setUserAuth, userAuth } =
-    useWorkerStore();
+  const {
+    StaffMember,
+    updateStaffMember,
+    isEditing,
+    setUserAuth,
+    userAuth,
+    isDuplicating,
+  } = useWorkerStore();
   const [images, setimages] = useState<images[]>(StaffMember.file);
 
   const formikObj = useFormik({
     validationSchema,
-    initialValues: { ...StaffMember, isEditing: isEditing.value, password: '' },
+    initialValues: {
+      ...StaffMember,
+      isEditing: isEditing.value,
+      password: '',
+      isDuplicating,
+      email: isDuplicating ? '' : isEditing.value ? StaffMember.email : '',
+    },
     onSubmit: (values) => {
       console.log(values);
       console.log(images);

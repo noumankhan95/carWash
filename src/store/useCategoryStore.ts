@@ -21,7 +21,6 @@ const useCategoryStore = create<CategoryAddition>((set, get) => ({
         image: c.image,
         name: c.name,
         arabicName: c.arabicName,
-        arabicDescription: c.arabicDescription,
       },
     }));
   },
@@ -59,7 +58,6 @@ const useCategoryStore = create<CategoryAddition>((set, get) => ({
         image: images,
         createdAt: serverTimestamp(),
         arabicName: c.arabicName,
-        arabicDescription: c.arabicDescription,
       });
     } catch (e) {
       console.log(e);
@@ -102,7 +100,6 @@ const useCategoryStore = create<CategoryAddition>((set, get) => ({
           image: arrayUnion(...images),
           arabicName: c.arabicName,
           updatedAt: serverTimestamp(),
-          arabicDescription: c.arabicDescription,
         });
       } catch (e) {
         console.log(e);

@@ -109,7 +109,7 @@ const Categories = () => {
           <button
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {
-              setCategoryItems({ image: [], name: '' });
+              setCategoryItems({ image: [], name: '', arabicName: '' });
               setIsNotEditing();
               navigate('/addCategory');
             }}

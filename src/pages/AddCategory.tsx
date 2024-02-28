@@ -13,7 +13,7 @@ type images = {
 const validationSchema = yup.object().shape({
   Name: yup.string().required('Category Name is Required').min(3),
   arabicName: yup.string().required('Arabic Name is Required').min(3),
-  arabicDescription: yup.string().required('Arabic Description Is required'),
+  arabicDescription: yup.string().notRequired(),
 });
 
 function AddCategory() {
@@ -33,7 +33,6 @@ function AddCategory() {
       Name: name || '',
       arabicName: arabicName || '',
       file: '',
-      arabicDescription: arabicDescription || '',
     },
     validationSchema,
     async onSubmit(values, formikHelpers) {
@@ -62,14 +61,12 @@ function AddCategory() {
             name: values.Name,
             image: images,
             arabicName: values.arabicName,
-            arabicDescription: values.arabicDescription,
           });
         } else {
           await addCategoryTodb({
             name: values.Name,
             image: images,
             arabicName: values.arabicName,
-            arabicDescription: values.arabicDescription,
           });
         }
         toast.success('Successfully Added');
@@ -211,7 +208,7 @@ function AddCategory() {
                 className="text-danger"
               />
             </div>
-            <div className="w-full md:w-2/5">
+            {/* <div className="w-full md:w-2/5">
               <label className="mb-3 block text-black dark:text-white">
                 Arabic Description
               </label>
@@ -226,7 +223,7 @@ function AddCategory() {
                 component="div"
                 className="text-danger"
               />
-            </div>
+            </div> */}
           </div>
           <div className="overflow-hidden rounded-sm border border-strokeshadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="px-4 py-5 pb-6 text-center lg:pb-8 xl:pb-11.5">

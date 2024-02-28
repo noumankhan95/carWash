@@ -25,6 +25,13 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
     email: '',
     permissions: [],
   },
+  isDuplicating: false,
+  setisDuplicating() {
+    set((state) => ({ ...state, isDuplicating: true }));
+  },
+  setisNotDuplicating() {
+    set((state) => ({ ...state, isDuplicating: false }));
+  },
   Timings: {
     Monday: { from: '', to: '', enabled: false },
     Tuesday: { from: '', to: '', enabled: false },

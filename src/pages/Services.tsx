@@ -118,6 +118,9 @@ const Services = () => {
                 file: [],
                 name: '',
                 category: '',
+                arabicDescription: '',
+                arabicName: '',
+                bookingType: '',
               });
               navigate('/addService');
             }}
@@ -205,6 +208,9 @@ const Services = () => {
                                 name: u.name,
                                 id: u.id,
                                 category: u.category,
+                                bookingType: u.bookingType,
+                                arabicDescription: u.arabicDescription,
+                                arabicName: u.arabicName,
                               });
                               navigate('/addService');
                             }}

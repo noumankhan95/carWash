@@ -31,8 +31,14 @@ function Staff() {
   const [reload, setreload] = useState<boolean>(false);
   const [todelete, settodelete] = useState<{ id: string; email: string }>();
   const [isdeleting, setisdeleting] = useState<boolean>(false);
-  const { EditItem, setIsEditing, setIsNotEditing, EmptyFields } =
-    useWorkerStore();
+  const {
+    EditItem,
+    setIsEditing,
+    setIsNotEditing,
+    EmptyFields,
+    setisDuplicating,
+    setisNotDuplicating,
+  } = useWorkerStore();
   const { permissions } = useUserAuth();
   const [users, setusers] = useState<userItem[]>();
   const getUsers = useCallback(async () => {
@@ -236,20 +242,35 @@ function Staff() {
                     ),
                 )}
               </div>
-              <div className="flex flex-row justify-start text-center sm:block my-4">
+              <div className="flex flex-row justify-start text-center sm:block my-4 space-x-2">
                 {(permissions.includes('Staff All') ||
                   permissions.includes('Staff Edit')) && (
-                  <button
-                    className="p-3.5  bg-primary rounded-md border  text-center font-medium text-white hover:bg-opacity-90 "
-                    onClick={() => {
-                      console.log(u);
-                      navigate('/addstaff');
-                      EditItem(u.worker);
-                      setIsEditing(u.id);
-                    }}
-                  >
-                    Edit
-                  </button>
+                  <>
+                    <button
+                      className="p-3.5  bg-primary rounded-md border  text-center font-medium text-white hover:bg-opacity-90 "
+                      onClick={() => {
+                        console.log(u);
+                        navigate('/addstaff');
+                        EditItem(u.worker);
+                        setisNotDuplicating();
+                        setIsEditing(u.id);
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="p-3.5  bg-primary rounded-md border  text-center font-medium text-white hover:bg-opacity-90 "
+                      onClick={() => {
+                        console.log(u);
+                        navigate('/addstaff');
+                        EditItem(u.worker);
+                        setIsNotEditing();
+                        setisDuplicating();
+                      }}
+                    >
+                      Duplicate
+                    </button>
+                  </>
                 )}
               </div>
             </div>

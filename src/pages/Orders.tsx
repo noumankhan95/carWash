@@ -10,25 +10,43 @@ import { toast } from 'react-toastify';
 import { LoaderIcon } from 'react-hot-toast';
 import useUserAuth from '../store/UserAuthStore.js';
 import useOrderStore from '../store/useOrderStore.js';
-
+import useGlobalStore from '../store/globalStore.js';
 function Orders() {
-  const endDateref = useRef<HTMLInputElement | null>(null);
+  // const endDateref = useRef<HTMLInputElement | null>(null);
   const [startDate, setStartDate] = useState(new Date());
-  const OrderNoRef = useRef<HTMLInputElement | null>(null);
-  const PhoneRef = useRef<HTMLInputElement | null>(null);
-  const [orderStatus, setOrderStatus] = useState([]);
-  const [orderMode, setorderMode] = useState([]);
-  const [filterbyservice, setfilterbyservice] = useState([]);
-  const [filterbyStaffMember, setfilterbyStaffMember] = useState([]);
-
   const [endDate, setEndDate] = useState(new Date());
+  const [serviceName, setserviceName] = useState<string>('');
+  const [workerName, setworkerName] = useState<string>('');
+
+  // const OrderNoRef = useRef<HTMLInputElement | null>(null);
+  // const PhoneRef = useRef<HTMLInputElement | null>(null);
+  // const [orderStatus, setOrderStatus] = useState([]);
+  // const [orderMode, setorderMode] = useState([]);
+  // const [filterbyservice, setfilterbyservice] = useState([]);
+  // const [filterbyStaffMember, setfilterbyStaffMember] = useState([]);
+  // const [filter, setfilter] = useState<any>({
+  //   date: null,
+  //   orderNumber: null,
+  //   phone: null,
+  //   orderStatus: null,
+  //   orderMode: null,
+  // });
+  const [filters, setFilters] = useState<any>({
+    startDate: null,
+    endDate: null,
+    orderNumber: '',
+    mobileNumber: '',
+    orderStatus: '',
+    orderMode: '',
+    service: '',
+    staffMember: '',
+  });
+  const { services, workers } = useGlobalStore();
   const handleDatesChange = (dates: [Date | null, Date | null]) => {
-    const [start, end] = dates;
-    if (start && end) {
-      setStartDate(start as Date);
-      setEndDate(end as Date);
-    }
+    const [startDate, endDate] = dates;
+    setFilters((prevFilters: any) => ({ ...prevFilters, startDate, endDate }));
   };
+
   const [Orders, setOrders] = useState<Array<Orders>>([]);
   const [isloading, setisloading] = useState<boolean>(false);
 
@@ -67,7 +85,9 @@ function Orders() {
     }
   }, []);
   const navigate = useNavigate();
-  console.log(totalPages, 'And', page);
+  const handleFilters = () => {
+    console.log(filters);
+  };
   return (
     <div>
       {/* <div className="flex flex-row justify-end my-5">
@@ -91,6 +111,7 @@ function Orders() {
                 type: '',
                 uid: '',
                 worker: '',
+                booking: '',
               });
               navigate('/addOrder');
             }}
@@ -99,279 +120,327 @@ function Orders() {
           </button>
         )}
       </div> */}
-      {/* <div className="flex flex-col gap-5.5 p-6.5">
+      <div className="flex flex-col gap-5.5 p-6.5">
         <h1 className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white ">
           Filter Orders By
-        </h1> */}
-      {/* <div className="flex flex-col space-y-4 lg:space-y-0 md:flex-row items-center space-x-0 md:space-x-4 justify-around">
+        </h1>
+        <div className="flex flex-col space-y-4 lg:space-y-0 md:flex-row items-center space-x-0 md:space-x-4 justify-around">
           <div className="w-full md:w-2/5 items-center justify-center">
             <DatePicker
               showIcon
-              calendarIconClassname="items-center mt-2 text-white"
+              calendarIconClassname="items-center  mt-2 text-white"
               calendarClassName="z-9999"
-              selected={startDate}
-              startDate={startDate}
-              endDate={endDate}
+              selected={filters.startDate}
+              startDate={filters.startDate}
+              endDate={filters.endDate}
               onChange={(e) => handleDatesChange(e)}
-              selectsRange
-              className="w-full h-12.5 items-center justify-center  rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-              wrapperClassName="w-full z-20"
-            /> */}
-      {/* </div> */}
-      {/* <div className="w-full md:w-2/5">
+              selectsRange={true}
+              className="w-full z-999999 h-12.5 items-center justify-center  rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              wrapperClassName="w-full z-99999"
+            />
+          </div>
+          <div className="w-full md:w-2/5">
             <input
               type="text"
               name="OrderNumber"
               placeholder="Order Number"
               className="w-full rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              value={filters['orderNumber']}
+              onChange={(e) =>
+                setFilters((v: any) => ({ ...v, orderNumber: e.target.value }))
+              }
             />
-       
-          </div> */}
-      {/* <div className="w-full md:w-2/5">
+          </div>
+          <div className="w-full md:w-2/5">
             <input
               type="text"
               name="MobileNumber"
               placeholder="Mobile Number"
               className="w-full rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              value={filters['mobileNumber']}
+              onChange={(e) =>
+                setFilters((v: any) => ({ ...v, mobileNumber: e.target.value }))
+              }
             />
             {/* <ErrorMessage
               name="ArabicName"
               component="div"
               className="text-danger"
             /> */}
-      {/* </div> */}
-      {/* </div> */}
-      {/* <div className="flex flex-col md:flex-row items-center space-x-0 md:space-x-4 justify-around"> */}
-      {/* <div className="w-full md:w-2/5">
-        <label className="mb-3 block text-black dark:text-white">
-          Order Status
-        </label>
-        <div className="relative w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-          <div className="flex flex-wrap items-center">
-            <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
-              Pending Orders
-              <span className="cursor-pointer pl-2 hover:text-danger">
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row items-center space-x-0 md:space-x-4 justify-around">
+          <div className="w-full md:w-2/5">
+            <label className="mb-3 block text-black dark:text-white">
+              Order Status
+            </label>
+            <div className="relative h-16 h-16 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+              <div className="flex flex-wrap items-center">
+                {filters.orderStatus && (
+                  <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
+                    {filters.orderStatus}
+                    <span className="cursor-pointer pl-2 hover:text-danger">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                    </span>
+                  </span>
+                )}
+              </div>
+              <select
+                name=""
+                id=""
+                className="absolute top-0 left-0 z-20 h-full w-full bg-transparent opacity-0"
+                onChange={(e) =>
+                  setFilters((v: any) => ({
+                    ...v,
+                    orderStatus: e.target.value,
+                  }))
+                }
+              >
+                <option value={''}>Select</option>
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+              </select>
+              <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                 <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
-                    fill="currentColor"
-                  ></path>
+                  <g opacity="0.8">
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                      fill="#637381"
+                    ></path>
+                  </g>
                 </svg>
               </span>
-            </span>
+            </div>
           </div>
-          <select
-            name=""
-            id=""
-            className="absolute top-0 left-0 z-20 h-full w-full bg-transparent opacity-0"
-          >
-            <option value="">Pending</option>
-            <option value="">Completed</option>
-          </select>
-          <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g opacity="0.8">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
-                  fill="#637381"
-                ></path>
-              </g>
-            </svg>
-          </span>
+          <div className="w-full md:w-2/5">
+            <label className="mb-3 block text-black dark:text-white">
+              Order Mode
+            </label>
+            <div className="relative h-16 z-20 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+              <div className="flex flex-wrap items-center">
+                {filters.orderMode && (
+                  <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
+                    {filters.orderMode}
+                    <span className="cursor-pointer pl-2 hover:text-danger">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                    </span>
+                  </span>
+                )}
+              </div>
+              <select
+                name=""
+                id=""
+                className="absolute top-0 left-0 z-20 h-full w-full bg-transparent opacity-0"
+                onChange={(e) =>
+                  setFilters((v: any) => ({
+                    ...v,
+                    orderMode: e.target.value,
+                  }))
+                }
+              >
+                <option value="">Select</option>
+                <option value="Online">Online</option>
+                <option value="Offline">Offline</option>
+              </select>
+              <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g opacity="0.8">
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                      fill="#637381"
+                    ></path>
+                  </g>
+                </svg>
+              </span>
+            </div>
+          </div>{' '}
+          <div className="w-full md:w-2/5">
+            <label className="mb-3 block text-black dark:text-white">
+              Filter By Service
+            </label>
+            <div className="relative h-16  w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+              <div className="flex flex-wrap items-center">
+                {filters.service && (
+                  <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
+                    {serviceName}
+                    <span className="cursor-pointer pl-2 hover:text-danger">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                    </span>
+                  </span>
+                )}
+              </div>
+              <select
+                name=""
+                id=""
+                className="absolute top-0 left-0  h-full w-full bg-transparent opacity-0"
+                onChange={(e) => {
+                  const [id, name] = e.target.value.split('|');
+                  setserviceName(name);
+                  setFilters((v: any) => ({
+                    ...v,
+                    service: id,
+                  }));
+                }}
+              >
+                <option value="">Select A Service</option>
+                {services.map((s) => (
+                  <option value={`${s.id}|${s.name}`} key={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+              <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g opacity="0.8">
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                      fill="#637381"
+                    ></path>
+                  </g>
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div className="w-full md:w-2/5">
+            <label className="mb-3 block text-black dark:text-white">
+              Filter By Staff Member
+            </label>
+            <div className="relative h-16 h-16 z-20 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+              <div className="flex flex-wrap items-center">
+                {filters.staffMember && (
+                  <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
+                    {workerName}
+                    <span className="cursor-pointer pl-2 hover:text-danger">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                    </span>
+                  </span>
+                )}
+              </div>
+              <select
+                name=""
+                id=""
+                className="absolute top-0 left-0 z-20 h-full w-full bg-transparent opacity-0"
+                onChange={(e) => {
+                  const [id, name] = e.target.value.split('|');
+                  setworkerName(name);
+
+                  setFilters((v: any) => ({
+                    ...v,
+                    staffMember: id,
+                  }));
+                }}
+              >
+                <option value="">Select A Member</option>
+                {workers.map((w) => (
+                  <option value={`${w.id}|${w.name}`} key={w.id}>
+                    {w.name}
+                  </option>
+                ))}
+              </select>
+              <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g opacity="0.8">
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                      fill="#637381"
+                    ></path>
+                  </g>
+                </svg>
+              </span>
+            </div>
+          </div>
         </div>
+        <button
+          className="inline-flex w-30 items-center justify-center gap-2.5 disabled:cursor-default rounded-md bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+          onClick={handleFilters}
+        >
+          Filter
+        </button>
       </div>
-      <div className="w-full md:w-2/5">
-        <label className="mb-3 block text-black dark:text-white">
-          Order Mode
-        </label>
-        <div className="relative z-20 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-          <div className="flex flex-wrap items-center">
-            <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
-              Online
-              <span className="cursor-pointer pl-2 hover:text-danger">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
-              </span>
-            </span>
-          </div>
-          <select
-            name=""
-            id=""
-            className="absolute top-0 left-0 z-20 h-full w-full bg-transparent opacity-0"
-          >
-            <option value="">Option</option>
-            <option value="">Option</option>
-          </select>
-          <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g opacity="0.8">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
-                  fill="#637381"
-                ></path>
-              </g>
-            </svg>
-          </span>
-        </div>
-      </div>{' '}
-      <div className="w-full md:w-2/5">
-        <label className="mb-3 block text-black dark:text-white">
-          Filter By Service
-        </label>
-        <div className="relative  w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-          <div className="flex flex-wrap items-center">
-            <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
-              Premium
-              <span className="cursor-pointer pl-2 hover:text-danger">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
-              </span>
-            </span>
-          </div>
-          <select
-            name=""
-            id=""
-            className="absolute top-0 left-0  h-full w-full bg-transparent opacity-0"
-          >
-            <option value="">Select A Service</option>
-            <option value="Standard Wash">StandardWash</option>
-            <option value="Premium Wash">PremiumWash</option>
-            <option value="Washing">Washing</option>
-            <option value="Car Detailing">Car Detailing</option>
-            <option value="Gold Wash">Gold Wash</option>
-            <option value="Ceramic">Ceramic</option>
-            <option value="Platinum Wash">Platinum Wash</option>
-          </select>
-          <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g opacity="0.8">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
-                  fill="#637381"
-                ></path>
-              </g>
-            </svg>
-          </span>
-        </div>
-      </div>
-      <div className="w-full md:w-2/5">
-        <label className="mb-3 block text-black dark:text-white">
-          Filter By Staff Member
-        </label>
-        <div className="relative z-20 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-          <div className="flex flex-wrap items-center">
-            <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
-              Ali - Lamsat
-              <span className="cursor-pointer pl-2 hover:text-danger">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
-                    fill="currentColor"
-                  ></path>
-                </svg>
-              </span>
-            </span>
-          </div>
-          <select
-            name=""
-            id=""
-            className="absolute top-0 left-0 z-20 h-full w-full bg-transparent opacity-0"
-          >
-            <option value="">Select A Service</option>
-            <option value="Standard Wash">StandardWash</option>
-            <option value="Premium Wash">PremiumWash</option>
-            <option value="Washing">Washing</option>
-            <option value="Car Detailing">Car Detailing</option>
-            <option value="Gold Wash">Gold Wash</option>
-            <option value="Ceramic">Ceramic</option>
-            <option value="Platinum Wash">Platinum Wash</option>
-          </select>
-          <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g opacity="0.8">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
-                  fill="#637381"
-                ></path>
-              </g>
-            </svg>
-          </span>
-        </div>
-      </div> */}
-      {/* </div> */}
-      {/* </div> */}
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">

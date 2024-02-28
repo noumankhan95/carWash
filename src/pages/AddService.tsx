@@ -20,6 +20,7 @@ const validationSchema = yup.object().shape({
   category: yup.string().required('Service is required'),
   arabicDescription: yup.string().required('Arabic Description is Required'),
   arabicName: yup.string().required('Arabic Name is Required'),
+  bookingType: yup.string().required('booking Type is Required'),
 });
 
 function AddService() {
@@ -31,6 +32,7 @@ function AddService() {
       category: scat,
       arabicDescription,
       arabicName,
+      bookingType,
     },
     addServiceTodb,
     isEditing,
@@ -40,7 +42,7 @@ function AddService() {
   const [isloading, setisloading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { categories, services, setreloadCategories } = useGlobalStore();
-  console.log('Cawrrq', scat);
+  console.log('Cawrrq', bookingType);
   const formikObj = useFormik({
     initialValues: {
       Name: name || '',
@@ -48,6 +50,7 @@ function AddService() {
       category: scat || '',
       arabicDescription: arabicDescription || '',
       arabicName: arabicName || '',
+      bookingType: bookingType || '',
     },
     validationSchema,
     async onSubmit(values, formikHelpers) {
@@ -78,6 +81,7 @@ function AddService() {
             category: values.category,
             arabicDescription: values.arabicDescription,
             arabicName: values.arabicName,
+            bookingType: values.bookingType,
           });
         } else {
           await addServiceTodb({
@@ -87,6 +91,7 @@ function AddService() {
             category: values.category,
             arabicDescription: values.arabicDescription,
             arabicName: values.arabicName,
+            bookingType: values.bookingType,
           });
         }
         setreloadCategories();
@@ -113,7 +118,7 @@ function AddService() {
       );
     }
   }, []);
-  console.log('CAts', categories);
+  console.log('CAts', formikObj.errors);
   const MemoizedImages = useMemo(() => {
     return (
       <div className="flex flex-row flex-wrap justify-center items-center py-3">
@@ -287,6 +292,28 @@ function AddService() {
                 <h2 className="text-meta-8">{scat}</h2>
               </div>
             )} */}
+            <div className="w-full md:w-2/5">
+              <label className="mb-3 block text-black dark:text-white">
+                Booking Type
+              </label>
+              <Field
+                as="select"
+                type="text"
+                name="bookingType"
+                placeholder="bookingType"
+                className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              >
+                <option value={''}>select</option>
+                <option value="Automatic">Automatic</option>
+                <option value="Manual">Manual</option>
+                <option value="Subscription">Subscription</option>
+              </Field>
+              <ErrorMessage
+                name="bookingType"
+                component="div"
+                className="text-danger"
+              />
+            </div>
           </div>
           <div className="overflow-hidden rounded-sm border border-strokeshadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="px-4 py-5 pb-6 text-center lg:pb-8 xl:pb-11.5">

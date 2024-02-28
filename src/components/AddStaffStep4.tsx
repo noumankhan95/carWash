@@ -8,7 +8,15 @@ import useWorkerStore from '../store/ServiceStore';
 import { useNavigate } from 'react-router-dom';
 // @ts-ignore
 import { db, auth } from '../firebase.js';
-import { setDoc, doc, runTransaction } from 'firebase/firestore';
+import {
+  setDoc,
+  doc,
+  runTransaction,
+  getDocs,
+  query,
+  collection,
+  where,
+} from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { LoaderIcon, toast } from 'react-hot-toast';
 import useGlobalStore from '../store/globalStore.js';
@@ -28,6 +36,8 @@ function AddServingArea() {
     Timings,
     setIsNotEditing,
     addServingArea,
+    isDuplicating,
+    setisNotDuplicating,
   } = useWorkerStore();
   const navigate = useNavigate();
   console.log(ServingArea, 'serving area');
@@ -52,8 +62,17 @@ function AddServingArea() {
       setisloading(true);
       if (isEditing.value) {
         console.log('Reached in Editing');
-        await addEditedItemtoDb();
+        // await addEditedItemtoDb();
       } else {
+        console.log('Reached Creating Staff');
+        const docs = await getDocs(
+          query(
+            collection(db, 'staff'),
+            where('StaffMember.phone', '==', StaffMember.phone),
+          ),
+        );
+        if (!docs.empty)
+          return toast.error('User With Phone number Already Exists');
         const u = await createUserWithEmailAndPassword(
           auth,
           userAuth.email,
@@ -69,10 +88,11 @@ function AddServingArea() {
 
         EmptyFields();
         setIsNotEditing();
-        // navigate('/staff');
+        setisNotDuplicating();
+        navigate('/staff');
       }
-      setreloadCategories();
-      toast.success('Success');
+      // setreloadCategories();
+      // toast.success('Success');
     } catch (e) {
       console.log(e);
       toast.error('An Error Occured ');
@@ -160,6 +180,8 @@ function AddServingArea() {
             <LoaderIcon style={{ margin: 'auto' }} className="w-4 h-4" />
           ) : isEditing.value ? (
             'Update'
+          ) : isDuplicating ? (
+            'Duplicate'
           ) : (
             'Add To Database'
           )}
