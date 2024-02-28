@@ -1,4 +1,12 @@
-import { collection, getDocs } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  or,
+  query,
+  where,
+  type QueryFieldFilterConstraint,
+  and,
+} from 'firebase/firestore';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Timestamp } from 'firebase/firestore';
@@ -20,26 +28,26 @@ function Orders() {
 
   // const OrderNoRef = useRef<HTMLInputElement | null>(null);
   // const PhoneRef = useRef<HTMLInputElement | null>(null);
-  // const [orderStatus, setOrderStatus] = useState([]);
+  // const [status, setstatus] = useState([]);
   // const [orderMode, setorderMode] = useState([]);
   // const [filterbyservice, setfilterbyservice] = useState([]);
-  // const [filterbyStaffMember, setfilterbyStaffMember] = useState([]);
+  // const [filterbyworker, setfilterbyworker] = useState([]);
   // const [filter, setfilter] = useState<any>({
   //   date: null,
   //   orderNumber: null,
   //   phone: null,
-  //   orderStatus: null,
+  //   status: null,
   //   orderMode: null,
   // });
   const [filters, setFilters] = useState<any>({
     startDate: null,
     endDate: null,
     orderNumber: '',
-    mobileNumber: '',
-    orderStatus: '',
+    customer: '',
+    status: '',
     orderMode: '',
     service: '',
-    staffMember: '',
+    worker: '',
   });
   const { services, workers } = useGlobalStore();
   const handleDatesChange = (dates: [Date | null, Date | null]) => {
@@ -85,8 +93,36 @@ function Orders() {
     }
   }, []);
   const navigate = useNavigate();
-  const handleFilters = () => {
-    console.log(filters);
+  const handleFilters = async () => {
+    try {
+      console.log(filters);
+      setisloading(true);
+      const queriesarr: QueryFieldFilterConstraint[] = [];
+      const docref = collection(db, 'orders');
+      Object.entries(filters).forEach(([filterType, value]) => {
+        if (value) {
+          queriesarr.push(where(filterType, '==', value));
+        }
+      });
+      console.log(queriesarr);
+      const response = await getDocs(query(docref, and(...queriesarr)));
+
+      if (!response.empty) {
+        console.log('not empty');
+        const orders: Orders[] = [];
+
+        response.forEach((doc) =>
+          orders.push({ ...(doc.data() as Orders), id: doc.id }),
+        );
+        setOrders(orders);
+      } else {
+        console.log('empty');
+      }
+    } catch (e) {
+      toast.error('An error Occured');
+    } finally {
+      setisloading(false);
+    }
   };
   return (
     <div>
@@ -125,7 +161,7 @@ function Orders() {
           Filter Orders By
         </h1>
         <div className="flex flex-col space-y-4 lg:space-y-0 md:flex-row items-center space-x-0 md:space-x-4 justify-around">
-          <div className="w-full md:w-2/5 items-center justify-center">
+          {/* <div className="w-full md:w-2/5 items-center justify-center">
             <DatePicker
               showIcon
               calendarIconClassname="items-center  mt-2 text-white"
@@ -138,7 +174,7 @@ function Orders() {
               className="w-full z-999999 h-12.5 items-center justify-center  rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               wrapperClassName="w-full z-99999"
             />
-          </div>
+          </div> */}
           <div className="w-full md:w-2/5">
             <input
               type="text"
@@ -154,12 +190,12 @@ function Orders() {
           <div className="w-full md:w-2/5">
             <input
               type="text"
-              name="MobileNumber"
+              name="customer"
               placeholder="Mobile Number"
               className="w-full rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-              value={filters['mobileNumber']}
+              value={filters['customer']}
               onChange={(e) =>
-                setFilters((v: any) => ({ ...v, mobileNumber: e.target.value }))
+                setFilters((v: any) => ({ ...v, customer: e.target.value }))
               }
             />
             {/* <ErrorMessage
@@ -176,9 +212,9 @@ function Orders() {
             </label>
             <div className="relative h-16 h-16 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
               <div className="flex flex-wrap items-center">
-                {filters.orderStatus && (
+                {filters.status && (
                   <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
-                    {filters.orderStatus}
+                    {filters.status}
                     <span className="cursor-pointer pl-2 hover:text-danger">
                       <svg
                         width="12"
@@ -205,7 +241,7 @@ function Orders() {
                 onChange={(e) =>
                   setFilters((v: any) => ({
                     ...v,
-                    orderStatus: e.target.value,
+                    status: e.target.value,
                   }))
                 }
               >
@@ -333,7 +369,7 @@ function Orders() {
                   setserviceName(name);
                   setFilters((v: any) => ({
                     ...v,
-                    service: id,
+                    service: name,
                   }));
                 }}
               >
@@ -370,7 +406,7 @@ function Orders() {
             </label>
             <div className="relative h-16 h-16 z-20 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
               <div className="flex flex-wrap items-center">
-                {filters.staffMember && (
+                {filters.worker && (
                   <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
                     {workerName}
                     <span className="cursor-pointer pl-2 hover:text-danger">
@@ -402,7 +438,7 @@ function Orders() {
 
                   setFilters((v: any) => ({
                     ...v,
-                    staffMember: id,
+                    worker: name,
                   }));
                 }}
               >
@@ -438,7 +474,7 @@ function Orders() {
           className="inline-flex w-30 items-center justify-center gap-2.5 disabled:cursor-default rounded-md bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
           onClick={handleFilters}
         >
-          Filter
+          {isloading ? <LoaderIcon className="h-8 w-8" /> : "Filter"}
         </button>
       </div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
