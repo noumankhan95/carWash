@@ -17,6 +17,7 @@ import { collection, getDocs } from 'firebase/firestore';
 //@ts-ignore
 import { db } from '../firebase';
 import useUpselling from '../store/useUpsellingStore';
+import useGlobalStore from '../store/globalStore';
 
 type filesArray = {
   url: File | string;
@@ -50,6 +51,13 @@ const validationSchema = yup.object().shape({
         ? schema.required('Price is Required')
         : schema.notRequired(),
     ),
+  service: yup
+    .string()
+    .when('type', ([type], schema) =>
+      type == 'Service'
+        ? schema.required('Service is Required')
+        : schema.notRequired(),
+    ),
 });
 
 function AddUpselling() {
@@ -59,6 +67,7 @@ function AddUpselling() {
   const { isEditing, addUpsellingTodb, updateinDb, item } = useUpselling();
   const [images, setimages] = useState<filesArray[]>(item.file);
   console.log('item', item);
+  const { services: gservices } = useGlobalStore();
   const formikObj = useFormik<UpsellingFormik>({
     initialValues: {
       Name: item.name || '',
@@ -66,10 +75,12 @@ function AddUpselling() {
       type: item.type || '',
       modifiers: item.modifiers || [],
       price: parseInt(item.price) || 0,
+      service: item.service?.name || '',
     },
     validationSchema,
     async onSubmit(values, formikHelpers) {
       setisloading(true);
+      console.log(values);
       try {
         console.log(values);
         if (images.length <= 0) {
@@ -87,6 +98,14 @@ function AddUpselling() {
           toast.error('Image Size should be Less than 2MB');
           return;
         }
+        const selectedService = gservices.find(
+          (s) => s.name === values.service,
+        );
+        if (!selectedService) {
+          toast.error('No Selected Service');
+
+          return;
+        }
         if (isEditing.value) {
           await updateinDb({
             name: values.Name,
@@ -96,6 +115,7 @@ function AddUpselling() {
             file: images,
             id: isEditing.id,
             modifiers: values.modifiers,
+            service: selectedService,
           });
         } else {
           await addUpsellingTodb({
@@ -105,6 +125,7 @@ function AddUpselling() {
             modifiers: values.modifiers,
             type: values.type,
             file: images,
+            service: selectedService,
           });
         }
         navigate('/upsellings');
@@ -365,6 +386,35 @@ function AddUpselling() {
                 />
                 <ErrorMessage
                   name="price"
+                  component="div"
+                  className="text-danger"
+                />
+              </div>
+            )}
+          </div>
+          <div className="flex space-x-4">
+            {formikObj.values.type === 'Service' && (
+              <div className="w-full md:w-2/5">
+                <label className="mb-3 block text-black dark:text-white">
+                  Service
+                </label>
+                <Field
+                  as="select"
+                  type="text"
+                  name="service"
+                  placeholder="Service"
+                  className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                >
+                  <option>Select</option>
+                  {gservices.map((s) => (
+                    <option key={s.id} value={s.name}>
+                      {s.name}
+                    </option>
+                  ))}
+                </Field>
+
+                <ErrorMessage
+                  name={`service`}
                   component="div"
                   className="text-danger"
                 />

@@ -109,11 +109,18 @@ function CreateAppointment() {
                 Customer Name
               </label>
               <Field
-                type="text"
+                as="select"
                 name="name"
                 placeholder="Name"
                 className="w-full  bg-white rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-              />
+              >
+                <option>Select A Customer</option>
+                {workers.map((w) => (
+                  <option key={w.id} value={w.name}>
+                    {w.name}
+                  </option>
+                ))}
+              </Field>
               <ErrorMessage
                 name="name"
                 component="div"

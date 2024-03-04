@@ -35,11 +35,11 @@ function AddLocation({ closeModal }: { closeModal: () => void }) {
     console.log('place_ud', id);
     setlocationaddress({ address, area, location, id });
   };
-  console.log(locationsList);
+  console.log(locationsList, 'LocationsList');
   return (
     <form onSubmit={handleSubmit}>
       <div className="p-6.5 space-y-6">
-        {/* <label className="mb-2.5 block text-black dark:text-white">
+        <label className="mb-2.5 block text-black dark:text-white">
           Change Radius
         </label>
         <input
@@ -47,7 +47,7 @@ function AddLocation({ closeModal }: { closeModal: () => void }) {
           type="number"
           placeholder="Set Radius"
           className="w-full  top-0 z-99999 rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-        /> */}
+        />
         <MapComponent
           updateRefs={updateRefs}
           Servicemode
@@ -192,6 +192,7 @@ function AddLocation({ closeModal }: { closeModal: () => void }) {
                       [locationaddress?.area!]: newItem,
                       duration: arrivalTimeRef.current?.value ?? '',
                       minamount: minOrderValueRef.current?.value ?? 0,
+                      serveRadius: radiusRef.current?.value || 20,
                     },
                   ] as ServicesList[];
                 } else {
@@ -210,6 +211,7 @@ function AddLocation({ closeModal }: { closeModal: () => void }) {
                       [locationaddress?.area!]: [locationaddress!],
                       duration: arrivalTimeRef.current?.value ?? '',
                       minamount: minOrderValueRef.current?.value ?? 0,
+                      serveRadius: radiusRef.current?.value || 20,
                     },
                   ] as ServicesList[];
                 }

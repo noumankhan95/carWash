@@ -18,6 +18,14 @@ const useUpselling = create<upsellingStore>((set, get) => ({
     type: '',
     file: [],
     modifiers: [],
+    service: {
+      arabicDescription: '',
+      bookingType: '',
+      category: '',
+      description: '',
+      file: [],
+      name: '',
+    },
   },
   isEditing: { id: '', value: false },
   async addUpsellingTodb(c) {
@@ -48,6 +56,7 @@ const useUpselling = create<upsellingStore>((set, get) => ({
       await addDoc(collection(db, 'upsellings'), {
         name: c.name,
         arabicName: c.arabicName,
+        service: c.service,
         modifiers: c.type === 'Service' ? c.modifiers : [],
         type: c.type,
         price: c.type === 'Product' ? c.price : 0,
@@ -76,6 +85,8 @@ const useUpselling = create<upsellingStore>((set, get) => ({
         type: c.type,
         id: c.id,
         modifiers: c.modifiers,
+        service: c.service,
+        
       },
     }));
   },
@@ -112,6 +123,8 @@ const useUpselling = create<upsellingStore>((set, get) => ({
         modifiers: c.type === 'Service' ? c.modifiers : [],
         price: c.type === 'Product' ? c.price : 0,
         file: arrayUnion(...images),
+        service: c.service,
+
         updatedAt: serverTimestamp(),
       });
     } catch (e) {

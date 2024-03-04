@@ -151,7 +151,7 @@ const MyComponent = ({
 
     if (place && place.geometry?.location) {
       const id = place?.place_id;
-      generatePolygon(place.formatted_address);
+      // generatePolygon(place.formatted_address);
       const location: itemLocation = {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
@@ -163,18 +163,18 @@ const MyComponent = ({
       }
 
       // Create a new circle around the selected location
-      // const circle = new window.google.maps.Circle({
-      //   strokeColor: '#FF0000',
-      //   strokeOpacity: 0.8,
-      //   strokeWeight: 2,
-      //   fillColor: '#FF0000',
-      //   fillOpacity: 0.35,
-      //   map: map,
-      //   center: location,
-      //   radius, // Specify the radius in meters
-      // });
+      const circle = new window.google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        center: location,
+        radius: radius || 30, // Specify the radius in meters
+      });
 
-      // setSelectedCircle(circle);
+      setSelectedCircle(circle);
       const address = place.formatted_address || '';
       const area = getAddressComponent(place, 'locality') || '';
       updateRefs(address, area, location, id!);

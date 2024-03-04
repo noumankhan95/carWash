@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { uploadBytes, ref } from 'firebase/storage';
+import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 //@ts-ignore
 import { db, storage } from '../firebase';
 import {
@@ -8,20 +8,54 @@ import {
   addDoc,
   updateDoc,
   collection,
+  arrayUnion,
 } from 'firebase/firestore';
 const useSubscription = create<SubscriptionStore>((set, get) => ({
   subscription: {
-    first: { discount: 0, enabled: false },
-    second: { discount: 0, enabled: false },
-    third: { discount: 0, enabled: false },
-    service: '',
-    status: false,
+    Discount: 0,
+    file: [],
+    showInApp: false,
+    Service: {
+      arabicDescription: '',
+      bookingType: '',
+      category: '',
+      description: '',
+      file: [],
+      name: '',
+    },
   },
   isEditing: { id: '', value: false },
   async addSubscriptionTodb(c) {
     try {
+      const images: { url: string }[] = [];
+
+      const uploadPromises = c.file.map(async (f) => {
+        console.log(f);
+        if (typeof f.url === 'string') {
+          return;
+        } else if (f.url instanceof File) {
+          let name = `categories/${c.file}/${f.url.name}`;
+
+          try {
+            await uploadBytes(ref(storage, name), f.url);
+            const constructedURL = await getDownloadURL(ref(storage, name));
+            images.push({ url: constructedURL });
+            console.log('File Uploaded');
+          } catch (e) {
+            // alert(e);
+            throw e;
+          }
+        }
+      });
+
+      await Promise.all(uploadPromises);
       await addDoc(collection(db, 'subscription'), {
-        ...c,
+        Discount: c.Discount,
+        file: arrayUnion(...images),
+
+        showInApp: c.showInApp,
+        Service: c.Service,
+
         createdAt: serverTimestamp(),
       });
     } catch (e) {
@@ -44,8 +78,33 @@ const useSubscription = create<SubscriptionStore>((set, get) => ({
 
   async updateinDb(c) {
     try {
+      const images: { url: string }[] = [];
+
+      const uploadPromises = c.file.map(async (f) => {
+        console.log(f);
+        if (typeof f.url === 'string') {
+          return;
+        } else if (f.url instanceof File) {
+          let name = `categories/${c.file}/${f.url.name}`;
+
+          try {
+            await uploadBytes(ref(storage, name), f.url);
+            const constructedURL = await getDownloadURL(ref(storage, name));
+            images.push({ url: constructedURL });
+            console.log('File Uploaded');
+          } catch (e) {
+            // alert(e);
+            throw e;
+          }
+        }
+      });
+
+      await Promise.all(uploadPromises);
       await updateDoc(doc(db, 'subscription', c.id!), {
-        ...c,
+        Discount: c.Discount,
+        file: arrayUnion(...images),
+        showInApp: c.showInApp,
+        Service: c.Service,
         updatedAt: serverTimestamp(),
       });
     } catch (e) {

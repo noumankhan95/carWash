@@ -115,20 +115,17 @@ const Upselling = () => {
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {
               setSubscriptionItem({
-                first: {
-                  discount: 0,
-                  enabled: false,
+                Discount: 0,
+                file: [],
+                Service: {
+                  arabicDescription: '',
+                  bookingType: '',
+                  category: '',
+                  description: '',
+                  file: [],
+                  name: '',
                 },
-                second: {
-                  discount: 0,
-                  enabled: false,
-                },
-                third: {
-                  discount: 0,
-                  enabled: false,
-                },
-                service: '',
-                status: false,
+                showInApp: false,
               });
               setIsNotEditing();
               navigate('/addSubscription');
@@ -143,14 +140,14 @@ const Upselling = () => {
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                Name
+                Service Name
               </th>
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                 Discount
               </th>
-              {/* <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                Enabled
-              </th> */}
+              <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                Show In App
+              </th>
 
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                 Actions
@@ -165,27 +162,19 @@ const Upselling = () => {
                   <tr key={u.id}>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                       <h5 className="font-medium text-black dark:text-white">
-                        {u.service}
+                        {u?.Service?.name}
                       </h5>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                       <h5 className="font-medium text-black dark:text-white">
-                        {u.first.enabled && (
-                          <h2>Once A Week {u.first.discount}%</h2>
-                        )}
-                        {u.second.enabled && (
-                          <h2>Twice A Week {u.second.discount}%</h2>
-                        )}
-                        {u.third.enabled && (
-                          <h2>Thrice A Week {u.third.discount}%</h2>
-                        )}
+                        {u?.Discount}
                       </h5>
                     </td>
-                    {/* <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                    <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                       <h5 className="font-medium text-black dark:text-white">
-                        {u.first.enabled}
+                        {u?.showInApp.toString()}
                       </h5>
-                    </td> */}
+                    </td>
 
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">

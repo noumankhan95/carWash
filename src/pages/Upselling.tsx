@@ -142,9 +142,9 @@ const Upselling = () => {
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                 Type
               </th>
-              <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+              {/* <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                 Price
-              </th>
+              </th> */}
               <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                 Actions
               </th>
@@ -171,11 +171,11 @@ const Upselling = () => {
                         {u.type}
                       </h5>
                     </td>
-                    <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                    {/* <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                       <h5 className="font-medium text-black dark:text-white">
                         {u.type === 'Service' ? 'See Details' : u.price}
                       </h5>
-                    </td>
+                    </td> */}
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         {permissions?.includes('Upsellings Delete') ||
@@ -221,6 +221,7 @@ const Upselling = () => {
                             onClick={() => {
                               // setshowEditCategory((p) => true);
                               // setSelectedUser(u);
+                              console.log('Selecting upseliing', u);
                               setIsEditing(u.id!);
                               //   setCategoryItems(u);
                               setUpsellingItem(u);

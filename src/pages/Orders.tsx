@@ -100,7 +100,15 @@ function Orders() {
       const queriesarr: QueryFieldFilterConstraint[] = [];
       const docref = collection(db, 'orders');
       Object.entries(filters).forEach(([filterType, value]) => {
-        if (value) {
+        if (filterType === 'startDate' && value) {
+          queriesarr.push(
+            where('selectedDate', '>=', Timestamp.fromDate(value as Date)),
+          );
+        } else if (filterType === 'endDate' && value) {
+          queriesarr.push(
+            where('selectedDate', '<=', Timestamp.fromDate(value as Date)),
+          );
+        } else if (value) {
           queriesarr.push(where(filterType, '==', value));
         }
       });
@@ -116,6 +124,7 @@ function Orders() {
         );
         setOrders(orders);
       } else {
+        setOrders([]);
         console.log('empty');
       }
     } catch (e) {
@@ -161,7 +170,7 @@ function Orders() {
           Filter Orders By
         </h1>
         <div className="flex flex-col space-y-4 lg:space-y-0 md:flex-row items-center space-x-0 md:space-x-4 justify-around">
-          {/* <div className="w-full md:w-2/5 items-center justify-center">
+          <div className="w-full md:w-2/5 items-center justify-center">
             <DatePicker
               showIcon
               calendarIconClassname="items-center  mt-2 text-white"
@@ -174,7 +183,7 @@ function Orders() {
               className="w-full z-999999 h-12.5 items-center justify-center  rounded-lg bg-white border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               wrapperClassName="w-full z-99999"
             />
-          </div> */}
+          </div>
           <div className="w-full md:w-2/5">
             <input
               type="text"
@@ -474,7 +483,7 @@ function Orders() {
           className="inline-flex w-30 items-center justify-center gap-2.5 disabled:cursor-default rounded-md bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
           onClick={handleFilters}
         >
-          {isloading ? <LoaderIcon className="h-8 w-8" /> : "Filter"}
+          {isloading ? <LoaderIcon className="h-8 w-8" /> : 'Filter'}
         </button>
       </div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">

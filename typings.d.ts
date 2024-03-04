@@ -166,6 +166,7 @@ type ServicesList = {
   [areaName: string]: serviceLocation[];
   duration: number;
   minamount: number;
+  serveRadius: number;
 };
 type serviceLocation = {
   address: string;
@@ -228,6 +229,7 @@ type upselling = {
   id?: string;
   file: Array<{ url: File | string }>;
   modifiers?: Array<{ name: string; price: string; time: string }>;
+  service?: globalServices;
 };
 
 type UpsellingFormik = {
@@ -236,6 +238,7 @@ type UpsellingFormik = {
   type: string;
   modifiers: Array<{ name: string; price: string; time: string }>;
   price: number;
+  service: string;
 };
 
 type upsellingStore = {
@@ -258,12 +261,11 @@ type SubscriptionStore = {
   addSubscriptionTodb: (c: Subscription) => Promise<void>;
 };
 type Subscription = {
-  first: { discount: number; enabled: boolean };
-  second: { discount: number; enabled: boolean };
-  third: { discount: number; enabled: boolean };
-  service: string;
+  Discount: number;
+  file: { url: string | File }[];
+  showInApp: boolean;
   id?: string;
-  status: boolean;
+  Service: globalServices;
 };
 type SubscriptionName = 'first' | 'second' | 'third';
 type Orders = {
@@ -309,7 +311,7 @@ type globalServices = {
   arabicDescription: string;
   id?: string;
   category: string;
-  file: { url: string }[];
+  file: { url: string | File }[];
   bookingType: string;
 };
 
