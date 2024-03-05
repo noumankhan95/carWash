@@ -298,11 +298,18 @@ type GlobalStore = {
   services: Array<globalServices>;
   categories: Array<globalCategory>;
   workers: Array<globalWorkers>;
+  roles: AppRoles;
   setcategories: (c: globalCategory[]) => void;
   setservices: (c: globalServices[]) => void;
   setworkers: (c: globalWorkers[]) => void;
   reloadCategories: boolean;
   setreloadCategories: () => void;
+  setRoles: (r: AppRoles) => void;
+};
+
+type AppRoles = {
+  [key: string]: Array<string>;
+  id?: string;
 };
 
 type globalServices = {
@@ -351,4 +358,11 @@ type appointmentDetails = {
 type appointmentVehicle = {
   vtype: string;
   vinstructions: string;
+};
+
+type RoleStore = {
+  roles: AppRoles;
+  setAppRoles: (r: AppRoles) => void;
+  addtoDb: () => Promise<void>;
+  // editItem: (uid: string) => Promise<void>;
 };

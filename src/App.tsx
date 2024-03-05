@@ -27,6 +27,7 @@ function App() {
     services,
     workers,
     reloadCategories,
+    setRoles,
   } = useGlobalStore();
   useEffect(() => {
     setLoading((p) => true);
@@ -114,10 +115,34 @@ function App() {
       setworkers(cats);
     } catch (e) {}
   };
+  const getRoles = async () => {
+    try {
+      const rolesArray: AppRoles[] = [];
+      const { empty, docs } = await getDocs(collection(db, 'roles'));
+
+      if (empty) {
+        setRoles({});
+        return;
+      }
+
+      const proles: AppRoles = {
+        ...docs[0].data(),
+        id: docs[0].id,
+      };
+      rolesArray.push(proles);
+
+      // Assuming you want to merge multiple roles into a single object
+      // const mergedRoles = rolesArray.reduce((acc, role) => {
+      //   return { ...acc, ...role };
+      // }, {});
+      setRoles(proles);
+    } catch (e) {}
+  };
   useEffect(() => {
     getCategories();
     getWorkers();
     getServices();
+    getRoles();
   }, [reloadCategories]);
   // useEffect(() => {
   //   setTimeout(() => setLoading(false), 1000);

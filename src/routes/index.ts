@@ -1,4 +1,7 @@
 import { lazy } from 'react';
+
+const EditRoles = lazy(() => import('../pages/EditRoles'));
+
 const AddUpselling = lazy(() => import('../pages/AddUpselling'));
 const AddCategory = lazy(() => import('../pages/AddCategory'));
 const AddService = lazy(() => import('../pages/AddService'));
@@ -29,6 +32,8 @@ const AddOrder = lazy(() => import('../pages/AddOrder'));
 const Appointments = lazy(() => import('../pages/Appointments'));
 const AddAppointment = lazy(() => import('../pages/CreateAppointment'));
 const AppointmentDetails = lazy(() => import('../pages/AppointmentDetails'));
+const CreateRoles = lazy(() => import('../pages/CreateRoles'));
+
 const coreRoutes = [
   {
     path: '/addOrder',
@@ -85,21 +90,21 @@ const coreRoutes = [
     title: 'Add Service',
     component: AddService,
   },
-  {
-    path: '/editproviders',
-    title: 'editProvider',
-    component: EditProviders,
-  },
+  // {
+  //   path: '/editproviders',
+  //   title: 'editProvider',
+  //   component: EditProviders,
+  // },
   // {
   //   path: '/subscriptions',
   //   title: 'Calender',
   //   component: Subscription,
   // },
-  {
-    path: '/providers',
-    title: 'Providers',
-    component: Providers,
-  },
+  // {
+  //   path: '/providers',
+  //   title: 'Providers',
+  //   component: Providers,
+  // },
   {
     path: '/calendar',
     title: 'Calender',
@@ -120,46 +125,7 @@ const coreRoutes = [
     title: 'Staff',
     component: Staff,
   },
-  {
-    path: '/profile',
-    title: 'Profile',
-    component: Profile,
-  },
-  {
-    path: '/forms/form-elements',
-    title: 'Forms Elements',
-    component: FormElements,
-  },
-  {
-    path: '/forms/form-layout',
-    title: 'Form Layouts',
-    component: FormLayout,
-  },
-  {
-    path: '/tables',
-    title: 'Tables',
-    component: Tables,
-  },
-  {
-    path: '/settings',
-    title: 'Settings',
-    component: Settings,
-  },
-  {
-    path: '/chart',
-    title: 'Chart',
-    component: Chart,
-  },
-  {
-    path: '/ui/alerts',
-    title: 'Alerts',
-    component: Alerts,
-  },
-  {
-    path: '/ui/buttons',
-    title: 'Buttons',
-    component: Buttons,
-  },
+
   {
     path: '/appointments',
     title: 'Appointments',
@@ -174,6 +140,16 @@ const coreRoutes = [
     path: '/appointmentDetails',
     title: 'Appointment Details',
     component: AppointmentDetails,
+  },
+  {
+    path: '/createRoles',
+    title: 'Create Role',
+    component: CreateRoles,
+  },
+  {
+    path: '/editRole',
+    title: 'Edit Role',
+    component: EditRoles,
   },
 ];
 
