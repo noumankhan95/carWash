@@ -8,15 +8,7 @@ const AddService = lazy(() => import('../pages/AddService'));
 const Categories = lazy(() => import('../pages/Categories'));
 const Services = lazy(() => import('../pages/Services'));
 const Upselling = lazy(() => import('../pages/Upselling'));
-const Calendar = lazy(() => import('../pages/Calendar'));
-const Chart = lazy(() => import('../pages/Chart'));
-const FormElements = lazy(() => import('../pages/Form/FormElements'));
-const FormLayout = lazy(() => import('../pages/Form/FormLayout'));
-const Profile = lazy(() => import('../pages/Profile'));
-const Settings = lazy(() => import('../pages/Settings'));
-const Tables = lazy(() => import('../pages/Tables'));
-const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
-const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
+
 const Staff = lazy(() => import('../pages/Staff'));
 const AddStaff = lazy(() => import('../pages/AddStaffMember'));
 const Roles = lazy(() => import('../pages/Roles'));
@@ -105,11 +97,7 @@ const coreRoutes = [
   //   title: 'Providers',
   //   component: Providers,
   // },
-  {
-    path: '/calendar',
-    title: 'Calender',
-    component: Calendar,
-  },
+
   {
     path: '/addstaff',
     title: 'addStaff',
