@@ -18,7 +18,7 @@ const validationSchema = yup.object().shape({
 type images = {
   url: File | string;
 };
-function Subscription({ settheStep }: AddStaffMemberChildrenProps) {
+function AddOffer({ settheStep }: AddStaffMemberChildrenProps) {
   const {
     isEditing,
     setIsEditing,
@@ -374,4 +374,4 @@ function Subscription({ settheStep }: AddStaffMemberChildrenProps) {
   );
 }
 
-export default Subscription;
+export default AddOffer;

@@ -228,20 +228,20 @@ function EditRoles() {
                   <option className="text-black" value="Upsellings Update">
                     Upsellings Update
                   </option>
-                  <option className="text-black" value="Subscriptions All">
-                    Subscriptions All
+                  <option className="text-black" value="Offers All">
+                    Offers All
                   </option>
-                  <option className="text-black" value="Subscriptions Read">
-                    Subscriptions Read
+                  <option className="text-black" value="Offers Read">
+                    Offers Read
                   </option>
-                  <option className="text-black" value="Subscriptions Create">
-                    Subscriptions Create
+                  <option className="text-black" value="Offers Create">
+                    Offers Create
                   </option>
-                  <option className="text-black" value="Subscriptions Delete">
-                    Subscriptions Delete
+                  <option className="text-black" value="Offers Delete">
+                    Offers Delete
                   </option>
-                  <option className="text-black" value="Subscriptions Update">
-                    Subscriptions Update
+                  <option className="text-black" value="Offers Update">
+                    Offers Update
                   </option>
                   <option className="text-black" value="Appointments All">
                     Appointments All

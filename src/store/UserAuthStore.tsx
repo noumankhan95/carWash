@@ -19,7 +19,7 @@ const useUserAuth = create<UserAuth>((set) => ({
       permissions,
     }));
   },
-  permissions: [],
+  permissions: "",
 }));
 
 export default useUserAuth;

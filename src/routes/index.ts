@@ -12,9 +12,9 @@ const Upselling = lazy(() => import('../pages/Upselling'));
 const Staff = lazy(() => import('../pages/Staff'));
 const AddStaff = lazy(() => import('../pages/AddStaffMember'));
 const Roles = lazy(() => import('../pages/Roles'));
-const Subscription = lazy(() => import('../pages/Subscription'));
+const Offers = lazy(() => import('../pages/Offers'));
 const Orders = lazy(() => import('../pages/Orders'));
-const AddSubscription = lazy(() => import('../pages/AddSubscription'));
+const AddOffer = lazy(() => import('../pages/AddOffer'));
 
 const Providers = lazy(() => import('../pages/Providers'));
 const EditProviders = lazy(() => import('../pages/EditProviders'));
@@ -43,14 +43,14 @@ const coreRoutes = [
     component: OrderDetails,
   },
   {
-    path: '/addSubscription',
-    title: 'Add Subscription',
-    component: AddSubscription,
+    path: '/addOffer',
+    title: 'Add Offers',
+    component: AddOffer,
   },
   {
-    path: '/subscriptions',
-    title: 'Subscription',
-    component: Subscription,
+    path: '/Offers',
+    title: 'Offers',
+    component: Offers,
   },
   {
     path: '/upsellings',

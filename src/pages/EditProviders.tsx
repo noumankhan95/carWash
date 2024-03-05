@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 
 import ProviderInformation from '../components/ProviderInformation';
-import Subscription from '../pages/Subscription';
+import Subscription from './Offers';
 type StepComponent = {
   [key: number]: {
     component: (props: AddStaffMemberChildrenProps) => React.ReactNode;

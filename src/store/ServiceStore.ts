@@ -23,7 +23,7 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
     Name: '',
     phone: '',
     email: '',
-    permissions: [],
+    permissions: '',
   },
   isDuplicating: false,
   setisDuplicating() {
@@ -151,7 +151,7 @@ const useWorkerStore = create<StaffWorker>((set, get) => ({
         Name: '',
         phone: '',
         email: '',
-        permissions: [],
+        permissions: '',
       },
       Timings: {
         Monday: { from: '', to: '', enabled: false },

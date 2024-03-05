@@ -34,7 +34,7 @@ const useSubscription = create<SubscriptionStore>((set, get) => ({
         if (typeof f.url === 'string') {
           return;
         } else if (f.url instanceof File) {
-          let name = `categories/${c.file}/${f.url.name}`;
+          let name = `offers/${c.file}/${f.url.name}`;
 
           try {
             await uploadBytes(ref(storage, name), f.url);
@@ -49,7 +49,7 @@ const useSubscription = create<SubscriptionStore>((set, get) => ({
       });
 
       await Promise.all(uploadPromises);
-      await addDoc(collection(db, 'subscription'), {
+      await addDoc(collection(db, 'offers'), {
         Discount: c.Discount,
         file: arrayUnion(...images),
 
@@ -85,7 +85,7 @@ const useSubscription = create<SubscriptionStore>((set, get) => ({
         if (typeof f.url === 'string') {
           return;
         } else if (f.url instanceof File) {
-          let name = `categories/${c.file}/${f.url.name}`;
+          let name = `offers/${c.file}/${f.url.name}`;
 
           try {
             await uploadBytes(ref(storage, name), f.url);
@@ -100,7 +100,7 @@ const useSubscription = create<SubscriptionStore>((set, get) => ({
       });
 
       await Promise.all(uploadPromises);
-      await updateDoc(doc(db, 'subscription', c.id!), {
+      await updateDoc(doc(db, 'offers', c.id!), {
         Discount: c.Discount,
         file: arrayUnion(...images),
         showInApp: c.showInApp,

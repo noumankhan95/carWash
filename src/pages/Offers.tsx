@@ -13,7 +13,7 @@ import useCategoryStore from '../store/useCategoryStore';
 import { ref } from 'firebase/database';
 import useSubscription from '../store/useSubscriptionStore';
 import useGlobalStore from '../store/globalStore';
-const Upselling = () => {
+const Offers = () => {
   const [isloading, setisloading] = useState<boolean>(false);
   const [isdeleting, setisdeleting] = useState<boolean>(false);
   const [reload, setreload] = useState<boolean>(false);
@@ -28,10 +28,10 @@ const Upselling = () => {
     useSubscription();
   const { roles } = useGlobalStore();
   const navigate = useNavigate();
-  const getupselling = useCallback(async () => {
+  const getOffers = useCallback(async () => {
     try {
       setisloading(true);
-      const cats = await getDocs(collection(db, 'subscription'));
+      const cats = await getDocs(collection(db, 'offers'));
       const catarray: Subscription[] = [];
       if (!cats.empty) {
         cats.forEach((cat) =>
@@ -43,14 +43,14 @@ const Upselling = () => {
       }
       setsubscription(catarray);
     } catch (e) {
-      toast.error('Couldnt Fetch upselling');
+      toast.error('Couldnt Fetch Offers');
     } finally {
       setisloading(false);
       setreload(false);
     }
   }, []);
   useEffect(() => {
-    getupselling();
+    getOffers();
   }, [reload]);
   return (
     <div>
@@ -109,8 +109,8 @@ const Upselling = () => {
         </div>
       )}
       <div className="flex flex-row justify-end my-5">
-        {(roles[permissions]?.includes('Subscriptions All') ||
-          roles[permissions]?.includes('Subscriptions Add')) && (
+        {(roles[permissions]?.includes('Offers All') ||
+          roles[permissions]?.includes('Offers Add')) && (
           <button
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {
@@ -128,7 +128,7 @@ const Upselling = () => {
                 showInApp: false,
               });
               setIsNotEditing();
-              navigate('/addSubscription');
+              navigate('/addOffer');
             }}
           >
             Create
@@ -289,4 +289,4 @@ const Upselling = () => {
   );
 };
 
-export default Upselling;
+export default Offers;
