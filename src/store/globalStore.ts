@@ -17,7 +17,7 @@ const useGlobalStore = create<GlobalStore>((set) => ({
   setworkers(c) {
     set((state) => ({ ...state, workers: c }));
   },
-  roles: [],
+  roles: {},
   setRoles(r) {
     set((state) => ({ ...state, roles: r }));
   },
