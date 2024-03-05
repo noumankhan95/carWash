@@ -2,32 +2,42 @@ import React, { useState } from 'react';
 // @ts-ignore
 import { db } from '../firebase.js';
 import { updateDoc, doc } from 'firebase/firestore';
-import { LoaderIcon } from 'react-hot-toast';
+import toast, { LoaderIcon } from 'react-hot-toast';
+import useGlobalStore from '../store/globalStore.js';
+import { useNavigate } from 'react-router-dom';
 type pageprops = {
-  user: WebsiteUsers;
+  user: StaffMember;
 };
 function EditUserModal({ user }: pageprops) {
+  const { roles, setreloadCategories } = useGlobalStore();
   const [isloading, setisloading] = useState<boolean>();
-  const [permissions, setpermissions] = useState<string[]>(user.permissions);
+  const [permissions, setpermissions] = useState<string>(user.permissions);
+  const navigate = useNavigate();
   const UpdateUserRole = async () => {
-    let docRef = doc(db, 'users', user.id);
+    let docRef = doc(db, 'staff', user.id!);
     try {
       setisloading((p) => true);
 
       await updateDoc(docRef, {
-        permissions: permissions,
+        ['StaffMember.permissions']: permissions,
       });
+      toast.success('success');
+      navigate('/');
+      setreloadCategories();
     } catch (e) {
       console.log(e);
+      toast.error('An Error Occured');
     } finally {
       setisloading((p) => false);
     }
   };
   console.log('User', user);
+  console.log('UserR', roles[user.permissions]);
+
   return (
     <div>
       <h3 className="text-black dark:text-white font-bold font-serif text-2xl text-center">
-        Edit User
+        Edit User Role
       </h3>
       <div className="flex flex-col gap-9">
         <form action="#">
@@ -84,34 +94,9 @@ function EditUserModal({ user }: pageprops) {
               {/* Dropdown Select */}
               <div className="relative z-20 p-4 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
                 <div className="flex flex-wrap items-center">
-                  {permissions?.map((I: String) => (
-                    <span
-                      className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30 z-50"
-                      onClick={(e) => {
-                        setpermissions(
-                          permissions.filter((item) => item !== I),
-                        );
-                      }}
-                    >
-                      {I}
-                      <span className="cursor-pointer pl-2 hover:text-danger">
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
-                            fill="currentColor"
-                          ></path>
-                        </svg>
-                      </span>
-                    </span>
-                  ))}
+                  <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30 z-50">
+                    {permissions}
+                  </span>
                 </div>
                 <select
                   name=""
@@ -119,122 +104,17 @@ function EditUserModal({ user }: pageprops) {
                   className="absolute top-0 p-6 left-0 z-20 h-full w-full bg-transparent opacity-0"
                   onChange={(e) => {
                     console.log(e.target.value);
-                    setpermissions((p) =>
-                      p?.some((item) => item === e.target.value || item === '')
-                        ? p
-                        : [...(p || []), e.target.value],
-                    );
+                    setpermissions((p) => e.target.value);
                   }}
                 >
                   <option className="text-black" value="">
                     Select
                   </option>
-                  <option className="text-black" value="Staff All">
-                    Staff All
-                  </option>
-                  <option className="text-black" value="Staff Read">
-                    Staff Read
-                  </option>
-                  <option className="text-black" value="Staff Create">
-                    Staff Create
-                  </option>
-                  <option className="text-black" value="Staff Delete">
-                    Staff Delete
-                  </option>
-                  <option className="text-black" value="Staff Update">
-                    Staff Update
-                  </option>
-                  <option className="text-black" value="Roles All">
-                    Roles All
-                  </option>
-                  <option className="text-black" value="Roles Read">
-                    Roles Read
-                  </option>
-                  <option className="text-black" value="Roles Create">
-                    Roles Create
-                  </option>
-                  <option className="text-black" value="Roles Delete">
-                    Roles Delete
-                  </option>
-                  <option className="text-black" value="Roles Update">
-                    Roles Update
-                  </option>
-                  <option className="text-black" value="Orders All">
-                    Orders All
-                  </option>
-                  <option className="text-black" value="Orders Read">
-                    Orders Read
-                  </option>
-                  <option className="text-black" value="Orders Create">
-                    Orders Create
-                  </option>
-                  <option className="text-black" value="Orders Delete">
-                    Orders Delete
-                  </option>
-                  <option className="text-black" value="Orders Update">
-                    Orders Update
-                  </option>
-                  <option className="text-black" value="Categories All">
-                    Categories All
-                  </option>
-                  <option className="text-black" value="Categories Read">
-                    Categories Read
-                  </option>
-                  <option className="text-black" value="Categories Create">
-                    Categories Create
-                  </option>
-                  <option className="text-black" value="Categories Delete">
-                    Categories Delete
-                  </option>
-                  <option className="text-black" value="Categories Update">
-                    Categories Update
-                  </option>
-                  <option className="text-black" value="Services All">
-                    Services All
-                  </option>
-                  <option className="text-black" value="Services Read">
-                    Services Read
-                  </option>
-                  <option className="text-black" value="Services Create">
-                    Services Create
-                  </option>
-                  <option className="text-black" value="Services Delete">
-                    Services Delete
-                  </option>
-                  <option className="text-black" value="Services Update">
-                    Services Update
-                  </option>
-                  <option className="text-black" value="Upsellings All">
-                    Upsellings All
-                  </option>
-                  <option className="text-black" value="Upsellings Read">
-                    Upsellings Read
-                  </option>
-                  <option className="text-black" value="Upsellings Create">
-                    Upsellings Create
-                  </option>
-                  <option className="text-black" value="Upsellings Delete">
-                    Upsellings Delete
-                  </option>
-                  <option className="text-black" value="Upsellings Update">
-                    Upsellings Update
-                  </option>
-                  <option className="text-black" value="Subscriptions All">
-                    Subscriptions All
-                  </option>
-                  <option className="text-black" value="Subscriptions Read">
-                    Subscriptions Read
-                  </option>
-                  <option className="text-black" value="Subscriptions Create">
-                    Subscriptions Create
-                  </option>
-                  <option className="text-black" value="Subscriptions Delete">
-                    Subscriptions Delete
-                  </option>
-                  <option className="text-black" value="Subscriptions Update">
-                    Subscriptions Update
-                  </option>
-                  <option value="Appointments">Appointments</option>
+                  {Object.keys(roles)
+                    .filter((r) => r !== 'updatedAt' && r !== 'id')
+                    .map((i) => (
+                      <option key={i}>{i}</option>
+                    ))}
                 </select>
                 <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                   <svg

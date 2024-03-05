@@ -4,6 +4,7 @@ import useWorkerStore from '../store/ServiceStore';
 import DynamicFirebaseImageComponent from './DynamicFirebaseImageComponent';
 import * as Yup from 'yup';
 import { useFormik, FormikProvider, Field, ErrorMessage } from 'formik';
+import useGlobalStore from '../store/globalStore';
 type images = {
   url: File | string;
 };
@@ -47,7 +48,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
     isDuplicating,
   } = useWorkerStore();
   const [images, setimages] = useState<images[]>(StaffMember.file);
-
+  const { roles } = useGlobalStore();
   const formikObj = useFormik({
     validationSchema,
     initialValues: {
@@ -65,7 +66,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
       if (isEditing) setUserAuth(values.email, values.password);
     },
   });
-  const [permissions, setpermissions] = useState<string[]>(
+  const [permissions, setpermissions] = useState<string>(
     StaffMember.permissions,
   );
   const SaveStaffMemberInfo = useCallback(
@@ -319,99 +320,30 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
               User Roles
             </label>
             {/* Dropdown Select */}
-            <div className="relative z-20  w-full rounded border border-stroke p-5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+            <div className="relative z-20 p-4 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
               <div className="flex flex-wrap items-center">
-                {formikObj.values.permissions?.map((I: String) => (
-                  <span
-                    className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30 z-50"
-                    onClick={(e) => {
-                      formikObj.setFieldValue(
-                        'permissions',
-                        formikObj.values.permissions.filter(
-                          (item) => item !== I,
-                        ),
-                      );
-                      setpermissions(permissions.filter((item) => item !== I));
-                    }}
-                    key={I.toString()}
-                  >
-                    {I}
-                    <span className="cursor-pointer pl-2 hover:text-danger">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
-                          fill="currentColor"
-                        ></path>
-                      </svg>
-                    </span>
-                  </span>
-                ))}
+                <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30 z-50">
+                  {permissions}
+                </span>
               </div>
-              <Field
-                as="select"
-                name="permissions"
-                className="absolute text-black top-0 p-6 left-0 z-20 h-full w-full bg-transparent opacity-0"
-                onChange={(e: any) => {
-                  if (!formikObj.values.permissions.includes(e.target.value))
-                    formikObj.setFieldValue('permissions', [
-                      ...(formikObj.values.permissions || []),
-
-                      e.target.value,
-                    ]);
+              <select
+                name=""
+                id=""
+                className="absolute top-0 p-6 left-0 z-20 h-full w-full bg-transparent opacity-0"
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setpermissions((p) => e.target.value);
                 }}
               >
-                <option value="">Select</option>
-                <option value="Staff All">Staff All</option>
-                <option value="Staff Read">Staff Read</option>
-                <option value="Staff Create">Staff Create</option>
-                <option value="Staff Delete">Staff Delete</option>
-                <option value="Staff Update">Staff Update</option>
-                <option value="Roles All">Roles All</option>
-                <option value="Roles Read">Roles Read</option>
-                <option value="Roles Create">Roles Create</option>
-                <option value="Roles Delete">Roles Delete</option>
-                <option value="Roles Update">Roles Update</option>
-                <option value="Orders All">Orders All</option>
-                <option value="Orders Read">Orders Read</option>
-                <option value="Orders Create">Orders Create</option>
-                <option value="Orders Delete">Orders Delete</option>
-                <option value="Orders Update">Orders Update</option>
-                <option value="Categories All">Categories All</option>
-                <option value="Categories Read">Categories Read</option>
-                <option value="Categories Create">Categories Create</option>
-                <option value="Categories Delete">Categories Delete</option>
-                <option value="Categories Update">Categories Update</option>
-                <option value="Services All">Services All</option>
-                <option value="Services Read">Services Read</option>
-                <option value="Services Create">Services Create</option>
-                <option value="Services Delete">Services Delete</option>
-                <option value="Services Update">Services Update</option>
-                <option value="Upsellings All">Upsellings All</option>
-                <option value="Upsellings Read">Upsellings Read</option>
-                <option value="Upsellings Create">Upsellings Create</option>
-                <option value="Upsellings Delete">Upsellings Delete</option>
-                <option value="Upsellings Update">Upsellings Update</option>
-                <option value="Subscriptions All">Subscriptions All</option>
-                <option value="Subscriptions Read">Subscriptions Read</option>
-                <option value="Subscriptions Create">
-                  Subscriptions Create
+                <option className="text-black" value="">
+                  Select
                 </option>
-                <option value="Subscriptions Delete">
-                  Subscriptions Delete
-                </option>
-                <option value="Subscriptions Update">
-                  Subscriptions Update
-                </option>
-                <option value="Appointments">Appointments</option>
-              </Field>
+                {Object.keys(roles)
+                  .filter((r) => r !== 'updatedAt' && r !== 'id')
+                  .map((i) => (
+                    <option key={i}>{i}</option>
+                  ))}
+              </select>
               <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                 <svg
                   width="24"
@@ -430,11 +362,6 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
                   </g>
                 </svg>
               </span>
-              <ErrorMessage
-                name="permissions"
-                component="div"
-                className="text-danger"
-              />
             </div>
           </div>
         </div>

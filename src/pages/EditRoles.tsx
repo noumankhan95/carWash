@@ -13,7 +13,7 @@ function EditRoles() {
   const { state } = useLocation();
   const [roleName, setroleName] = useState<string>(state?.name || '');
 
-  const { roles } = useGlobalStore();
+  const { roles, setreloadCategories } = useGlobalStore();
   const [pageroles, setpageroles] = useState<[string, string[]]>();
   useEffect(() => {
     const ap = Object.entries(roles)?.find((i) => i[0] === roleName);
@@ -34,6 +34,7 @@ function EditRoles() {
       setAppRoles(preRoles);
       await addtoDb();
       toast.success('Success');
+      setreloadCategories();
       navigate('/');
     } catch (e) {
       console.log(e);

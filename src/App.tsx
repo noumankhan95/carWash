@@ -2,7 +2,6 @@ import { Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
-import ECommerce from './pages/Dashboard/ECommerce';
 import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
 import Loader from './common/Loader';
@@ -33,14 +32,14 @@ function App() {
     setLoading((p) => true);
     const sub = onAuthStateChanged(auth, (user) => {
       if (user) {
-        getDoc(doc(db, 'users', user.uid))
+        getDoc(doc(db, 'staff', user.uid))
           .then((u) => {
             console.log(u?.data()?.permissions, 'per');
             setisloggedIn({
               ...u?.data(),
               id: user.uid,
               isloggedIn: true,
-              permissions: u?.data()?.permissions,
+              permissions: u?.data()?.StaffMember.permissions,
             } as UserAuth);
           })
           .catch((e) => {
@@ -57,7 +56,7 @@ function App() {
           phone: '',
           role: 'User',
           isloggedIn: false,
-          permissions: [],
+          permissions: '',
         });
         setLoading(false);
       }
@@ -125,9 +124,10 @@ function App() {
         return;
       }
 
-      const proles: AppRoles = {
-        ...docs[0].data(),
-        id: docs[0].id,
+      const proles: AppRoles | any = {
+        id: docs[0].id as string,
+
+        ...docs[0]?.data(),
       };
       rolesArray.push(proles);
 

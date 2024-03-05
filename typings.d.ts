@@ -66,7 +66,8 @@ type StaffMember = {
   file: Array<{ url: File | string }>;
   phone: string;
   email: string;
-  permissions: PermissionsRoles[];
+  permissions: string;
+  id?: string;
 };
 
 type AddStaffMemberChildrenProps = {
@@ -83,14 +84,13 @@ type StaffWorkerUser = {
 };
 
 type Roles = 'Staff' | 'Admin' | 'User';
-type PermissionsRoles = string;
 type WebsiteUsers = {
   id: string;
   role?: Roles;
   email: string;
   name: string;
   phone: string;
-  permissions: PermissionsRoles[];
+  permissions: string;
 };
 
 interface UserAuth extends WebsiteUsers {

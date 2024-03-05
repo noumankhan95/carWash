@@ -11,6 +11,7 @@ import EditUserModal from '../components/EditUserModal';
 import EditCategory from '../components/EditCategory';
 import useCategoryStore from '../store/useCategoryStore';
 import { ref } from 'firebase/database';
+import useGlobalStore from '../store/globalStore';
 const Categories = () => {
   const [isloading, setisloading] = useState<boolean>(false);
   const [isdeleting, setisdeleting] = useState<boolean>(false);
@@ -20,6 +21,7 @@ const Categories = () => {
   const [showAlert, setshowAlert] = useState(false);
   const [categories, setcategories] = useState<CategoryAdditionItem[]>([]);
   const { permissions } = useUserAuth();
+  const { roles } = useGlobalStore();
   const { setCategoryItems, setIsEditing, setIsNotEditing } =
     useCategoryStore();
   const navigate = useNavigate();
@@ -104,8 +106,8 @@ const Categories = () => {
         </div>
       )}
       <div className="flex flex-row justify-end my-5">
-        {(permissions.includes('Categories All') ||
-          permissions.includes('Categories Add')) && (
+        {(roles[permissions]?.includes('Categories All') ||
+          roles[permissions]?.includes('Categories Add')) && (
           <button
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {
@@ -145,8 +147,8 @@ const Categories = () => {
 
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        {permissions?.includes('Categories Delete') ||
-                          (permissions?.includes('Categories All') && (
+                        {roles[permissions]?.includes('Categories Delete') ||
+                          (roles[permissions]?.includes('Categories All') && (
                             <button
                               className="hover:text-danger"
                               onClick={() => {
@@ -181,8 +183,8 @@ const Categories = () => {
                               </svg>
                             </button>
                           ))}
-                        {(permissions?.includes('Categories Edit') ||
-                          permissions?.includes('Categories All')) && (
+                        {(roles[permissions]?.includes('Categories Edit') ||
+                          roles[permissions]?.includes('Categories All')) && (
                           <button
                             className="hover:text-primary"
                             onClick={() => {

@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import { LoaderIcon } from 'react-hot-toast';
 import useUserAuth from '../store/UserAuthStore.js';
 import useAppointment from '../store/useAppointment.js';
+import useGlobalStore from '../store/globalStore.js';
 
 function Appointments() {
   const endDateref = useRef<HTMLInputElement | null>(null);
@@ -49,6 +50,7 @@ function Appointments() {
   const currentItems = appointment.slice(startIndex, endIndex);
   const { permissions } = useUserAuth();
   const { setAppointment, setvehicle, setCustomer } = useAppointment();
+  const { roles } = useGlobalStore();
   // const {
   //   setIsEditing,
   //   setIsNotEditing,
@@ -93,8 +95,8 @@ function Appointments() {
   return (
     <div>
       <div className="flex flex-row justify-end my-5">
-        {(permissions.includes('Services All') ||
-          permissions.includes('Services Add')) && (
+        {(roles[permissions]?.includes('Appointments All') ||
+          roles[permissions]?.includes('Appointments Add')) && (
           <button
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {

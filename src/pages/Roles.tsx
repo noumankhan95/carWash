@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Alerts from './UiElements/Alerts';
 import Modal from '../components/Modal';
 import EditUserModal from '../components/EditUserModal';
 import {
@@ -17,22 +16,24 @@ import { LoaderIcon } from 'react-hot-toast';
 import { useToast, toast } from 'react-toastify';
 import useWorkerStore from '../store/ServiceStore.js';
 import useUserAuth from '../store/UserAuthStore.js';
+import useGlobalStore from '../store/globalStore.js';
 function Roles() {
   const [showAlert, setshowAlert] = useState(false);
   const [showEditUser, setshowEditUser] = useState(false);
-  const [users, setusers] = useState<WebsiteUsers[]>();
+  const [users, setusers] = useState<StaffMember[]>();
   const [isloading, setisloading] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<WebsiteUsers>();
+  const [selectedUser, setSelectedUser] = useState<StaffMember>();
   const [todelete, settodelete] = useState<{ id: string; email: string }>();
   const [isdeleting, setisdeleting] = useState<boolean>(false);
   const [reload, setreload] = useState<boolean>(false);
   const { permissions } = useUserAuth();
+  const { roles } = useGlobalStore();
   const getUsers = useCallback(async () => {
     try {
       setisloading((p) => true);
-      const userData = await getDocs(collection(db, 'users'));
-      const updatedUsers = userData.docs.map((u) => ({
-        ...(u.data() as WebsiteUsers),
+      const userData = await getDocs(collection(db, 'staff'));
+      const updatedUsers = userData?.docs?.map((u) => ({
+        ...(u.data()?.StaffMember as StaffMember),
         id: u.id,
       }));
       // userData.forEach((u) => {
@@ -158,7 +159,7 @@ function Roles() {
                     <tr key={u.id}>
                       <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                         <h5 className="font-medium text-black dark:text-white">
-                          {u.name}
+                          {u.Name}
                         </h5>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -171,13 +172,13 @@ function Roles() {
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <div className="flex items-center space-x-3.5">
-                          {permissions?.includes('Roles Delete') ||
-                            (permissions?.includes('Roles All') && (
+                          {/* {roles[permissions]?.includes('Roles Delete') ||
+                            (roles[permissions]?.includes('Roles All') && (
                               <button
                                 className="hover:text-danger"
                                 onClick={() => {
                                   setshowAlert((p) => true);
-                                  settodelete({ id: u.id, email: u.email });
+                                  settodelete({ id: u.id!, email: u.email });
                                 }}
                               >
                                 <svg
@@ -206,9 +207,9 @@ function Roles() {
                                   />
                                 </svg>
                               </button>
-                            ))}
-                          {(permissions?.includes('Roles Edit') ||
-                            permissions?.includes('Roles All')) && (
+                            ))} */}
+                          {(roles[permissions]?.includes('Roles Edit') ||
+                            roles[permissions]?.includes('Roles All')) && (
                             <button
                               className="hover:text-primary"
                               onClick={() => {
@@ -262,7 +263,7 @@ function Roles() {
                       setshowEditUser(false);
                     }}
                   >
-                    <EditUserModal user={selectedUser as WebsiteUsers} />
+                    <EditUserModal user={selectedUser as StaffMember} />
                   </Modal>
                 </div>
               )}

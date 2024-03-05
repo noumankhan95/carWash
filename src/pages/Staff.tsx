@@ -16,6 +16,7 @@ import { type Timestamp } from 'firebase/firestore';
 import { db } from '../firebase.js';
 import useWorkerStore from '../store/ServiceStore.js';
 import useUserAuth from '../store/UserAuthStore.js';
+import useGlobalStore from '../store/globalStore.js';
 type workTime = StaffWorkerUser & {
   createdAt: Timestamp;
   updatedAt: Timestamp;
@@ -39,6 +40,7 @@ function Staff() {
     setisDuplicating,
     setisNotDuplicating,
   } = useWorkerStore();
+  const { roles } = useGlobalStore();
   const { permissions } = useUserAuth();
   const [users, setusers] = useState<userItem[]>();
   const getUsers = useCallback(async () => {
@@ -142,8 +144,8 @@ function Staff() {
         </div>
       )}
       <div className="flex flex-row justify-end">
-        {(permissions.includes('Staff All') ||
-          permissions.includes('Staff Add')) && (
+        {(roles[permissions].includes('Staff All') ||
+          roles[permissions].includes('Staff Add')) && (
           <button
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {
@@ -243,8 +245,8 @@ function Staff() {
                 )}
               </div>
               <div className="flex flex-row justify-start text-center sm:block my-4 space-x-2">
-                {(permissions.includes('Staff All') ||
-                  permissions.includes('Staff Edit')) && (
+                {(roles[permissions].includes('Staff All') ||
+                  roles[permissions].includes('Staff Edit')) && (
                   <>
                     <button
                       className="p-3.5  bg-primary rounded-md border  text-center font-medium text-white hover:bg-opacity-90 "

@@ -12,6 +12,7 @@ import EditCategory from '../components/EditCategory';
 import useCategoryStore from '../store/useCategoryStore';
 import { ref } from 'firebase/database';
 import useUpselling from '../store/useUpsellingStore';
+import useGlobalStore from '../store/globalStore';
 const Upselling = () => {
   const [isloading, setisloading] = useState<boolean>(false);
   const [isdeleting, setisdeleting] = useState<boolean>(false);
@@ -25,6 +26,7 @@ const Upselling = () => {
   //   useCategoryStore();
   const { isEditing, setIsEditing, setUpsellingItem, setIsNotEditing } =
     useUpselling();
+  const { roles } = useGlobalStore();
   const navigate = useNavigate();
   const getupselling = useCallback(async () => {
     try {
@@ -107,8 +109,8 @@ const Upselling = () => {
         </div>
       )}
       <div className="flex flex-row justify-end my-5">
-        {(permissions.includes('Upsellings All') ||
-          permissions.includes('Upsellings Add')) && (
+        {(roles[permissions]?.includes('Upsellings All') ||
+          roles[permissions]?.includes('Upsellings Add')) && (
           <button
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {
@@ -178,8 +180,8 @@ const Upselling = () => {
                     </td> */}
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        {permissions?.includes('Upsellings Delete') ||
-                          (permissions?.includes('Upsellings All') && (
+                        {roles[permissions]?.includes('Upsellings Delete') ||
+                          (roles[permissions]?.includes('Upsellings All') && (
                             <button
                               className="hover:text-danger"
                               onClick={() => {
@@ -214,8 +216,8 @@ const Upselling = () => {
                               </svg>
                             </button>
                           ))}
-                        {(permissions?.includes('Upsellings Edit') ||
-                          permissions?.includes('Upsellings All')) && (
+                        {(roles[permissions]?.includes('Upsellings Edit') ||
+                          roles[permissions]?.includes('Upsellings All')) && (
                           <button
                             className="hover:text-primary"
                             onClick={() => {

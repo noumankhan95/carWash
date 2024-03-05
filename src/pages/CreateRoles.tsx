@@ -90,8 +90,8 @@ const CreateRoles = () => {
         </div>
       )}
       <div className="flex flex-row justify-end my-5">
-        {(permissions.includes('Categories All') ||
-          permissions.includes('Categories Add')) && (
+        {(roles[permissions]?.includes('Roles All') ||
+          roles[permissions]?.includes('Roles Add')) && (
           <button
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {
@@ -166,8 +166,8 @@ const CreateRoles = () => {
                               />
                             </svg>
                           </button>
-                          {(permissions?.includes('Categories Edit') ||
-                            permissions?.includes('Categories All')) && (
+                          {(roles[permissions]?.includes('Roles Edit') ||
+                            roles[permissions]?.includes('Roles All')) && (
                             <button
                               className="hover:text-primary"
                               onClick={() => {

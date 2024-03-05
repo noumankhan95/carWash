@@ -26,7 +26,7 @@ const Upselling = () => {
   //   useCategoryStore();
   const { isEditing, setIsEditing, setSubscriptionItem, setIsNotEditing } =
     useSubscription();
-  const { services } = useGlobalStore();
+  const { roles } = useGlobalStore();
   const navigate = useNavigate();
   const getupselling = useCallback(async () => {
     try {
@@ -109,8 +109,8 @@ const Upselling = () => {
         </div>
       )}
       <div className="flex flex-row justify-end my-5">
-        {(permissions.includes('Subscriptions All') ||
-          permissions.includes('Subscriptions Add')) && (
+        {(roles[permissions]?.includes('Subscriptions All') ||
+          roles[permissions]?.includes('Subscriptions Add')) && (
           <button
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {
@@ -178,8 +178,10 @@ const Upselling = () => {
 
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        {permissions?.includes('Subscriptions Delete') ||
-                          (permissions?.includes('Subscriptions All') && (
+                        {roles[permissions]?.includes('Subscriptions Delete') ||
+                          (roles[permissions]?.includes(
+                            'Subscriptions All',
+                          ) && (
                             <button
                               className="hover:text-danger"
                               onClick={() => {
@@ -214,8 +216,10 @@ const Upselling = () => {
                               </svg>
                             </button>
                           ))}
-                        {(permissions?.includes('Subscriptions Edit') ||
-                          permissions?.includes('Subscriptions All')) && (
+                        {(roles[permissions]?.includes('Subscriptions Edit') ||
+                          roles[permissions]?.includes(
+                            'Subscriptions All',
+                          )) && (
                           <button
                             className="hover:text-primary"
                             onClick={() => {

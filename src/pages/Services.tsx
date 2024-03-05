@@ -12,6 +12,7 @@ import EditCategory from '../components/EditCategory';
 import useCategoryStore from '../store/useCategoryStore';
 import { ref } from 'firebase/database';
 import useServiceAdditionStore from '../store/ServiceAdditionStore';
+import useGlobalStore from '../store/globalStore';
 const Services = () => {
   const [isloading, setisloading] = useState<boolean>(false);
   const [isdeleting, setisdeleting] = useState<boolean>(false);
@@ -25,6 +26,7 @@ const Services = () => {
   const { setServiceAdditionItem, setIsEditing, setIsNotEditing } =
     useServiceAdditionStore();
   const navigate = useNavigate();
+  const { roles } = useGlobalStore();
   const getservices = useCallback(async () => {
     try {
       setisloading(true);
@@ -106,8 +108,8 @@ const Services = () => {
         </div>
       )}
       <div className="flex flex-row justify-end my-5">
-        {(permissions.includes('Services All') ||
-          permissions.includes('Services Add')) && (
+        {(roles[permissions]?.includes('Services All') ||
+          roles[permissions]?.includes('Services Add')) && (
           <button
             className="rounded-md inline-flex w-52 items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             onClick={() => {
@@ -156,8 +158,8 @@ const Services = () => {
 
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        {permissions?.includes('Services Delete') ||
-                          (permissions?.includes('Services All') && (
+                        {roles[permissions]?.includes('Services Delete') ||
+                          (roles[permissions]?.includes('Services All') && (
                             <button
                               className="hover:text-danger"
                               onClick={() => {
@@ -192,8 +194,8 @@ const Services = () => {
                               </svg>
                             </button>
                           ))}
-                        {(permissions?.includes('Services Edit') ||
-                          permissions?.includes('Services All')) && (
+                        {(roles[permissions]?.includes('Services Edit') ||
+                          roles[permissions]?.includes('Services All')) && (
                           <button
                             className="hover:text-primary"
                             onClick={() => {
