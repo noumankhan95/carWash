@@ -149,7 +149,7 @@ const Services = () => {
               services &&
               services?.map((u) => (
                 <>
-                  <tr key={u.id}>
+                  <tr key={u?.id ?? Math.random() * 10000}>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                       <h5 className="font-medium text-black dark:text-white">
                         {u.name}

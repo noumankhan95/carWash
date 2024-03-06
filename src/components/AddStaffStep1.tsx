@@ -14,9 +14,7 @@ const validationSchema = Yup.object().shape({
   phone: Yup.number()
     .typeError('Phone must be a number')
     .required('Phone Number is required'),
-  permissions: Yup.array()
-    .min(1, 'At least one permission must be selected')
-    .required('Permissions are required'),
+  permissions: Yup.string().required('Field required'),
   email: Yup.string()
     .when('isEditing', {
       is: (isEditing: boolean) => isEditing == false,
@@ -149,6 +147,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
       </div>
     );
   }, [images]);
+  console.log(formikObj.errors);
   return (
     <FormikProvider value={formikObj}>
       <form onSubmit={formikObj.handleSubmit}>
@@ -323,15 +322,17 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
             <div className="relative z-20 p-4 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
               <div className="flex flex-wrap items-center">
                 <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30 z-50">
-                  {permissions}
+                  {formikObj.values.permissions}
                 </span>
               </div>
-              <select
-                name=""
-                id=""
+              <Field
+                as="select"
+                name="permissions"
+                id="permissions"
                 className="absolute top-0 p-6 left-0 z-20 h-full w-full bg-transparent opacity-0"
-                onChange={(e) => {
+                onChange={async (e: any) => {
                   console.log(e.target.value);
+                  await formikObj.setFieldValue('permissions', e.target.value);
                   setpermissions((p) => e.target.value);
                 }}
               >
@@ -343,7 +344,7 @@ function AddStaffMember({ settheStep }: AddStaffMemberChildrenProps) {
                   .map((i) => (
                     <option key={i}>{i}</option>
                   ))}
-              </select>
+              </Field>
               <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                 <svg
                   width="24"

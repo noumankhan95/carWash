@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import SwitcherOne from './SwitcherOne';
-import Buttons from '../pages/UiElements/Buttons';
+
 // import { Modal } from './ModalSettings';
 import Modal from './Modal';
 import AddLocation from './AddLocation';
@@ -62,7 +61,7 @@ function AddServingArea() {
       setisloading(true);
       if (isEditing.value) {
         console.log('Reached in Editing');
-        // await addEditedItemtoDb();
+        await addEditedItemtoDb();
       } else {
         console.log('Reached Creating Staff');
         const docs = await getDocs(
@@ -92,7 +91,7 @@ function AddServingArea() {
         navigate('/staff');
       }
       // setreloadCategories();
-      // toast.success('Success');
+      toast.success('Success');
     } catch (e) {
       console.log(e);
       toast.error('An Error Occured ');
